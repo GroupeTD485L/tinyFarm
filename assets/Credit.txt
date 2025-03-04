@@ -1,0 +1,12 @@
+coq.png : domaine public via Wikimedia (https://commons.wikimedia.org/w/index.php?curid=64953708)
+poule.png : CC BY NC via minecraft.wiki (https://minecraft.wiki/w/File:Chicken_JE2_BE2.png)
+savon.png : Domaine public via Wikimedia (https://commons.wikimedia.org/wiki/File:Liquid_soap.svg)
+seau_eau.png : CC BY NC via minecraft.wiki (https://minecraft.wiki/w/File:Water_Bucket_JE2_BE2.png)
+seringue.png : Domaine public via Wikimedia (https://commons.wikimedia.org/w/index.php?curid=8806639)
+foin.jpg : Domaine public via https://www.rawpixel.com/image/6483165/psd-sticker-public-domain-illustrations
+sac_nourriture.png : Licence standard Adobe Stock (https://stock.adobe.com/ch_fr/images/sack-with-wheat-flour-and-golden-ears-isolated-on-white-vector-cartoon-illustration-of-food/525658206)
+poussin.png : CC BY NC via minecraft.wiki (https://minecraft.wiki/w/File:Baby_Chicken_JE2_BE2.png)
+lapereau.png : CC BY NC via minecraft.wiki (https://minecraft.wiki/w/File:Baby_Brown_Rabbit_JE2_BE2.png)
+
+lapinM.png : CC BY NC via minecraft.wiki (https://minecraft.wiki/w/File:Brown_Rabbit_JE2_BE2.png)
+lapinF.png : CC BY NC via minecraft.wiki (https://minecraft.wiki/w/File:Brown_Rabbit_JE2_BE2.png)
