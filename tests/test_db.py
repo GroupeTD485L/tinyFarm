@@ -274,7 +274,7 @@ def test_rajout_ferme(db_conn, setup_compte, setup_ferme):
     assert resultA == (setup_ferme[0], "Mageline", rn.strftime('%Y-%m-%d %H:%M:%S.%f') ) and resultB == (setup_ferme[1], "Henry", rn.strftime('%Y-%m-%d %H:%M:%S.%f'))
 
 def test_rajout_vache(db_conn, setup_vache):
-    
+
     cur = db_conn.cursor()
     cur.execute("SELECT poids, age, qt_lait, dernier_repas, dernier_breuvage, dernier_lavage FROM Vache WHERE proprietaire = ?;", (setup_vache[0],))
     resultA = cur.fetchone()
@@ -934,6 +934,45 @@ def test_poids_superieur_invalide_poule(db_conn, setup_poule):
     with pytest.raises(sqlite3.IntegrityError):
         cur.execute("INSERT INTO Poule (poids, sexe) VALUES (10,'F') RETURNING idPoule;")
     cur.close()
+
+def test_lait_vache(db_conn, setup_ferme, setup_vache):
+    cur = db_conn.cursor()
+    cur.execute("UPDATE Vache SET age = age + 10, poids = poids + 80;")
+   
+    #dans le cas ou elle a était traite dans la journée
+    cur.execute("""
+                UPDATE Vache SET qt_lait=8 WHERE poids>=80 AND age>10 AND malade_depuis IS NULL AND dernier_repas=? AND qt_lait=0;
+                """,(date.today(),))
+    #dans le cas ou elle n'a pas était traite dans la journée
+    cur.execute("""
+                UPDATE Vache SET qt_lait=12 WHERE poids>=80 AND age>10 AND malade_depuis IS NULL AND dernier_repas=? AND qt_lait>0;
+                """,(date.today(),))
+    db_conn.commit()
+
+    cur.execute("""
+    SELECT qt_lait FROM Vache WHERE proprietaire=?;
+    """, (setup_ferme[0],))
+    resultA = cur.fetchone()[0]
+
+    cur.close()
+    assert resultA is not None and (resultA==8 or resultA==12 or resultA==16)
+
+def test_mortalite_maladie_vache(db_conn, setup_ferme):
+    cur = db_conn.cursor()
+    #modification valeur malade_depuis
+    cur.execute("""
+    UPDATE Vache SET malade_depuis=? WHERE proprietaire=?;
+                """, (date.today() - timedelta(days=5), setup_ferme[1],))
+    cur.execute("""
+                DELETE FROM Vache WHERE malade_depuis>=?;
+                """, (date.today() - timedelta(days=4),))
+    cur.execute("""SELECT COUNT(*) FROM Vache WHERE proprietaire=?""", (setup_ferme[1],))
+    db_conn.commit()
+    resultA=cur.fetchone()[0]
+
+    cur.close()
+    assert resultA==0
+
 # Futur test à venir...
 
 def test_rajout_Coop(db_conn, setup_Coop, setup_Produit):
