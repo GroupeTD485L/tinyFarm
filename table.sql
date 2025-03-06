@@ -84,7 +84,7 @@ CREATE TABLE Commerce (
 );
 
 CREATE TABLE Remise (
-    idProduit SERIAL PRIMARY KEY,
+    idRemise SERIAL PRIMARY KEY,
     proprietaire INTEGER REFERENCES Ferme(idFerme),
     type INTEGER REFERENCES Produit(idProduit),
     quantite INTEGER NOT NULL
