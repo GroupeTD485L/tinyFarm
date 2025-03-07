@@ -40,7 +40,7 @@ def setup_db(db_conn):
         CREATE TABLE Poule (
             idPoule INTEGER PRIMARY KEY AUTOINCREMENT,
             proprietaire INTEGER REFERENCES Ferme(idFerme),
-            poids DECIMAL(5,2) DEFAULT 0.05 CHECK (poids >= 0) NOT NULL,
+            poids DECIMAL(5,2) DEFAULT 0.05 CHECK ((poids >= 0) AND (poids <= 3.5)) NOT NULL,
             age INTEGER DEFAULT 0 CHECK (age >= 0),
             sexe CHAR(1) CHECK (sexe IN ('M', 'F', 'U')) NOT NULL,   -- U pour Unknown
             nb_oeuf INTEGER DEFAULT 0 CHECK (nb_oeuf >= 0) NOT NULL,
@@ -57,17 +57,17 @@ def setup_db(db_conn):
             dernier_breuvage DATE,
             dernier_lavage DATE,
             malade_depuis DATE,
-            nb_bebe INTEGER DEFAULT 8 CHECK (nb_bebe >= 0) NOT NULL,
-            nb_petit INTEGER DEFAULT 0 CHECK (nb_petit >= 0) NOT NULL,
-            nb_gros INTEGER DEFAULT 0 CHECK (nb_gros >= 0) NOT NULL,
-            nb_adulte_m INTEGER DEFAULT 0 CHECK (nb_adulte_m >= 0) NOT NULL,
-            nb_adulte_f INTEGER DEFAULT 0 CHECK (nb_adulte_f >= 0) NOT NULL
+            nb_bebe INTEGER DEFAULT 8 CHECK (nb_bebe >= 0 AND nb_bebe + nb_petit + nb_gros <= 50) NOT NULL,
+            nb_petit INTEGER DEFAULT 0 CHECK (nb_petit >= 0 AND nb_bebe + nb_petit + nb_gros <= 50) NOT NULL,
+            nb_gros INTEGER DEFAULT 0 CHECK (nb_gros >= 0 AND nb_bebe + nb_petit + nb_gros <= 50) NOT NULL,
+            nb_adulte_m INTEGER DEFAULT 0 CHECK (nb_adulte_m >= 0 AND nb_adulte_m + nb_adulte_f <= 50) NOT NULL,
+            nb_adulte_f INTEGER DEFAULT 0 CHECK (nb_adulte_f >= 0 AND nb_adulte_m + nb_adulte_f <= 50) NOT NULL
         );
     """)
     cur.execute("""
         CREATE TABLE Vache (
             proprietaire INTEGER PRIMARY KEY REFERENCES Ferme(idFerme),
-            poids INTEGER DEFAULT 1 CHECK (poids >= 0) NOT NULL,
+            poids INTEGER DEFAULT 1 CHECK ((poids >= 0) AND (poids<=750)) NOT NULL,
             age INTEGER DEFAULT 0 CHECK (age >= 0) NOT NULL,
             qt_lait INTEGER DEFAULT 0 CHECK (qt_lait >= 0) NOT NULL,
             dernier_repas DATE,
@@ -322,3 +322,337 @@ def test_rajout_Commerce(db_conn, setup_Commerce, setup_ferme, setup_Produit):
     assert resultA == (setup_ferme[0], setup_ferme[1], setup_Produit[0], 2, 500) and resultB == (setup_ferme[0], setup_ferme[1], setup_Produit[1], 1, 1900 )
 
 # Futur test à venir...
+
+def test_nom_ferme_valide(db_conn, setup_db):
+    cur = db_conn.cursor()
+    cur.execute("INSERT INTO Ferme (nom) VALUES ('La fermette') RETURNING idFerme;")
+    result = cur.fetchone()
+    cur.close()
+    assert result != None
+
+
+def test_nom_ferme_invalide(db_conn, setup_db):
+    cur = db_conn.cursor()
+    
+    with pytest.raises(sqlite3.IntegrityError):
+        cur.execute("INSERT INTO Ferme (nom) VALUES ('L') RETURNING idFerme;")
+    
+    cur.close()
+
+
+def test_id_ferme_unique(db_conn, setup_db):
+    cur = db_conn.cursor()
+    cur.execute("INSERT INTO Ferme (idFerme, nom) VALUES (1,'La fermette'); ")
+    
+    with pytest.raises(sqlite3.IntegrityError):    
+        cur.execute("INSERT INTO Ferme (idFerme, nom) VALUES (1,'La nouvelle fermette');")
+    
+    cur.close()
+	
+def test_nombre_ecus_coherent(db_conn, setup_db):
+    cur = db_conn.cursor()
+    cur.execute("INSERT INTO Ferme (nom) VALUES ('La fermette') RETURNING ecus;")
+    result = cur.fetchone()[0]
+    cur.close()
+    assert result >=0
+
+def test_nombre_ecus_incoherent(db_conn, setup_db):
+    cur = db_conn.cursor()
+    with pytest.raises(sqlite3.IntegrityError):
+        cur.execute("INSERT INTO Ferme (nom, ecus) VALUES ('La fermette', -550);")
+
+
+def test_nom_compte_valide(db_conn, setup_db):
+    cur = db_conn.cursor()
+    cur.execute("INSERT INTO Compte (pseudo) VALUES ('Romuald') RETURNING idCompte;")
+    result = cur.fetchone()
+    cur.close
+    assert result != None
+
+
+def test_nom_compte_invalide(db_conn, setup_db):
+    cur = db_conn.cursor()
+    
+    with pytest.raises(sqlite3.IntegrityError):
+        cur.execute("INSERT INTO Compte (pseudo) VALUES ('R') RETURNING idCompte;")
+    
+    cur.close
+
+def test_nom_compte_unique(db_conn, setup_db):
+    cur = db_conn.cursor()
+    cur.execute("INSERT INTO Compte (pseudo) VALUES ('Romuald');")
+
+    with pytest.raises(sqlite3.IntegrityError):
+        cur.execute("INSERT INTO Compte (pseudo) VALUES ('Romuald');")
+    
+    cur.close
+
+def test_id_compte_unique(db_conn, setup_db):
+    cur = db_conn.cursor()
+    cur.execute("INSERT INTO Compte (idCompte, pseudo) VALUES (1, 'Romuald');")
+    
+    with pytest.raises(sqlite3.IntegrityError):
+        cur.execute("INSERT INTO Compte (idCompte, pseudo) VALUES (1, 'Albert');")
+    
+    cur.close
+
+
+def test_nombre_achatRestant_coherent(db_conn, setup_db):
+    cur = db_conn.cursor()
+    cur.execute("INSERT INTO Ferme (nom) VALUES ('La fermette') RETURNING achatRestant;")
+    result = cur.fetchone()[0]
+    cur.close()
+    assert result >=0
+
+def test_nombre_achatRestant_incoherent(db_conn, setup_db):
+    cur = db_conn.cursor()
+    with pytest.raises(sqlite3.IntegrityError):
+        cur.execute("INSERT INTO Ferme (nom, achatRestant) VALUES ('La fermette', -3) RETURNING achatRestant;")
+    cur.close()
+
+
+
+def test_nb_bebe_lapin_correct(db_conn, setup_ferme):
+    cur = db_conn.cursor()
+    cur.execute("INSERT INTO Clapier (proprietaire,nb_bebe, nb_petit, nb_gros) VALUES (1, 28, 2, 7) RETURNING proprietaire;")
+    result = cur.fetchone()
+    cur.close()
+
+    assert result != None
+
+def test_nb_bebe_lapin_incorrect(db_conn, setup_ferme):
+    cur = db_conn.cursor()
+    with pytest.raises(sqlite3.IntegrityError):
+        cur.execute("INSERT INTO Clapier (proprietaire,nb_bebe, nb_petit, nb_gros) VALUES (1, 45, 30, 2) RETURNING proprietaire;")
+    cur.close()
+def test_nb_lapin_adultes_correct(db_conn, setup_ferme):
+    cur = db_conn.cursor()
+    cur.execute("INSERT INTO Clapier (proprietaire, nb_adulte_m, nb_adulte_f) VALUES (1, 28, 22) RETURNING proprietaire;")
+    result = cur.fetchone()
+    cur.close()
+
+    assert result != None
+
+def test_nb_adulte_lapin_incorrect(db_conn, setup_ferme):
+    cur = db_conn.cursor()
+    with pytest.raises(sqlite3.IntegrityError):
+        cur.execute("INSERT INTO Clapier (proprietaire,nb_adulte_m, nb_adulte_f) VALUES (1, 35, 25) RETURNING proprietaire;")
+    cur.close()
+
+def test_nom_produit_valide(db_conn, setup_db):
+    cur = db_conn.cursor()
+    cur.execute("INSERT INTO Produit (nom, estVendable) VALUES ('Caribou en conserve', true) RETURNING idProduit;")
+    result = cur.fetchone()
+    cur.close()
+    assert result != None
+
+def test_nom_produit_invalide(db_conn, setup_db):
+    cur = db_conn.cursor()
+
+    with pytest.raises(sqlite3.IntegrityError):
+        cur.execute("INSERT INTO Produit (nom, estVendable) VALUES ('C', true) RETURNING idProduit;")
+
+    cur.close()
+
+def test_commerce_quantite_correct(db_conn, setup_db):
+    cur = db_conn.cursor()
+    cur.execute("INSERT INTO Commerce (quantite, prixUnitaire) VALUES (10, 5) RETURNING idTransac;")
+    result = cur.fetchone()
+    cur.close()
+
+    assert result != None
+
+def test_commerce_quantite_incorrecte(db_conn, setup_db):
+
+    cur = db_conn.cursor()
+
+    with pytest.raises(sqlite3.IntegrityError):
+        cur.execute("INSERT INTO Commerce (quantite, prixUnitaire) VALUES (0, 5) RETURNING idTransac;")
+    cur.close()
+
+def test_commerce_prixUnitaire_correct(db_conn, setup_db):
+    cur = db_conn.cursor()
+    cur.execute("INSERT INTO Commerce (quantite, prixUnitaire) VALUES (10, 5) RETURNING idTransac;")
+    result = cur.fetchone()
+    cur.close()
+
+    assert result != None
+
+def test_commerce_prixUnitaire_incorrecte(db_conn, setup_db):
+
+    cur = db_conn.cursor()
+        
+    with pytest.raises(sqlite3.IntegrityError):
+        cur.execute("INSERT INTO Commerce (quantite, prixUnitaire) VALUES (10, 0) RETURNING idTransac;")
+    cur.close()
+
+
+def test_poids_valide_poule(db_conn, setup_poule):
+
+    cur = db_conn.cursor()
+
+    cur.execute("INSERT INTO Poule (poids,sexe) VALUES (2,'M') RETURNING idPoule;")
+    result = cur.fetchone()
+
+    cur.close()
+    assert result != None
+
+def test_poids_inferieur_invalide_poule(db_conn, setup_poule):
+
+    cur = db_conn.cursor()
+	
+    with pytest.raises(sqlite3.IntegrityError):
+        cur.execute("INSERT INTO Poule (poids, sexe) VALUES (-1,'F') RETURNING idPoule;")
+    cur.close()
+
+def test_age_valide_poule(db_conn, setup_poule):
+
+    cur = db_conn.cursor()
+
+    cur.execute("INSERT INTO Poule (sexe,age) VALUES ('M',12) RETURNING idPoule;")
+    result = cur.fetchone()
+
+    cur.close()
+    assert result != None
+    
+def test_age_invalide_poule(db_conn, setup_poule):
+
+    cur = db_conn.cursor()
+		
+    with pytest.raises(sqlite3.IntegrityError):
+        cur.execute("INSERT INTO Poule (sexe,age) VALUES ('F',-12) RETURNING idPoule;")
+    cur.close()
+
+def test_sexe_valide_poule(db_conn, setup_poule):
+
+    cur = db_conn.cursor()
+
+    cur.execute("INSERT INTO Poule (sexe) VALUES ('M') RETURNING idPoule;")
+    result = cur.fetchone()
+
+    cur.close()
+    assert result != None
+
+def test_sexe_invalide_poule(db_conn, setup_poule):
+
+    cur = db_conn.cursor()
+		
+    with pytest.raises(sqlite3.IntegrityError):
+        cur.execute("INSERT INTO Poule (sexe) VALUES ('C') RETURNING idPoule;")
+    cur.close()
+    
+def test_nb_oeufs_valide_poule(db_conn, setup_poule):
+
+    cur = db_conn.cursor()
+
+    cur.execute("INSERT INTO Poule (nb_oeuf,sexe) VALUES (30,'F') RETURNING idPoule;")
+    result = cur.fetchone()
+
+    cur.close()
+    assert result != None
+    
+def test_nb_oeufs_invalide_poule(db_conn, setup_poule):
+
+    cur = db_conn.cursor()
+		
+    with pytest.raises(sqlite3.IntegrityError):
+        cur.execute("INSERT INTO Poule (nb_oeuf,sexe) VALUES (-12,'F') RETURNING idPoule;")
+    cur.close()   
+
+
+def test_vache_poid_valide (db_conn,setup_ferme):
+
+    cur = db_conn.cursor()
+    cur.execute("INSERT INTO Vache(proprietaire , poids , age, qt_lait ) VALUES (1,50,1,1) RETURNING proprietaire ")
+    result = cur.fetchone()[0]
+    cur.close()
+    assert result == 1
+
+def test_vache_poid_inferieur_invalide (db_conn,setup_ferme):
+
+    cur = db_conn.cursor()
+    with pytest.raises(sqlite3.IntegrityError):
+
+        cur.execute("INSERT INTO Vache(proprietaire , poids , age, qt_lait ) VALUES (1,-1,1,1) RETURNING proprietaire ")
+
+
+def test_vache_age_valide (db_conn,setup_ferme):
+
+    cur = db_conn.cursor()
+    cur.execute("INSERT INTO Vache(proprietaire , poids , age, qt_lait ) VALUES (1,50,5,1) RETURNING age ")
+    result = cur.fetchone()[0]
+    cur.close()
+    assert result == 5
+
+def test_vache_age_invalide (db_conn,setup_ferme):
+
+    cur = db_conn.cursor()
+    with pytest.raises(sqlite3.IntegrityError):
+
+        cur.execute("INSERT INTO Vache(proprietaire , poids , age, qt_lait ) VALUES (1,50,-1,1) RETURNING age ")
+        cur.close()
+
+def test_vache_qt_lait_valide (db_conn,setup_ferme):
+
+    cur = db_conn.cursor()
+    cur.execute("INSERT INTO Vache(proprietaire , poids , age, qt_lait ) VALUES (1,50,5,5) RETURNING qt_lait ")
+    result = cur.fetchone()[0]
+    cur.close()
+    assert result == 5
+
+def test_vache_qt_lait_invalide (db_conn,setup_ferme):
+
+    cur = db_conn.cursor()
+    with pytest.raises(sqlite3.IntegrityError):
+
+        cur.execute("INSERT INTO Vache(proprietaire , poids , age, qt_lait ) VALUES (1,50,1,-1) RETURNING qt_lait ")
+        cur.close()
+          
+def test_vache_proprietaire_existant(db_conn, setup_ferme):
+    cur = db_conn.cursor()
+    cur.execute("PRAGMA foreign_keys = ON;")
+    cur.execute("INSERT INTO Vache(proprietaire , poids , age, qt_lait ) VALUES (1,50,5,5) RETURNING proprietaire ")
+    result = cur.fetchone()[0]
+    cur.close()
+    assert result == 1
+
+
+def test_vache_proprietaire_non_existant(db_conn, setup_ferme):
+
+    cur = db_conn.cursor()
+    cur.execute("PRAGMA foreign_keys = ON;")
+    with pytest.raises(sqlite3.IntegrityError):
+        cur.execute("INSERT INTO Vache(proprietaire , poids , age, qt_lait ) VALUES (4,50,1,1) RETURNING proprietaire ")
+        cur.close()
+
+
+def test_classement_idFerme_valide(db_conn, setup_ferme):
+
+    cur = db_conn.cursor()
+    cur.execute("PRAGMA foreign_keys = ON;")
+    cur.execute("INSERT INTO Classement(idFerme,score ) VALUES (1,2) RETURNING score ")
+    result = cur.fetchone()[0]
+    cur.close()
+    assert result == 2
+
+def test_classement_idFerme_invalide(db_conn, setup_ferme):
+
+    cur = db_conn.cursor()
+    cur.execute("PRAGMA foreign_keys = ON;")
+    with pytest.raises(sqlite3.IntegrityError):
+        cur.execute("INSERT INTO Classement(idFerme,score ) VALUES (4,10) RETURNING score ")
+        cur.close()
+
+def test_vache_poid_superieur_invalide (db_conn,setup_ferme):
+
+    cur = db_conn.cursor()
+    with pytest.raises(sqlite3.IntegrityError):
+        cur.execute("INSERT INTO Vache(proprietaire , poids , age, qt_lait ) VALUES (1,950,1,1) RETURNING proprietaire ")
+
+def test_poids_superieur_invalide_poule(db_conn, setup_poule):
+
+    cur = db_conn.cursor()
+	
+    with pytest.raises(sqlite3.IntegrityError):
+        cur.execute("INSERT INTO Poule (poids, sexe) VALUES (10,'F') RETURNING idPoule;")
+    cur.close()
