@@ -219,24 +219,22 @@ ajout_change ajout de nouvelles données (produit)
 @pytest.fixture
 def setup_Produit(db_conn,setup_db):
     """Donnéee d'exemple pour la table Produit"""
-    nomProduit = ['oeuf', 'lait', 'Botte de Paille', 'Seau d\'eau','graines','savon']
-    decrProduit = ['ceci est un oeuf', 'lait de vache d une qualité supérieur', 'De quoi nourir la vache', 'de l\'eau','miam les graines','ça mousse']
+    produits = [
+        ('oeuf', 'ceci est un oeuf'),
+        ('lait', 'lait de vache d\'une qualité supérieur'),
+        ('Botte de Paille', 'De quoi nourir la vache'),
+        ('Seau d\'eau', 'de l\'eau'),
+        ('graines', 'miam les graines'),
+        ('savon', 'ça mousse')
+    ]
+    # nomProduit = ['oeuf', 'lait', 'Botte de Paille', 'Seau d\'eau','graines','savon']
+    # decrProduit = ['ceci est un oeuf', 'lait de vache d une qualité supérieur', 'De quoi nourir la vache', 'de l\'eau','miam les graines','ça mousse']
     idp = []
-             
     cur = db_conn.cursor()
-    cur.execute("INSERT INTO Produit (nom, description, estVendable) VALUES (?, ?, 1) RETURNING idProduit", (nomProduit[0], decrProduit[0]))
-    idp.append(cur.fetchone()[0])
-    cur.execute("INSERT INTO Produit (nom, description, estVendable) VALUES (?, ?, 1) RETURNING idProduit", (nomProduit[1], decrProduit[1]))
-    idp.append(cur.fetchone()[0])
-    cur.execute("INSERT INTO Produit (nom, description, estVendable) VALUES (?, ?, 1) RETURNING idProduit", (nomProduit[2], decrProduit[2]))
-    idp.append(cur.fetchone()[0])
-    cur.execute("INSERT INTO Produit (nom, description, estVendable) VALUES (?, ?, 1) RETURNING idProduit", (nomProduit[3], decrProduit[3]))
-    idp.append(cur.fetchone()[0])
-    db_conn.commit()
-    cur.execute("INSERT INTO Produit (nom, description, estVendable) VALUES (?, ?, 1) RETURNING idProduit", (nomProduit[2], decrProduit[2]))
-    idp.append(cur.fetchone()[0])
-    cur.execute("INSERT INTO Produit (nom, description, estVendable) VALUES (?, ?, 1) RETURNING idProduit", (nomProduit[3], decrProduit[3]))
-    idp.append(cur.fetchone()[0])
+    for produit in produits:
+        cur.execute("INSERT INTO Produit (nom, description, estVendable) VALUES (?, ?, 1) RETURNING idProduit", produit)
+        idp.append(cur.fetchone()[0])
+
     cur.close()
     return idp
     
