@@ -564,3 +564,61 @@ def test_mortalite_lapin(db_conn, setup_clapier, setup_ferme):
     assert nb_bebe_lapin_ferme2 == 5 # la moitié des bébés lapins sont morts
     assert nb_petit_lapin_ferme3 == (0,5) # la moitié des petits lapins sont morts car il n'y avait pas de bébés lapins
 
+def test_creation_bebe_lapin(db_conn, setup_clapier, setup_ferme):
+    # === Simuler le passage d'une nuit ===
+    # Création de nouveaux bébés lapins si il y a au moins un couple de lapins
+    # Modification des clapiers des 4 fermes pour simuler la création de nouveaux bébés lapins
+    
+    cur = db_conn.cursor()
+    # Le nombre de bébés lapins est augmenté 
+    cur.execute("""
+        UPDATE Clapier SET nb_bebe = 10, nb_adulte_f = 3, nb_adulte_m = 4, dernier_repas = ?, dernier_breuvage = ?, dernier_lavage = ?
+        WHERE proprietaire = ?;""",
+        (date.today(), date.today(), date.today(), setup_ferme[0]))
+
+    # Le  nombre de bébés lapins n'est pas augmenté car il n'y a pas de couple de lapins
+    cur.execute("""
+        UPDATE Clapier SET nb_bebe = 10, nb_adulte_f = 0, nb_adulte_m = 5, dernier_repas = ?, dernier_breuvage = ?, dernier_lavage = ?
+        WHERE proprietaire = ?;""",
+        (date.today(), date.today(), date.today(), setup_ferme[1]))
+    
+    # Le nombre de bébés lapins n'est pas augmenté car les conditions ne sont pas respectées
+    cur.execute("""
+        UPDATE Clapier SET nb_bebe = 10, nb_adulte_f = 3, nb_adulte_m = 4, dernier_repas = ?, dernier_breuvage = ?, dernier_lavage = ?
+        WHERE proprietaire = ?;""",
+        (date.today(), date.today(), date.today()-timedelta(days=1), setup_ferme[2]))   
+    
+    # si il y a au moins un couple de lapins et que toutes les conditions sont respectées : nourris, abreuvé, lavé, en bonne santé, alors des bébés lapins sont créés 
+    cur.execute("""
+        UPDATE Clapier SET nb_bebe = nb_bebe + MIN(nb_adulte_m, nb_adulte_f) 
+        WHERE nb_adulte_f > 0 AND nb_adulte_m > 0 AND dernier_repas = ? AND dernier_breuvage = ? AND dernier_lavage = ? AND proprietaire = ?;""",
+        (date.today(), date.today(), date.today(),setup_ferme[0],))
+    
+    # si il n'y a pas de couple de lapins, alors aucun bébé lapin n'est créé 
+    cur.execute("""
+        UPDATE Clapier SET nb_bebe = nb_bebe + MIN(nb_adulte_m, nb_adulte_f) 
+        WHERE nb_adulte_f > 0 AND nb_adulte_m > 0 AND dernier_repas = ? AND dernier_breuvage = ? AND dernier_lavage = ? AND proprietaire = ?;""",
+        (date.today(), date.today(), date.today(),setup_ferme[1],))
+    
+    # si il y a un couple de lapins mais que toutes les conditions ne sont pas respectées, alors aucun bébé lapin n'est créé
+    cur.execute("""
+        UPDATE Clapier SET nb_bebe = nb_bebe + MIN(nb_adulte_m, nb_adulte_f) 
+        WHERE nb_adulte_f > 0 AND nb_adulte_m > 0 AND dernier_repas = ? AND dernier_breuvage = ? AND dernier_lavage = ? AND proprietaire = ?;""",
+        (date.today(), date.today(), date.today(),setup_ferme[2],))
+
+    # Vérification des résultats après la nuit
+    cur.execute("SELECT nb_bebe FROM Clapier WHERE proprietaire = ?;", (setup_ferme[0],))
+    nb_bebe_lapin_ferme0 = cur.fetchone()[0]
+    
+    cur.execute("SELECT nb_bebe FROM Clapier WHERE proprietaire = ?;", (setup_ferme[1],))
+    nb_bebe_lapin_ferme1 = cur.fetchone()[0]
+
+    cur.execute("SELECT nb_bebe FROM Clapier WHERE proprietaire = ?;", (setup_ferme[2],))
+    nb_bebe_lapin_ferme2 = cur.fetchone()[0]
+
+    cur.close()
+    # Vérifications
+    assert nb_bebe_lapin_ferme0 == 13 # le nombre de bébés lapins est augmenté
+    assert nb_bebe_lapin_ferme1 == 10 # le nombre de bébés lapins n'est pas augmenté
+    assert nb_bebe_lapin_ferme2 == 10 # la moitié des bébés lapins sont morts
+    
