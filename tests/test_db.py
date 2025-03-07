@@ -229,7 +229,7 @@ def setup_Produit(db_conn, setup_db):
     for produit in produits:
         cur.execute("INSERT INTO Produit (nom, description, estVendable) VALUES (?, ?, 1) RETURNING idProduit", produit)
         idp.append(cur.fetchone()[0])
-    
+    cur.close()
     return idp
     
 @pytest.fixture
@@ -950,6 +950,54 @@ def test_mortalite_maladie_vache(db_conn, setup_ferme):
 
     cur.close()
     assert resultA==0
+
+    
+"""
+ajout_change
+"""
+"""tests transactions"""
+
+"""fonction qui permet d'avoir la moyenne du prix du produit 'prod' vendu à la coopérative"""
+def calcule_avg_prix(db_conn,setup_Commerce,prod):
+    cur = db_conn.cursor()
+    cur.execute("SELECT nom FROM Produit WHERE idProduit = ?;", (prod,))
+    nom_article = cur.fetchone()[0]
+    cur.execute("SELECT prixUnitaire,quantite FROM Commerce JOIN Produit ON idProduit=produit WHERE nom = ?;", (nom_article,))
+    avg_tab = cur.fetchall()
+    avg = 0
+    nb=0
+    for i in range(len(avg_tab)):
+        avg += avg_tab[i][0]*avg_tab[i][1]
+        nb += avg_tab[i][1]
+    return avg /nb
+
+"""
+ajout_change 
+"""
+"""fonction permettant de tester si l'utilisateur peut acheter un produit à la coopérative.
+ On a un cas où il ne peut pas acheter car le produit seul coûte trop cher, un où il peut acheter car le prix du produit passe, 
+ un où il peut acheter car la moyenne des prix passe, et un où la moyenne des prix du produit est trop cher """
+def test_possibiliter_achat(db_conn, setup_ferme, setup_Produit,setup_Commerce):
+    cur= db_conn.cursor()
+    avg_ventes_non_suffisant = calcule_avg_prix(db_conn,setup_Commerce,setup_Produit[1])
+    cur.execute("SELECT ecus FROM Ferme WHERE idFerme = ?;", (setup_ferme[1],))
+    argent_acheteur_non_suffisant = cur.fetchone()[0]
+
+    avg_ventes_non_suffisant_moyenne = calcule_avg_prix(db_conn,setup_Commerce,setup_Produit[0])
+    cur.execute("SELECT ecus FROM Ferme WHERE idFerme = ?;", (setup_ferme[0],))
+    argent_acheteur_non_suffisant_moyenne = cur.fetchone()[0]
+
+
+    avg_ventes_suffisant_moyenne = calcule_avg_prix(db_conn,setup_Commerce,setup_Produit[2])
+    cur.execute("SELECT ecus FROM Ferme WHERE idFerme = ?;", (setup_ferme[0],))
+    argent_acheteur_suffisant_moyenne = cur.fetchone()[0]
+
+    avg_ventes_suffisant = calcule_avg_prix(db_conn,setup_Commerce,setup_Produit[3])
+    cur.execute("SELECT ecus FROM Ferme WHERE idFerme = ?;", (setup_ferme[0],))
+    argent_acheteur_suffisant = cur.fetchone()[0]
+
+    cur.close()
+    assert avg_ventes_non_suffisant >= argent_acheteur_non_suffisant and avg_ventes_non_suffisant_moyenne >= argent_acheteur_non_suffisant_moyenne and avg_ventes_suffisant_moyenne <= argent_acheteur_suffisant_moyenne and avg_ventes_suffisant <= argent_acheteur_suffisant
 
 # Futur test à venir...
 
