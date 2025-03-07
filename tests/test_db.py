@@ -1401,3 +1401,29 @@ def test_creation_bebe_lapin(db_conn, setup_clapier, setup_ferme):
     assert nb_bebe_lapin_ferme1 == 10 # le nombre de bébés lapins n'est pas augmenté
     assert nb_bebe_lapin_ferme2 == 10 # la moitié des bébés lapins sont morts
     
+def test_abreuver_nourrir(db_conn, setup_ferme, setup_clapier):
+
+    # === Simuler le passage d'une nuit ===
+    cur = db_conn.cursor()
+
+    # === Mettre à jour les dates de dernier repas et dernier breuvage, on passe les dates au date d'hier pour ===
+    cur.execute("""
+        UPDATE Clapier SET dernier_repas = ?, dernier_breuvage = ? WHERE proprietaire = ? AND dernier_repas = ? AND dernier_breuvage = ?;
+    """, (date.today()-timedelta(days=1), date.today()-timedelta(days=1), setup_ferme[0], date.today(), date.today()))
+    # après on select les dates de dernier repas et dernier breuvage pour chaque clapier
+    cur.execute("SELECT dernier_repas, dernier_breuvage FROM Clapier  WHERE proprietaire = ?;",(setup_ferme[0],))
+    poule_non_nourri_non_abreuve = cur.fetchone()
+    # Regarder si clapier nourri et abreuvé après une nuit devient non nourri et non abreuvé
+    assert poule_non_nourri_non_abreuve ==(date.today().strftime('%Y-%m-%d'),((date.today()- timedelta(days=1)).strftime('%Y-%m-%d')))
+
+def test_laver(db_conn, setup_ferme, setup_clapier):
+    cur = db_conn.cursor()
+    # === Mettre à jour les dates du dernier lavage, on passe les dates au date d'hier pour ===
+    cur.execute("""
+            UPDATE Clapier SET dernier_lavage = ? WHERE proprietaire = ? AND dernier_lavage = ?;
+        """, ( (date.today()-timedelta(days=1)),setup_ferme[0], date.today()))
+    # après on selecte les dates du dernier lavage pour chaque clapier
+    cur.execute("SELECT dernier_lavage FROM Clapier  WHERE proprietaire = ?;", (setup_ferme[0],))
+    poule_non_laver = cur.fetchone()
+    # Regarder si clapier n'est pas lavé
+    assert poule_non_laver == ( ((date.today() - timedelta(days=1)).strftime('%Y-%m-%d'),))
