@@ -937,7 +937,7 @@ def test_poids_superieur_invalide_poule(db_conn, setup_poule):
 
 def test_lait_vache(db_conn, setup_ferme, setup_vache):
     cur = db_conn.cursor()
-    cur.execute("UPDATE Vache SET age = age + 10, poids = poids + 80;")
+    #cur.execute("UPDATE Vache SET age = age + 10, poids = poids + 80;")
    
     #dans le cas ou elle a était traite dans la journée
     cur.execute("""
@@ -951,7 +951,7 @@ def test_lait_vache(db_conn, setup_ferme, setup_vache):
 
     cur.execute("""
     SELECT qt_lait FROM Vache WHERE proprietaire=?;
-    """, (setup_ferme[0],))
+    """, (setup_ferme[1],))
     resultA = cur.fetchone()[0]
 
     cur.close()
