@@ -30,7 +30,7 @@ CREATE TABLE Compte (
 CREATE TABLE Poule (
     idPoule SERIAL PRIMARY KEY,
     proprietaire INTEGER REFERENCES Ferme(idFerme),
-    poids DECIMAL(5,2) DEFAULT 0.05 CHECK (poids >= 0) NOT NULL,
+    poids DECIMAL(5,2) DEFAULT 0.05 CHECK ((poids >= 0) AND (poids <= 3.5)) NOT NULL,
     age INTEGER DEFAULT 0 CHECK (age >= 0),
     sexe CHAR(1) CHECK (sexe IN ('M', 'F', 'U')) NOT NULL,   -- U pour Unknown
     nb_oeuf INTEGER DEFAULT 0 CHECK (nb_oeuf >= 0) NOT NULL,
@@ -46,16 +46,16 @@ CREATE TABLE Clapier (
     dernier_breuvage DATE,
     dernier_lavage DATE,
     malade_depuis DATE,
-    nb_bebe INTEGER DEFAULT 8 CHECK (nb_bebe >= 0) NOT NULL,
-    nb_petit INTEGER DEFAULT 0 CHECK (nb_petit >= 0) NOT NULL,
-    nb_gros INTEGER DEFAULT 0 CHECK (nb_gros >= 0) NOT NULL,
-    nb_adulte_m INTEGER DEFAULT 0 CHECK (nb_adulte_m >= 0) NOT NULL,
-    nb_adulte_f INTEGER DEFAULT 0 CHECK (nb_adulte_f >= 0) NOT NULL
+    nb_bebe INTEGER DEFAULT 8 CHECK (nb_bebe >= 0 AND nb_bebe + nb_petit + nb_gros <= 50) NOT NULL,
+    nb_petit INTEGER DEFAULT 0 CHECK (nb_petit >= 0 AND nb_bebe + nb_petit + nb_gros <= 50) NOT NULL,
+    nb_gros INTEGER DEFAULT 0 CHECK (nb_gros >= 0 AND nb_bebe + nb_petit + nb_gros <= 50) NOT NULL,
+    nb_adulte_m INTEGER DEFAULT 0 CHECK (nb_adulte_m >= 0 AND nb_adulte_m + nb_adulte_f <= 50) NOT NULL,
+    nb_adulte_f INTEGER DEFAULT 0 CHECK (nb_adulte_f >= 0 AND nb_adulte_m + nb_adulte_f <= 50) NOT NULL
 );
 
 CREATE TABLE Vache (
     proprietaire INTEGER PRIMARY KEY REFERENCES Ferme(idFerme),
-    poids INTEGER DEFAULT 1 CHECK (poids >= 0) NOT NULL,
+    poids INTEGER DEFAULT 1 CHECK ((poids >= 0) AND (poids<=750)) NOT NULL,
     age INTEGER DEFAULT 0 CHECK (age >= 0) NOT NULL,
     qt_lait INTEGER DEFAULT 0 CHECK (qt_lait >= 0) NOT NULL,
     dernier_repas DATE,
