@@ -1,5 +1,4 @@
 # TinyFarm - Base de donnée - 485L
-
 ## Membre de l'équipe
 - BERNINI Daniele
 - BLONDEAU Nathan
@@ -19,7 +18,39 @@
 - SAADANA Adam
 - SOARES--QUEBRIAC Kélig (Chef d'équipe)
 - VIRENQUE Luka
+  
+# REST Api
+<u>REST Api endpoint :</u>
+- Goulven
+- Daniele
+- Adam
+- Maxime
 
+<u>Startup :</u>
+- Gwénolé
+
+<u>Entity :</u>
+- Isaac
+- Rémi
+- Solène
+
+<u>Repo :</u>
+- Tony
+- Nathan
+- Noé
+
+<u>Controller :</u>
+- Luka
+- Takidine
+- Joyce
+
+<u>Service :</u>
+- Kélig
+- Sam
+- Amaël
+
+
+# Schéma de base de donnée (Pour le vendredi 28)
 ## Schéma
 ![Schema de la base de donnée](./assets/schema_db.png)
 
