@@ -10,6 +10,11 @@ export MY_GITHUB_PAT="votrePAT"
 
 Une fois qu'il a été complété, il faut faire un `source .env` avant d'exécuter une application qui aurait besoin de ces variables d'environnement
 
+# Les URLs importantes
+Pour créer/voir vos app : [https://github.com/settings/apps](https://github.com/settings/apps)
+
+Pour créer/voir vos jetons : [https://github.com/settings/tokens](https://github.com/settings/tokens)
+
 # Exécuter l'appli
 
 Pour compiler/exécuter en développement :
