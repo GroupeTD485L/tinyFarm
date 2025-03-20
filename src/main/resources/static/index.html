@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login GitHub</title>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+
+<body class="p-10 flex flex-col items-center">
+
+    <div x-data="githubLogin()" x-init="checkLoginStatus()" class="text-center">
+            <button @click="login()" class="px-4 py-2 bg-blue-600 text-white rounded">
+                Login with GitHub
+            </button>
+            <button @click="logout()" class="px-4 py-2 bg-blue-600 text-white rounded">
+                Logout
+            </button>
+
+            <div class="mt-4">
+                <p class="mt-2 text-lg font-bold" x-text="user.name"></p>
+                <p class="mt-2 text-lg font-bold" x-text="admin.message"></p>
+            </div>
+
+    </div>
+
+    <script>
+        fetch('/farm').then(response => console.log("not logged in:", response.status))
+        function githubLogin() {
+            return {
+                loggedIn: false,
+                user: { name: ""},
+                admin: { message: "not admin" },
+                async login() {
+                    window.location.href = window.location.origin+'/oauth2/authorization/github';
+                },
+                async checkLoginStatus() {
+                    try {
+                        let res = await fetch('/user', { credentials: "include" });
+                        if (res.ok) {
+                            let data = await res.json();
+                            console.log("User Data:", data);
+                            this.user.name = data.username;
+                            this.loggedIn = true;
+                            fetch('/farm').then(response => response.json()).then(data => console.log("logged in:", data))
+                        } else {
+                            this.loggedIn = false;
+                            this.user = { name: "" };
+                        }
+                    } catch (err) {
+                        console.error('Not logged in', err);
+                        this.loggedIn = false;
+                    }
+                    try {
+                        let res = await fetch('/admin');
+                        if (res.ok) {
+                            let data = await res.json();
+                            console.log("admin Data:", data);
+                            console.log("message Data:", data.message);
+                            this.admin = { message: data.message };
+                            console.log("admin:", this.admin)
+                        }
+                    } catch (err) {
+                        console.error('Not admin:', err);
+                    }
+                },
+                async logout() {
+                    console.log("Logging out...");
+                    try {
+                        let res = await fetch('/logout', { method: "POST", credentials: "include", redirect: "manual" });
+                        console.log("Logout response:", res);
+                        if (res.ok || res.status === 0) { // Status= 0 when spring redirects to /login?logout
+                            this.loggedIn = false;
+                            this.user = { name: "" };
+                            this.admin = { message: "not admin" };
+                            window.location.href = "/"; // Reload page after logout
+                        }
+                    } catch (err) {
+                        console.error("Error logging out:", err);
+                    }
+                },
+            };
+        }
+
+    </script>
+</body>
+
+</html>

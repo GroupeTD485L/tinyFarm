@@ -1,0 +1,52 @@
+server:
+  port: 8080
+  address: 0.0.0.0
+  forward-headers-strategy: native
+  http2:
+    enabled: true
+
+# logging:
+#   level:
+#     org.springframework.web: DEBUG
+#     org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+
+
+spring:
+#  profiles:
+#    active: dev
+  # mvc:
+  #   log-request-details: true
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: ${SPRING_SECURITY_OAUTH2_CLIENT_ID}
+            client-secret: ${SPRING_SECURITY_OAUTH2_CLIENT_SECRET}
+            scope: read:user, user:email
+            redirect-uri: "${BASE_URL}/login/oauth2/code/github"
+        provider:
+          github:
+            authorization-uri: https://github.com/login/oauth/authorize
+            token-uri: https://github.com/login/oauth/access_token
+            user-info-uri: https://api.github.com/user
+  datasource:
+    url: jdbc:h2:mem:testdb  # Base en mémoire (réinitialisée à chaque démarrage)
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update   # ou `create-drop` pour supprimer la base après exécution
+    show-sql: true       # Afficher les requêtes SQL dans la console
+    properties:
+      hibernate:
+        format_sql: true  # Mieux voir les requêtes SQL
+  h2:
+  console:
+    enabled: true
+    path: /h2-console  # URL de la console H2
+
+
