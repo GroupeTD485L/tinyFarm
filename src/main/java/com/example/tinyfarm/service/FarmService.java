@@ -3,8 +3,8 @@ package com.example.tinyfarm.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.authgithub.entity.Farm;
-import com.example.authgithub.repository.FarmRepository;
+import  com.example.tinyfarm.entity.Farm;
+import  com.example.tinyfarm.repository.FarmRepository;
 
 import java.util.Optional;
 

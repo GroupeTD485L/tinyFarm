@@ -15,8 +15,8 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
-import com.example.authgithub.controller.TestAuthController;
-import com.example.authgithub.service.CustomOAuth2UserService;
+import  com.example.tinyfarm.controller.TestAuthController;
+import  com.example.tinyfarm.service.CustomOAuth2UserService;
 
 import java.util.Optional;
 import jakarta.servlet.http.HttpServletResponse;

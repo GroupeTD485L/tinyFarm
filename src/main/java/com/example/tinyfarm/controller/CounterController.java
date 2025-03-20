@@ -4,7 +4,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.authgithub.service.UserService;
+import  com.example.tinyfarm.service.UserService;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 

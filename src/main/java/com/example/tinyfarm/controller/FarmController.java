@@ -3,8 +3,8 @@ package com.example.tinyfarm.controller;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.authgithub.entity.Farm;
-import com.example.authgithub.service.FarmService;
+import  com.example.tinyfarm.entity.Farm;
+import  com.example.tinyfarm.service.FarmService;
 
 @RestController
 @RequestMapping("/farm")
