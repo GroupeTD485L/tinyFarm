@@ -20,35 +20,15 @@
 - VIRENQUE Luka
   
 # REST Api
-<u>REST Api endpoint :</u>
-- Goulven
-- Daniele
-- Adam
-- Maxime
 
-<u>Startup :</u>
-- Gwénolé
-
-<u>Entity :</u>
-- Isaac
-- Rémi
-- Solène
-
-<u>Repo :</u>
-- Tony
-- Nathan
-- Noé
-
-<u>Controller :</u>
-- Luka
-- Takidine
-- Joyce
-
-<u>Service :</u>
-- Kélig
-- Sam
-- Amaël
-
+| Nom de la tache | Qui s'en charge |
+|-|-|
+|REST Api endpoint| Goulven, Daniele, Adam, Maxime|
+|Startup|Gwénolé|
+|Entity|Isaac, Rémi, Solène|
+|Repository|Tony, Nathan, Noé|
+|Controller|Luka, Takidine, Joyce|
+|Service|Kélig, Sam, Amaël|
 
 # Schéma de base de donnée (Pour le vendredi 28)
 ## Schéma
