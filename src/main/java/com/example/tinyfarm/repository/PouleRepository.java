@@ -1,8 +1,11 @@
 package com.example.tinyfarm.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import  com.example.tinyfarm.entity.Poule;
+import  com.example.chicken.entity.Ferme;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface PouleRepository extends JpaRepository<Poule, String> {
     Page<Poule> findAll(Pageable pageable);  // Ajout de la pagination
