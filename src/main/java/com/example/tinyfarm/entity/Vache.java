@@ -22,21 +22,22 @@ public class Vache {
     private LocalDateTime dernierLavage; 
     private LocalDateTime maladeDepuis;
 
+    // la vache connait son propriétaire
     @OneToOne
     @JoinColumn(name = "proprietaire", nullable = false)
     @JsonBackReference
-    private String proprietaire; // le propriétaire de la vache
+    private Ferme proprietaire; // le propriétaire de la vache
 
     // Constructeurs
-    public Vache() {}
-
-    public Vache(LocalDateTime dernierRepas, LocalDateTime dernierBreuvage, LocalDateTime dernierLavage) {
+    public Vache() {
         this.poids = 1; // Le poids est initialisé à 1 kg
         this.age = 0; // L'âge est initialisé à 0
         this.qt_lait = 0; // La quantité de lait est initialisée à 0
-        this.dernierRepas = dernierRepas;
-        this.dernierBreuvage = dernierBreuvage;
-        this.dernierLavage = dernierLavage;
+        
+        // Nous considérons que lors de la création de la vache, elle n'est pas nourrie, abreuvée et lavée
+        this.dernierRepas = LocalDateTime.now().minusDays(1); // Initialisé à hier 
+        this.dernierBreuvage = LocalDateTime.now().minusDays(1); // Initialisé à hier
+        this.dernierLavage = LocalDateTime.now().minusDays(1); // Initialisé à hier
         this.maladeDepuis = null; // La vache n'est pas malade
     }
      // Getters et setters si nécessaire (ou utiliser @Data avec Lombok)
