@@ -13,11 +13,11 @@ public class Remise{
     private Long idRemise;
 
     @OneToOne
-    @JoinColumn(name="proprietaire") //le nom de l'attribut dans la table Remise
+    @JoinColumn(name="proprietaire", nullable = false) //le nom de l'attribut dans la table Remise
     private Ferme idFerme;
 
     @ManyToOne
-    @JoinColumn(name="type")
+    @JoinColumn(name="type", nullable = false)
     private Produit idProduit;
 
     private int quantite;

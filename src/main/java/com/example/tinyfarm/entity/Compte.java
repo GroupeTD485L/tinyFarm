@@ -13,7 +13,7 @@ public class Compte{
     private Long idCompte;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="idFerme") //le nom de l'attribut dans la table compte
+    @JoinColumn(name="idFerme", nullable = false) //le nom de l'attribut dans la table compte
     private Ferme idFerme;
 
     private String pseudo;
