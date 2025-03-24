@@ -17,22 +17,22 @@ public class Ferme{
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // Auto-incrémentation de l'ID
     private Long idFerme;
 
-    @OneToOne(mappedBy = "idFerme", nullable = false) // the value of mappedBy is the name of the association-mapping attribute on the owning side
+    @OneToOne(mappedBy = "idFerme") // the value of mappedBy is the name of the association-mapping attribute on the owning side
     private Compte compte; 
 
-    @OneToOne(mappedBy = "proprietaire", nullable = false)
+    @OneToOne(mappedBy = "proprietaire")
     private Remise remise;
 
-    @OneToOne(mappedBy = "idFerme", nullable = false)
+    @OneToOne(mappedBy = "idFerme")
     private Classement classement;
 
-    @OneToMany(mappedBy = "proprietaire", nullable = false)
+    @OneToMany(mappedBy = "proprietaire")
     private List<Poule> poules;
 
-    @OneToOne(mappedBy = "proprietaire", nullable = false)
+    @OneToOne(mappedBy = "proprietaire")
     private Vache vache;
 
-    @OneToOne(mappedBy = "proprietaire", nullable = false)
+    @OneToOne(mappedBy = "proprietaire")
     private Clapier clapier;
 
     private String nom;
