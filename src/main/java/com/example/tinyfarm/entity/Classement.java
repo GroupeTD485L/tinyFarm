@@ -9,7 +9,7 @@ import lombok.Data;
 public class Classement{
     @Id
     @OneToOne
-    @JoinColumn(name=idFerme, nullable = false)
+    @JoinColumn(name="idFerme", nullable = false)
     private Ferme idFerme;
 
     private float score;
