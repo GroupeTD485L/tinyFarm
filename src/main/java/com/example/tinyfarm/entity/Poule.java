@@ -2,8 +2,6 @@ package com.example.tinyfarm.entity;
 
 import java.time.LocalDateTime; // représente une date avec heure sans fuseau horaire  
 
-import com.fasterxml.jackson.annotation.JsonBackReference; // Importation de la classe JsonBackReference Cette annotation est utilisée pour gérer les relations bidirectionnelles dans la sérialisation JSON afin d'éviter les boucles infinies
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -34,7 +32,6 @@ public class Poule {
     // la poule connait son propriétaire
     @ManyToOne
     @JoinColumn(name = "proprietaire", nullable = false)
-    @JsonBackReference
     private Ferme proprietaire; // le propriétaire des poules
 
     // Constructeurs

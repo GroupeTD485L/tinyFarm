@@ -1,8 +1,6 @@
 package com.example.tinyfarm.entity;
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jakarta.persistence.Entity; // représente une date avec heure sans fuseau horaire
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
@@ -28,7 +26,6 @@ public class Clapier {
     // le clapier connait son propriétaire
     @OneToOne
     @JoinColumn(name = "proprietaire", nullable = false)
-    @JsonBackReference
     private Ferme proprietaire; // le propriétaire du clapier
  
     // Constructeurs
