@@ -14,7 +14,7 @@ public class Remise{
 
     @OneToOne
     @JoinColumn(name="proprietaire", nullable = false) //le nom de l'attribut dans la table Remise
-    private Ferme idFerme;
+    private Ferme proprietaire;
 
     @ManyToOne
     @JoinColumn(name="type", nullable = false)
