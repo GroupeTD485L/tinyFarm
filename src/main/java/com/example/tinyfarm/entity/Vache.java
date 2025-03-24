@@ -29,7 +29,6 @@ public class Vache {
     private Ferme proprietaire; // le propriétaire de la vache
 
     // Constructeurs
-    public Vache() {}
     public Vache() {
         this.poids = 1; // Le poids est initialisé à 1 kg
         this.age = 0; // L'âge est initialisé à 0
