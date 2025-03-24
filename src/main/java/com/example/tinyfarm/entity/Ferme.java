@@ -49,9 +49,9 @@ public class Ferme{
         Clapier clapier = new Clapier();
         Vache vache = new Vache();
         List<Poule> poules;
-        poules.add(new Poule(idFerme, 'M')); //ajout des poules a la ferme
-        poules.add(new Poule(idFerme, 'F'));
-        poules.add(new Poule(idFerme, 'F'));
+        poules.add(new Poule('M')); //ajout des poules a la ferme
+        poules.add(new Poule('F'));
+        poules.add(new Poule('F'));
         Remise remise = new Remise();
         Classement classement = new Classement();
         int achatRestant = 12;
