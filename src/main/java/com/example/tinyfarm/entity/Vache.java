@@ -2,16 +2,16 @@ package com.example.tinyfarm.entity;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jakarta.persistence.Entity; // représente une date avec heure sans fuseau horaire
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 import lombok.Data; // Importation de la classe Data de Lombok qui génère automatiquement les méthodes equals, hashCode, toString, getters et setters
+
 @Entity
 @Table(name = "vache")
+@Data
 public class Vache {
     private double poids; // Le poids de la vache
     private int age; // L'âge de la vache
@@ -24,7 +24,6 @@ public class Vache {
     // la vache connait son propriétaire
     @OneToOne
     @JoinColumn(name = "proprietaire", nullable = false)
-    @JsonBackReference
     private Ferme proprietaire; // le propriétaire de la vache
 
     // Constructeurs
@@ -39,5 +38,4 @@ public class Vache {
         this.dernierLavage = LocalDateTime.now().minusDays(1); // Initialisé à hier
         this.maladeDepuis = null; // La vache n'est pas malade
     }
-     // Getters et setters si nécessaire (ou utiliser @Data avec Lombok)
 }
