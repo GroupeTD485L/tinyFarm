@@ -5,8 +5,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "transaction")
-public class Transaction{
+@Table(name = "commerce")
+public class Commerce{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idTransac;
@@ -27,7 +27,10 @@ public class Transaction{
     private float prixUnitaire;
 	private LocalDateTime dateAchat;
 
-    public Transaction(int quantite,float prixUnitaire) {
+    public Commerce(){
+    }
+    
+    public Commerce(int quantite,float prixUnitaire) {
         this.quantite= quantite;
         this.prixUnitaire = prixUnitaire;
         this.dateAchat=LocalDateTime.now();
