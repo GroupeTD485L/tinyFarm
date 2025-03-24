@@ -1,15 +1,14 @@
 package com.example.tinyfarm.entity;
-import java.time.LocalDateTime;
+import java.time.LocalDateTime; // représente une date avec heure sans fuseau horaire
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import jakarta.persistence.Entity; // représente une date avec heure sans fuseau horaire
+import jakarta.persistence.Entity; 
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
-// pas utile pour le moment en cas de besoin on l'ajoutera il faudra alors ajouter la dépendance dans le pom.xml
-//import lombok.Data; // Importation de la classe Data de Lombok qui génère automatiquement les méthodes equals, hashCode, toString, getters et setters
+import lombok.Data; // Importation de la classe Data de Lombok qui génère automatiquement les méthodes equals, hashCode, toString, getters et setters
 @Entity
 @Table(name = "clapier")
 public class Clapier {

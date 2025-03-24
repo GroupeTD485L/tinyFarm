@@ -12,9 +12,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-// pas utile pour le moment en cas de besoin on l'ajoutera il faudra alors ajouter la dépendance dans le pom.xml
-//import lombok.Data; // Importation de la classe Data de Lombok qui génère automatiquement les méthodes equals, hashCode, toString, getters et setters
-
 @Entity
 @Table(name = "poule")
 public class Poule {
