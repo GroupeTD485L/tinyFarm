@@ -1,6 +1,7 @@
 package com.example.tinyfarm.entity;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -48,7 +49,7 @@ public class Ferme{
         int ecus = 1500;
         Clapier clapier = new Clapier();
         Vache vache = new Vache();
-        List<Poule> poules;
+        List<Poule> poules = new ArrayList<Poule>();
         poules.add(new Poule('M')); //ajout des poules a la ferme
         poules.add(new Poule('F'));
         poules.add(new Poule('F'));
