@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import jakarta.persistence.Entity; // représente une date avec heure sans fuseau horaire
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import lombok.Data; // Importation de la classe Data de Lombok qui génère automatiquement les méthodes equals, hashCode, toString, getters et setters
@@ -24,6 +25,7 @@ public class Clapier {
     private LocalDateTime maladeDepuis;
 
     // le clapier connait son propriétaire
+    @Id
     @OneToOne
     @JoinColumn(name = "proprietaire", nullable = false)
     private Ferme proprietaire; // le propriétaire du clapier
