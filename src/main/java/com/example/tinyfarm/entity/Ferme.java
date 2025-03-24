@@ -1,19 +1,17 @@
 package com.example.tinyfarm.entity;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import jakarta.persistence.Entity; // représente une date avec heure sans fuseau horaire
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.mappedBy;
+import jakarta.persistence.*;
+import lombok.Data;
 
 
 @Entity
 @Table(name = "ferme")
+@Data 
 public class Ferme{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // Auto-incrémentation de l'ID
@@ -37,10 +35,6 @@ public class Ferme{
     @OneToOne(mappedBy = "proprietaire")
     private Clapier clapier;
 
-    @OneToMany(mappedBy = "idVendeur") //je sais pas du tout comment faire pour qu'il y ait les deux a la fois
-    @OneToMany(mappedBy = "idAcheteur")
-    private Transaction transaction;
-
     private String nom;
     private int ecus;
     private LocalDateTime enHibernation;
@@ -51,15 +45,15 @@ public class Ferme{
 
     public Ferme(String nom){
         this.nom = nom;
-        ecus = 1500;
-        clapier = new Clapier();
-        vache = new Vache();
-        poules = new List<Poule>();
-        poules.add(new Poule(idFerme, 'M', null, null, null)); //ajout des poules a la ferme
-        poules.add(new Poule(idFerme, 'F', null, null, null));
-        poules.add(new Poule(idFerme, 'F', null, null, null));
-        remise = new Remise();
-        classement = new Classement();
-        achatRestant = 12;
+        int ecus = 1500;
+        Clapier clapier = new Clapier();
+        Vache vache = new Vache();
+        List<Poule> poules;
+        poules.add(new Poule(idFerme, 'M')); //ajout des poules a la ferme
+        poules.add(new Poule(idFerme, 'F'));
+        poules.add(new Poule(idFerme, 'F'));
+        Remise remise = new Remise();
+        Classement classement = new Classement();
+        int achatRestant = 12;
     }
 }

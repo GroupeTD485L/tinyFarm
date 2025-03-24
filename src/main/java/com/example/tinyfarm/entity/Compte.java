@@ -1,21 +1,19 @@
 package com.example.tinyfarm.entity;
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Entity; // représente une date avec heure sans fuseau horaire
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
 @Table(name = "compte")
+@Data
 public class Compte{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // Auto-incrémentation de l'ID
     private Long idCompte;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name=idFerme) //le nom de l'attribut dans la table compte
+    @JoinColumn(name="idFerme") //le nom de l'attribut dans la table compte
     private Ferme idFerme;
 
     private String pseudo;
