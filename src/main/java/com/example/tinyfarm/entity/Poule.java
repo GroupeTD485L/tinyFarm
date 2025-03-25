@@ -35,12 +35,14 @@ public class Poule {
     private Ferme proprietaire; // le propriétaire des poules
 
     // Constructeurs
+
     public Poule() {}
 
-    public Poule(char sexe) {
-        this.poids = 0.05; // Le poids est initialisé à 0.05
-        this.age = 0; // L'âge est initialisé à 0
-        this.sexe = sexe;
+
+    public Poule(char sexe, double poids, int age) {
+        this.poids = poids; // Le poids est initialisé à 0.05 pour le poussin et 2.5 pour la poule et le coq
+        this.age = age; // L'âge est initialisé à 0 pour le poussin et 5 pour la poule et le coq
+        this.sexe = sexe; // Le sexe est initialisé à 'U' pour le poussin (Unknown), 'F' pour la poule et 'M' pour le coq et 
         this.nbOeuf = 0; // Le nombre d'oeufs est initialisé à 0
 
         // Nous considérons que lors de la création de la poule, elle n'est pas nourrie, abreuvée et lavée
