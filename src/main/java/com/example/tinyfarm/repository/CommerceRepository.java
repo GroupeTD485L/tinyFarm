@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 
-public interface CommerceRepository extends JpaRepository<Commerce, String> {
+public interface CommerceRepository extends JpaRepository<Commerce, Long> {
     Page<Commerce> findAll(Pageable pageable);  // Ajout de la pagination
     Page<Commerce> findAllByVendeur(Ferme ferme, Pageable pageable);
 }
