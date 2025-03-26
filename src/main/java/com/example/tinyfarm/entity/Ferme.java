@@ -24,7 +24,7 @@ public class Ferme{
     @OneToOne(mappedBy = "proprietaire")
     private Remise remise;
 
-    @OneToOne(mappedBy = "idFerme")
+    @OneToOne(mappedBy = "ferme")
     private Classement classement;
 
     @OneToMany(mappedBy = "proprietaire")

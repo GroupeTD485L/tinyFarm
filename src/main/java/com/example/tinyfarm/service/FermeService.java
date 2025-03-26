@@ -26,7 +26,7 @@ public class FermeService {
         }
 
         // Sinon, créer une nouvelle ferme
-        Ferme newFerme = new Ferme(username, "My Farm", "Unknown Location");
+        Ferme newFerme = new Ferme("My Farm");
         return fermeRepository.save(newFerme);
     }
 }

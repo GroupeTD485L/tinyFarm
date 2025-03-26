@@ -9,5 +9,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface PouleRepository extends JpaRepository<Poule, String> {
     Page<Poule> findAll(Pageable pageable);  // Ajout de la pagination
-    Page<Poule> findAllByFarm(Ferme ferme, Pageable pageable);
+    Page<Poule> findAllByProprietaire(Ferme ferme, Pageable pageable);
 }

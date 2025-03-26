@@ -10,7 +10,7 @@ import  com.example.tinyfarm.service.FermeService;
 @RequestMapping("/ferme")
 public class FermeController {
 
-    private final FermeService farmService;
+    private final FermeService fermeService;
 
     public FermeController(FermeService fermeService) {
         this.fermeService = fermeService;

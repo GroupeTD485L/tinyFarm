@@ -9,6 +9,6 @@ import org.springframework.data.domain.Pageable;
 
 
 public interface ClapierRepository extends JpaRepository<Clapier, String> {
-    Page<Clapier> findAll(Pageable pageable);  // Ajout de la pagination
-    Page<Clapier> findAllByFarm(Ferme ferme, Pageable pageable);
+    // Page<Clapier> findAll(Pageable pageable);  // Ajout de la pagination
+    // Page<Clapier> findAllByFarm(Ferme ferme, Pageable pageable);
 }
