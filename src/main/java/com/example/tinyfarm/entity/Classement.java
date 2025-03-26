@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Entity
 @Table(name = "classement")
+@Data
 public class Classement{
     @Id
     private Long idClassement;
