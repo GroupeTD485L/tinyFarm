@@ -50,9 +50,9 @@ public class Ferme{
         Clapier clapier = new Clapier();
         Vache vache = new Vache();
         List<Poule> poules = new ArrayList<Poule>();
-        poules.add(new Poule('M')); //ajout des poules a la ferme
-        poules.add(new Poule('F'));
-        poules.add(new Poule('F'));
+        poules.add(new Poule('M', 2.5, 5)); //ajout des poules a la ferme
+        poules.add(new Poule('F', 2.5, 5));
+        poules.add(new Poule('F', 2.5, 5));
         Remise remise = new Remise();
         Classement classement = new Classement();
         int achatRestant = 12;
