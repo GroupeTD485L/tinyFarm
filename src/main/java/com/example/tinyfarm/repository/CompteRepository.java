@@ -7,8 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Optional;
 
 public interface CompteRepository extends JpaRepository<Compte, Long> {
     // Page<Compte> findAll(Pageable pageable);  // Ajout de la pagination
     // Page<Compte> findAllByFarm(Ferme ferme, Pageable pageable);
+    Optional<Compte> findByPseudo(String pseudo);
 }
