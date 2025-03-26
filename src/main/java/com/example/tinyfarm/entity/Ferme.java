@@ -46,15 +46,15 @@ public class Ferme{
 
     public Ferme(String nom){
         this.nom = nom;
-        int ecus = 1500;
-        Clapier clapier = new Clapier();
-        Vache vache = new Vache();
-        List<Poule> poules = new ArrayList<Poule>();
+        ecus = 1500;
+        clapier = new Clapier();
+        vache = new Vache();
+        poules = new ArrayList<Poule>();
         poules.add(new Poule('M', 2.5, 5)); //ajout des poules a la ferme
         poules.add(new Poule('F', 2.5, 5));
         poules.add(new Poule('F', 2.5, 5));
-        Remise remise = new Remise();
-        Classement classement = new Classement();
-        int achatRestant = 12;
+        remise = new Remise();
+        classement = new Classement();
+        achatRestant = 12;
     }
 }
