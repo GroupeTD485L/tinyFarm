@@ -22,7 +22,7 @@ public class Clapier {
 
     // le clapier connait son propriétaire
     @Id
-    long idClapier;
+    private long idClapier;
 
     @OneToOne
     @MapsId

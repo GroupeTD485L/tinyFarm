@@ -20,7 +20,7 @@ public class Vache {
 
     // la vache connait son propriétaire
     @Id
-    long idVache;
+    private long idVache;
 
     @OneToOne
     @MapsId
