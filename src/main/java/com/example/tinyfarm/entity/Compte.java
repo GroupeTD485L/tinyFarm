@@ -16,7 +16,9 @@ public class Compte{
     @JoinColumn(name="idFerme", nullable = false) //le nom de l'attribut dans la table compte
     private Ferme idFerme;
 
+    @Column(unique = true, nullable = false)
     private String pseudo;
+    
     private LocalDateTime derniereConnexion;
 
     public Compte(){}
