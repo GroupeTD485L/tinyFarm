@@ -37,7 +37,7 @@ public class Ferme{
     private Clapier clapier;
 
     private String nom;
-    private int ecus;
+    private float ecus;
     private LocalDateTime enHibernation;
     private int achatRestant;
     private LocalDateTime dernierAchat;
