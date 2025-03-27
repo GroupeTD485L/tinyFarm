@@ -104,17 +104,17 @@ public class ClapierService {
         
         if (clapier.getDernierRepas() != null && 
         clapier.getDernierRepas().isBefore(LocalDateTime.now().minusHours(24))) {
-        
-        Produit p =  produitRepository.findByNom("Graine");
-            
-                Remise remise = remiseRepository.findByIdProduitAndProprietaire(p,clapier.getProprietaire());
-                if (remise.getQuantite()>0 ){
-                    clapier.setDernierRepas(LocalDateTime.now());
-                    remise.setQuantite(remise.getQuantite()-1);
-                }
-                
-            
+            Optional<Produit> existp =  produitRepository.findByNom("Graine");
+            if (!existp.isPresent()) {
+                throw new IllegalArgumentException("Le produit n'existe pas");
             }
+            Produit p = existp.get();    
+            Remise remise = remiseRepository.findByIdProduitAndProprietaire(p,clapier.getProprietaire());
+            if (remise.getQuantite()>0 ){
+                clapier.setDernierRepas(LocalDateTime.now());
+                remise.setQuantite(remise.getQuantite()-1);
+            }
+        }
         return clapierRepository.save(clapier);
     }
 
@@ -125,21 +125,23 @@ public class ClapierService {
             return null;
         }
         Clapier clapier = optFerme.get().getClapier();
+        
         if (clapier == null) {
             return null;
         }
 
-
-        Produit p =  produitRepository.findByNom("Seau d'eau");
+        Optional<Produit> existp =  produitRepository.findByNom("Seau d'eau");
+        if (!existp.isPresent()) {
+            throw new IllegalArgumentException("Le produit n'existe pas");
+        }
+        Produit p = existp.get();
         
-                Remise remise = remiseRepository.findByIdProduitAndProprietaire(p,clapier.getProprietaire());
-                if (remise.getQuantite()>0 ){
-                    clapier.setDernierBreuvage(LocalDateTime.now());
-                    remise.setQuantite(remise.getQuantite()-1);
-                }
-                
-            
-    
+        Remise remise = remiseRepository.findByIdProduitAndProprietaire(p,clapier.getProprietaire());
+        if (remise.getQuantite()>0 ){
+            clapier.setDernierBreuvage(LocalDateTime.now());
+            remise.setQuantite(remise.getQuantite()-1);
+        }
+
         return clapierRepository.save(clapier);
     }
 
@@ -154,16 +156,20 @@ public class ClapierService {
             return null;
         }
 
-        Produit p =  produitRepository.findByNom("Seringue");
-                Remise remise = remiseRepository.findByIdProduitAndProprietaire(p,clapier.getProprietaire());
-                if (remise.getQuantite()>0 ){
-                    clapier.setMaladeDepuis(null);
-                    remise.setQuantite(remise.getQuantite()-1);
-                }
-                
+        Optional<Produit> existp =  produitRepository.findByNom("Seringue");
+        if (!existp.isPresent()) {
+            throw new IllegalArgumentException("Le produit n'existe pas");
+        }
+        Produit p = existp.get();
+        Remise remise = remiseRepository.findByIdProduitAndProprietaire(p,clapier.getProprietaire());
+        if (remise.getQuantite()>0 ){
+            clapier.setMaladeDepuis(null);
+            remise.setQuantite(remise.getQuantite()-1);
+        }
             
         return clapierRepository.save(clapier);
     }
+
     @Transactional
     public Clapier laverClapier(Long idFerme) {
         Optional<Ferme> optFerme = fermeRepository.findById(idFerme);
@@ -175,16 +181,18 @@ public class ClapierService {
             return null;
         }
 
-        Produit p =  produitRepository.findByNom("Savon");
+        Optional<Produit> existp =  produitRepository.findByNom("Savon");
+        if (!existp.isPresent()) {
+            throw new IllegalArgumentException("Le produit n'existe pas");
+        }
+        Produit p = existp.get();
             
-                Remise remise = remiseRepository.findByIdProduitAndProprietaire(p,clapier.getProprietaire());
-                if (remise.getQuantite()>0 ){
-                    clapier.setDernierLavage(LocalDateTime.now());
-                    remise.setQuantite(remise.getQuantite()-1);
-                }
+        Remise remise = remiseRepository.findByIdProduitAndProprietaire(p,clapier.getProprietaire());
+        if (remise.getQuantite()>0 ){
+            clapier.setDernierLavage(LocalDateTime.now());
+            remise.setQuantite(remise.getQuantite()-1);
+        }
                 
-            
-    
         return clapierRepository.save(clapier);
     }
 }

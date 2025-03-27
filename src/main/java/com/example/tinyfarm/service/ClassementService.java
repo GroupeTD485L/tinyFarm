@@ -50,22 +50,38 @@ public class ClassementService {
         long nbPointPoule = totalJoueur * 25;
         long nbPointLait = totalJoueur * 20;
 
-        Produit oeuf = produitRepository.findByNom("Oeuf");
+        Optional<Produit> existOeuf =  produitRepository.findByNom("Oeuf");
+        if (!existOeuf.isPresent()) {
+            throw new IllegalArgumentException("Le produit n'existe pas");
+        }
+        Produit oeuf = existOeuf.get();
         long totalVenteOeuf = commerceRepository.countByProduitAndAcheteurIsNotNull(oeuf);
         long totalVenteOeufJoueur = commerceRepository.countByProduitAndVendeurAndAcheteurIsNotNull(oeuf, ferme);
         float scoreOeuf = nbPointOeuf * (totalVenteOeufJoueur/(float)totalVenteOeuf);
 
-        Produit lapin = produitRepository.findByNom("Lapin");
+        Optional<Produit> existLapin =  produitRepository.findByNom("Lapin");
+        if (!existLapin.isPresent()) {
+            throw new IllegalArgumentException("Le produit n'existe pas");
+        }
+        Produit lapin = existLapin.get();
         long totalVenteLapin = commerceRepository.countByProduitAndAcheteurIsNotNull(lapin);
         long totalVenteLapinJoueur = commerceRepository.countByProduitAndVendeurAndAcheteurIsNotNull(lapin, ferme);
         float scoreLapin = nbPointLapin * (totalVenteLapinJoueur/(float)totalVenteLapin);
 
-        Produit poule = produitRepository.findByNom("Poule");
+        Optional<Produit> existPoule =  produitRepository.findByNom("Poule");
+        if (!existPoule.isPresent()) {
+            throw new IllegalArgumentException("Le produit n'existe pas");
+        }
+        Produit poule = existPoule.get();
         long totalVentePoule = commerceRepository.countByProduitAndAcheteurIsNotNull(poule);
         long totalVentePouleJoueur = commerceRepository.countByProduitAndVendeurAndAcheteurIsNotNull(poule, ferme);
         float scorePoule = nbPointPoule * (totalVentePouleJoueur/(float)totalVentePoule);
 
-        Produit lait = produitRepository.findByNom("Lait");
+        Optional<Produit> existLait =  produitRepository.findByNom("Lait");
+        if (!existLait.isPresent()) {
+            throw new IllegalArgumentException("Le produit n'existe pas");
+        }
+        Produit lait = existLait.get();
         long totalVenteLait = commerceRepository.countByProduitAndAcheteurIsNotNull(lait);
         long totalVenteLaitJoueur = commerceRepository.countByProduitAndVendeurAndAcheteurIsNotNull(lait, ferme);
         float scoreLait = nbPointLait * (totalVenteLaitJoueur/(float)totalVenteLait);

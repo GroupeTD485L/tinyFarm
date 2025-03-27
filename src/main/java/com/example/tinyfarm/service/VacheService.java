@@ -90,41 +90,40 @@ public class VacheService {
         Vache vache = optVache.get();
         if (vache.getDernierRepas() != null && 
         vache.getDernierRepas().isBefore(LocalDateTime.now().minusHours(24))) {
-
-        
         if (nourriture.equals("Herbe")) {
-        if (vache.getPoids()+5 <= 750){
-            vache.setPoids(vache.getPoids() + 5);
-            vache.setDernierRepas(LocalDateTime.now());
-        }
-        else if (vache.getPoids()<750 && vache.getPoids()+5 > 750 ){
-            vache.setPoids(750);
-            vache.setDernierRepas(LocalDateTime.now());
-        }
-        }
-        if (nourriture.equals("Paille")){
-
+            if (vache.getPoids()+5 <= 750){
+                vache.setPoids(vache.getPoids() + 5);
+                vache.setDernierRepas(LocalDateTime.now());
+            }
+            else if (vache.getPoids()<750 && vache.getPoids()+5 > 750 ){
+                vache.setPoids(750);
+                vache.setDernierRepas(LocalDateTime.now());
+            }
+            }
+            if (nourriture.equals("Paille")) {                
+                Optional<Produit> existp = produitRepository.findByNom("Paille");
+                if (!existp.isPresent()) {
+                    throw new IllegalArgumentException("Le produit n'existe pas");
+                }
+                Produit p = existp.get();
                 
-            Produit p =  produitRepository.findByNom("Paille");
-            
                 Remise remise = remiseRepository.findByIdProduitAndProprietaire(p,vache.getProprietaire());
                 if ( remise.getQuantite() > 0 ){
-                if (vache.getPoids()+3 <= 750){
-                    vache.setPoids(vache.getPoids() + 3);
-                    vache.setDernierRepas(LocalDateTime.now());
-                    remise.setQuantite(remise.getQuantite()-1);
-                    remiseRepository.save(remise);
+                    if (vache.getPoids()+3 <= 750) {
+                        vache.setPoids(vache.getPoids() + 3);
+                        vache.setDernierRepas(LocalDateTime.now());
+                        remise.setQuantite(remise.getQuantite()-1);
+                        remiseRepository.save(remise);
+                    }
+                    else if (vache.getPoids()<750 && vache.getPoids()+3 > 750) {
+                        vache.setPoids(750);
+                        vache.setDernierRepas(LocalDateTime.now());
+                        remise.setQuantite(remise.getQuantite()-1);
+                        remiseRepository.save(remise);
+                    }
                 }
-                else if (vache.getPoids()<750 && vache.getPoids()+3 > 750 ){
-                    vache.setPoids(750);
-                    vache.setDernierRepas(LocalDateTime.now());
-                    remise.setQuantite(remise.getQuantite()-1);
-                    remiseRepository.save(remise);
-                }
-                }
-            
-        }
-        return vacheRepository.save(vache);
+            }
+            return vacheRepository.save(vache);
         }
         return vache;
     }
@@ -141,16 +140,18 @@ public class VacheService {
         
         Vache vache = optVache.get();
 
-        Produit p =  produitRepository.findByNom("Seau d'eau");
+        Optional<Produit> existp =  produitRepository.findByNom("Seau d'eau");
+        if (!existp.isPresent()) {
+            throw new IllegalArgumentException("Le produit n'existe pas");
+        }
+        Produit p = existp.get();
                 
-                Remise remise = remiseRepository.findByIdProduitAndProprietaire(p,vache.getProprietaire());
-                if (remise.getQuantite()>0 ){
-                    vache.setDernierBreuvage(LocalDateTime.now());
-                    remise.setQuantite(remise.getQuantite()-1);
-                }
-                
-            
-        
+        Remise remise = remiseRepository.findByIdProduitAndProprietaire(p,vache.getProprietaire());
+        if (remise.getQuantite()>0 ){
+            vache.setDernierBreuvage(LocalDateTime.now());
+            remise.setQuantite(remise.getQuantite()-1);
+        }
+
         return vacheRepository.save(vache);
     }
     
@@ -168,22 +169,21 @@ public class VacheService {
         
         // Si la vache est malade, on la soigne
         if (vache.getMaladeDepuis() != null) {
-
-
-
-            Produit p =  produitRepository.findByNom("Seringue");
+            Optional<Produit> existp =  produitRepository.findByNom("Seringue");
+            if (!existp.isPresent()) {
+                throw new IllegalArgumentException("Le produit n'existe pas");
+            }
+            Produit p = existp.get();
             
-                Remise remise = remiseRepository.findByIdProduitAndProprietaire(p,vache.getProprietaire());
-                if (remise.getQuantite()>0 ){
-                    remise.setQuantite(remise.getQuantite()-1);
-                    vache.setMaladeDepuis(null);
-                }
-                
+            Remise remise = remiseRepository.findByIdProduitAndProprietaire(p,vache.getProprietaire());
+            if (remise.getQuantite()>0 ){
+                remise.setQuantite(remise.getQuantite()-1);
+                vache.setMaladeDepuis(null);
+            }
             
             return vacheRepository.save(vache);
         }
 
-        
         return(vache);
     }
     
@@ -199,17 +199,20 @@ public class VacheService {
         
         Vache vache = optVache.get();
 
-        Produit p =  produitRepository.findByNom("Savon");
+        Optional<Produit> existp =  produitRepository.findByNom("Savon");
+        if (!existp.isPresent()) {
+            throw new IllegalArgumentException("Le produit n'existe pas");
+        }
+        Produit p = existp.get();
 
-                Remise remise = remiseRepository.findByIdProduitAndProprietaire(p,vache.getProprietaire());
-                if (remise.getQuantite()>0 ){
-                    remise.setQuantite(remise.getQuantite()-1);
-                    vache.setDernierLavage(LocalDateTime.now());
-                }
+        Remise remise = remiseRepository.findByIdProduitAndProprietaire(p,vache.getProprietaire());
+        if (remise.getQuantite()>0 ){
+            remise.setQuantite(remise.getQuantite()-1);
+            vache.setDernierLavage(LocalDateTime.now());
+        }
                 
         return vacheRepository.save(vache);
     }
-    
     
 }
 
