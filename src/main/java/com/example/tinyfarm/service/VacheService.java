@@ -49,7 +49,7 @@ public class VacheService {
     
     
     /**
-     * Mettre à jour les informations de la vache
+     * Mettre à jour les informations de la vache en fin de journee
      */
     @Transactional
     public Vache updateVache(Long idFerme) {
@@ -64,14 +64,56 @@ public class VacheService {
         if (vache == null) {
             return null;
         }
+
         vache.setAge(vache.getAge()+1);
 
+        //malade depuis plus  de 4 jours donc meurt
         if (vache.getMaladeDepuis() != null 
             && vache.getMaladeDepuis().isBefore(LocalDateTime.now().minusDays(4))) {
             ferme.setVache(null);
             fermeRepository.save(ferme);
             vacheRepository.delete(vache);
             return null;
+        }
+        
+        return vacheRepository.save(vache);
+    }
+
+    /**
+     * Mettre a jour la quantite de lait de la vache (une fois a 6h et une a 18h)
+     */
+    @Transactional
+    public Vache updateLaitVache(Long idFerme) {
+        Optional<Ferme> optFerme = fermeRepository.findById(idFerme);
+        if (!optFerme.isPresent()) {
+            return null;
+        }
+        
+        Ferme ferme = optFerme.get();
+        Vache vache = ferme.getVache();
+        
+        //si il n'y a pas de vache
+        if (vache == null) {
+            return null;
+        }
+
+        //la vache peut produire du lait
+        if (vache.getMaladeDepuis() == null 
+            && vache.getDernierLavage().isAfter(LocalDateTime.now().minusHours(24)) 
+            && vache.getDernierRepas().getDayOfMonth()==LocalDateTime.now().getDayOfMonth()){
+            //la vache n'a pas ete trait
+            if (vache.getQt_lait()>0){
+                vache.setQt_lait(vache.getQt_lait() + 4);
+                if (vache.getQt_lait() > 16){vache.setQt_lait(16);}
+            }
+            else {
+                vache.setQt_lait(6);
+            }
+        }
+
+        //elle est sale ou malade donc ne produit pas de lait
+        else {
+            vache.setQt_lait(0);
         }
         
         return vacheRepository.save(vache);
