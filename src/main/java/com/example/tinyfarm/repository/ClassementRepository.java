@@ -9,6 +9,6 @@ import org.springframework.data.domain.Pageable;
 
 
 public interface ClassementRepository extends JpaRepository<Classement, Long> {
-    // Page<Classement> findAll(Pageable pageable);  // Ajout de la pagination
+    Page<Classement> findAll(Pageable pageable);  // Ajout de la pagination
     // Page<Classement> findAllByFarm(Ferme ferme, Pageable pageable);
 }
