@@ -47,14 +47,14 @@ public class Ferme{
     public Ferme(String nom){
         this.nom = nom;
         ecus = 1500;
-        clapier = new Clapier();
-        vache = new Vache();
-        poules = new ArrayList<Poule>();
-        poules.add(new Poule('M', 2.5, 5)); //ajout des poules a la ferme
-        poules.add(new Poule('F', 2.5, 5));
-        poules.add(new Poule('F', 2.5, 5));
-        remise = new Remise();
-        classement = new Classement();
+        //clapier = new Clapier();
+        //vache = new Vache();
+        //poules = new ArrayList<Poule>();
+        //poules.add(new Poule('M', 2.5, 5)); //ajout des poules a la ferme
+        //poules.add(new Poule('F', 2.5, 5));
+        //poules.add(new Poule('F', 2.5, 5));
+        //remise = new Remise();
+        //classement = new Classement();
         achatRestant = 12;
     }
 }
