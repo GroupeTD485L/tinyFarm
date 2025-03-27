@@ -6,11 +6,15 @@ import lombok.Data;
 
 @Entity
 @Table(name = "classement")
+@Data
 public class Classement{
     @Id
+    private Long idClassement;
+
     @OneToOne
+    @MapsId
     @JoinColumn(name="idFerme", nullable = false)
-    private Ferme idFerme;
+    private Ferme ferme;
 
     private float score;
 

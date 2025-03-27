@@ -16,14 +16,16 @@ public class Compte{
     @JoinColumn(name="idFerme", nullable = false) //le nom de l'attribut dans la table compte
     private Ferme idFerme;
 
+    @Column(unique = true, nullable = false)
     private String pseudo;
+    
     private LocalDateTime derniereConnexion;
 
     public Compte(){}
 
-    public Compte(String pseudo){
+    public Compte(String pseudo, Ferme ferme){
         this.pseudo = pseudo;
-        idFerme = new Ferme();
+        idFerme = ferme;
         this.derniereConnexion = LocalDateTime.now(); //initialisation de la derniere connexion au moment ou l'on creer le compte
     }
 }

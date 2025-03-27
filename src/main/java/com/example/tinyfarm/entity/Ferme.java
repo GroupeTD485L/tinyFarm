@@ -24,7 +24,7 @@ public class Ferme{
     @OneToOne(mappedBy = "proprietaire")
     private Remise remise;
 
-    @OneToOne(mappedBy = "idFerme")
+    @OneToOne(mappedBy = "ferme")
     private Classement classement;
 
     @OneToMany(mappedBy = "proprietaire")
@@ -37,7 +37,7 @@ public class Ferme{
     private Clapier clapier;
 
     private String nom;
-    private int ecus;
+    private float ecus;
     private LocalDateTime enHibernation;
     private int achatRestant;
     private LocalDateTime dernierAchat;
@@ -46,15 +46,15 @@ public class Ferme{
 
     public Ferme(String nom){
         this.nom = nom;
-        int ecus = 1500;
-        Clapier clapier = new Clapier();
-        Vache vache = new Vache();
-        List<Poule> poules = new ArrayList<Poule>();
-        poules.add(new Poule('M')); //ajout des poules a la ferme
-        poules.add(new Poule('F'));
-        poules.add(new Poule('F'));
-        Remise remise = new Remise();
-        Classement classement = new Classement();
-        int achatRestant = 12;
+        ecus = 1500;
+        //clapier = new Clapier();
+        //vache = new Vache();
+        //poules = new ArrayList<Poule>();
+        //poules.add(new Poule('M', 2.5, 5)); //ajout des poules a la ferme
+        //poules.add(new Poule('F', 2.5, 5));
+        //poules.add(new Poule('F', 2.5, 5));
+        //remise = new Remise();
+        //classement = new Classement();
+        achatRestant = 12;
     }
 }
