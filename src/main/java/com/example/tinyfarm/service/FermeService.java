@@ -24,7 +24,14 @@ public class FermeService {
     private final CompteRepository compteRepository;
     private final RemiseRepository remiseRepository;
 
-    public FermeService(FermeRepository fermeRepository, VacheRepository vacheRepository, ClapierRepository clapierRepository, PouleRepository pouleRepository, CompteRepository compteRepository, RemiseRepository remiseRepository) {
+    public FermeService(
+            FermeRepository fermeRepository,
+            VacheRepository vacheRepository,
+            ClapierRepository clapierRepository,
+            PouleRepository pouleRepository,
+            CompteRepository compteRepository,
+            RemiseRepository remiseRepository
+        ) {
         this.fermeRepository = fermeRepository;
         this.vacheRepository = vacheRepository;
         this.clapierRepository = clapierRepository;
