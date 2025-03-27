@@ -5,8 +5,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Data
 @Table(name = "commerce")
+@Data
 public class Commerce{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

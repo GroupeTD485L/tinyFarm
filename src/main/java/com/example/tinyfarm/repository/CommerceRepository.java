@@ -1,10 +1,10 @@
 package com.example.tinyfarm.repository;
 
-import  com.example.tinyfarm.entity.*;
-
+import com.example.tinyfarm.entity.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
@@ -18,6 +18,6 @@ public interface CommerceRepository extends JpaRepository<Commerce, Long> {
     long countByProduitAndVendeurAndAcheteurIsNotNull(Produit produit, Ferme vendeur);
     Optional<Commerce> findById(Long id);
 
-    @Query("SELECT AVG(c.prixUnitaire) FROM Commerce c WHERE produit=id")
+    @Query("SELECT AVG(c.prixUnitaire) FROM Commerce c WHERE c.produit.idProduit = :id AND c.acheteur IS NULL")
     Double findAveragePriceById(long id);
 }
