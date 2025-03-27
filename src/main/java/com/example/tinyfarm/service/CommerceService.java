@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @Service
 public class CommerceService {
-     private final CommerceRepository commerceRepository;
+    private final CommerceRepository commerceRepository;
 
     public CommerceService(CommerceRepository commerceRepository) {
         this.commerceRepository = commerceRepository;
