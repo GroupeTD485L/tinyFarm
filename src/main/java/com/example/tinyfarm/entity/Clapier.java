@@ -30,8 +30,6 @@ public class Clapier {
     private Ferme proprietaire; // le propriétaire du clapier
  
     // Constructeurs
-    public Clapier() {}
-    
     public Clapier() {
         this.nb_bebe = 8; // Le nombre de bébés est initialisé à 8
         this.nb_petit = 0; // Le nombre de petits est initialisé à 0
