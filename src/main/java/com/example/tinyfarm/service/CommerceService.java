@@ -20,7 +20,7 @@ public class CommerceService {
     public CommerceService(CommerceRepository commerceRepository) {
         this.commerceRepository = commerceRepository;
     }
-
+    /*
     @Transactional
     public Commerce addCommerce(Commerce commerce) {
         return commerceRepository.save(commerce);
@@ -39,7 +39,7 @@ public class CommerceService {
         Ferme acheteur = commerce.getAcheteur();
         float prixMoyen = commerceRepository.findAveragePriceById(id);
         float montantTransaction = quantite*prixMoyen;
-        List<Commerce> commerces = commerceRepository.findAllByProduitOrderByPrixAsc(ProduitRepository.findById(id));
+        List<Commerce> commerces = commerceRepository.findAllByProduitOrderByPrixAsc(ProduitService.findById(id));
         for (Commerce c : commerces) {
             if (c.getQuantite()<=quantite) {
                 c.getVendeur().setEcus(c.getQuantite()*prixMoyen);
@@ -65,5 +65,5 @@ public class CommerceService {
             // TODO : Remettre les produits du commerce dans la réserve
         }
     }
-
+    */
 }
