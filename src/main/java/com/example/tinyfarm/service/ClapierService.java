@@ -130,7 +130,7 @@ public class ClapierService {
         }
 
 
-        Produit p =  produitRepository.findByNom("Sceau d'eau");
+        Produit p =  produitRepository.findByNom("Seau d'eau");
         
                 Remise remise = remiseRepository.findByIdProduitAndProprietaire(p,clapier.getProprietaire());
                 if (remise.getQuantite()>0 ){
@@ -175,7 +175,7 @@ public class ClapierService {
             return null;
         }
 
-        Produit p =  produitRepository.findByNom("savon");
+        Produit p =  produitRepository.findByNom("Savon");
             
                 Remise remise = remiseRepository.findByIdProduitAndProprietaire(p,clapier.getProprietaire());
                 if (remise.getQuantite()>0 ){
