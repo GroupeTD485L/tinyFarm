@@ -24,4 +24,10 @@ public class Remise{
 
     public Remise(){}
 
+    public Remise(Ferme proprietaire, Produit idProduit, int quantite) {
+        this.proprietaire = proprietaire;
+        this.idProduit = idProduit;
+        this.quantite = quantite;
+    }
+
 }

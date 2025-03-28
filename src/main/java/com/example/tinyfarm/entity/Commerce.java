@@ -31,7 +31,10 @@ public class Commerce{
     public Commerce(){
     }
     
-    public Commerce(int quantite,float prixUnitaire) {
+    public Commerce(Ferme acheteur, Ferme vendeur, Produit produit, int quantite, float prixUnitaire) {
+        this.acheteur = acheteur;
+        this.vendeur = vendeur;
+        this.produit = produit;
         this.quantite= quantite;
         this.prixUnitaire = prixUnitaire;
         this.dateAchat=LocalDateTime.now();
