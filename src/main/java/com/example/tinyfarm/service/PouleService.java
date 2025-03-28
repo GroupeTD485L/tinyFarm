@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.Duration;
 
-import com.example.tinyfarm.entity.Poule;
+import com.example.tinyfarm.entity.*;
 import com.example.tinyfarm.repository.PouleRepository;
 
 import org.springframework.data.domain.Page;
@@ -26,6 +26,14 @@ public class PouleService {
 
     public Page<Poule> getAllPoules(Pageable pageable) {
         return pouleRepository.findAll(pageable);
+    }
+
+    public Page<Poule> getPoulesByProprietaireAndSexe(Ferme ferme, char sexe, Pageable pageable) {
+        return pouleRepository.findAllByProprietaireAndSexe(ferme, sexe, pageable);
+    }
+
+    public Page<Poule> getPoulesBySexe(char sexe, Pageable pageable) {
+        return pouleRepository.findAllBySexe(sexe, pageable);
     }
 
     public Optional<Poule> getPouleById(Long id) {
