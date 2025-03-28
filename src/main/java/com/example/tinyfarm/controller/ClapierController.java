@@ -10,7 +10,6 @@ import  com.example.tinyfarm.service.ClapierService;
 
 
 @RestController 
-@PreAuthorize("isAuthenticated()") // L'utilisateur doit être authentifié
 @RequestMapping("/comptes/fermes/{fermeId}/clapier") // URL
 public class ClapierController {
     
@@ -24,7 +23,7 @@ public class ClapierController {
 
 
     // Créer le clapier TODO /!\ VOIR LE CORPS DE CLAPIERSERVICE.CREERCLAPIER
-    // @PreAuthorize("hasRole('ROLE_ADMIN')") // L'utilisateur doit être un admin   
+    @PreAuthorize("isAuthenticated()")
     @PostMapping
     public ResponseEntity<Clapier> creerClapier(@PathVariable Long idFerme){ // Créer le clapier 
         Clapier clapier = clapierService.creerClapier(idFerme); // Créer le clapier
@@ -38,6 +37,7 @@ public class ClapierController {
 
 
     // Obtenir les infos du clapier 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping
     public ResponseEntity<Clapier> getClapier(@PathVariable Long fermeId) {
         Clapier clapier = clapierService.getInfoClapier(fermeId); // Récupére les infos du clapier cible
@@ -51,6 +51,7 @@ public class ClapierController {
 
 
     // Met à jour les infos du clapier
+    @PreAuthorize("isAuthenticated()")
     @PutMapping 
     public ResponseEntity<Clapier> updateClapier(@PathVariable Long fermeId){
         Clapier clapier = clapierService.updateClapier(fermeId); // Met à jour les infos du clapier
@@ -64,6 +65,7 @@ public class ClapierController {
 
 
     // Nourrir les membres du clapier
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("/nourrir")
     public ResponseEntity<Clapier> nourrirClapier(@PathVariable Long fermeId){
         Clapier clapier = clapierService.nourrirClapier(fermeId); // Met à jour les infos du clapier
@@ -77,6 +79,7 @@ public class ClapierController {
 
 
     // Abreuver les membres du clapier
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("/abreuver")
     public ResponseEntity<Clapier> abreuverClapier(@PathVariable Long fermeId){
         Clapier clapier = clapierService.abbreuverClapier(fermeId); // Met à jour les infos du clapier
@@ -90,6 +93,7 @@ public class ClapierController {
 
 
     // Soigner les membres du clapier
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("/soigner")
     public ResponseEntity<Clapier> soignerClapier(@PathVariable Long fermeId){
         Clapier clapier = clapierService.SoignerClapier(fermeId); // Met à jour les infos du clapier
@@ -103,6 +107,7 @@ public class ClapierController {
 
 
     // Laver les membres du clapier
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("/laver")
     public ResponseEntity<Clapier> laverClapier(@PathVariable Long fermeId){
         Clapier clapier = clapierService.laverClapier(fermeId); // Met à jour les infos du clapier
