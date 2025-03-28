@@ -8,6 +8,7 @@ import com.example.tinyfarm.repository.ProduitRepository;
 
 import java.util.Optional;
 
+@Service
 public class ProduitService {
     private final ProduitRepository produitRepository;
 
@@ -15,6 +16,7 @@ public class ProduitService {
         this.produitRepository = produitRepository;
     }
 
+    @Transactional
     public Produit getProduit(String nomProduit) {
         Optional<Produit> existingProduit = produitRepository.findByNom(nomProduit);
         if (!existingProduit.isPresent()) {
