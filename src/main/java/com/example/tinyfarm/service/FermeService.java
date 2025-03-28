@@ -52,7 +52,6 @@ public class FermeService {
         Clapier clapier = new Clapier();
         ArrayList<Poule> poules = new ArrayList<Poule>();
         Compte compte = new Compte(pseudo, ferme);
-        Remise remise = new Remise();
         
         //initialisation des 3 poules
         poules.add(new Poule('M', 2.5, 5));
@@ -67,8 +66,6 @@ public class FermeService {
         clapierRepository.save(clapier);
         ferme.setPoules(poules);
         pouleRepository.saveAll(poules);
-        ferme.setRemise(remise);
-        remiseRepository.save(remise);
 
         return fermeRepository.save(ferme);
     }
