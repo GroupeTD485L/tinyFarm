@@ -57,11 +57,11 @@ public class PouleController {
     public Page<Poule> getListeCoqs(Pageable pageable){
         return pouleService.getPoulesByProprietaireAndSexe(null, 'M', pageable); // TODO : méthode qui donne la ferme en fonction de l'id
     }
-
+    //TODO
     @PutMapping("/coqs/nourrir")
     @PreAuthorize("isAuthenticated()")
     public void nourrirCoqs(){} 
-
+    //TODO
     @PutMapping("/coqs/abreuver")
     @PreAuthorize("isAuthenticated()")
     public void abreuverCoqs(){} 
@@ -73,11 +73,11 @@ public class PouleController {
     public Page<Poule> getListePoules(Pageable pageable){
         return pouleService.getPoulesByProprietaireAndSexe(null, 'F', pageable);  // TODO : méthode qui donne la ferme en fonction de l'id
     }
-
+    //TODO
     @PutMapping("/poules/nourrir")
     @PreAuthorize("isAuthenticated()")
     public void nourrirPoules(){} 
-
+    //TODO
     @PutMapping("/poules/abreuver")
     @PreAuthorize("isAuthenticated()")
     public void abreuverPoules(){} 
@@ -89,23 +89,23 @@ public class PouleController {
     public Page<Poule> getListePoussins(Pageable pageable){
         return pouleService.getPoulesByProprietaireAndSexe(null, 'U', pageable);  // TODO : méthode qui donne la ferme en fonction de l'id
     }
-
+    //TODO
     @PutMapping("/poussins/nourrir")
     @PreAuthorize("isAuthenticated()")
     public void nourrirPoussins(){} 
-
+    //TODO
     @PutMapping("/poussins/abreuver")
     @PreAuthorize("isAuthenticated()")
     public void abreuverPoussins(){} 
 
     // Méthode d'update 
-
+    /* TODO
     @PutMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Page<Poule>> updatePoulailler(@PathVariable long idFerme, Pageable pageable){
 
     } 
-
+     */
     // Gestion d'un type de volaille donné
 
     @GetMapping("/{idPoule}")
@@ -122,19 +122,47 @@ public class PouleController {
 
     @PutMapping("/{idPoule}/nourrir")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Poule> nourrirVolaille(){} 
+    public ResponseEntity<Poule> nourrirVolaille(@PathVariable long idPoule, @RequestBody String nourriture){
+        Poule poule = pouleService.nourrirPoule(idPoule, nourriture);
+        if (poule != null){
+            return ResponseEntity.ok(poule);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    } 
 
     @PutMapping("/{idPoule}/abreuver")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Poule> abreuverVolaille(){} 
+    public ResponseEntity<Poule> abreuverVolaille(@PathVariable long idPoule, @RequestBody String nourriture){
+        Poule poule = pouleService.abreuverPoule(idPoule, nourriture);
+        if (poule != null){
+            return ResponseEntity.ok(poule);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    } 
 
     @PutMapping("/{idPoule}/soigner")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Poule> soignerVolaille(){} 
+    public ResponseEntity<Poule> soignerVolaille(@PathVariable long idPoule){
+        Poule poule = pouleService.soignerPoule(idPoule);
+        if (poule != null){
+            return ResponseEntity.ok(poule);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    } 
 
     @PutMapping("/{idPoule}/laver")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Poule> laverVolaille(){} 
+    public ResponseEntity<Poule> laverVolaille(@PathVariable long idPoule){
+        Poule poule = pouleService.laverPoule(idPoule);
+        if (poule != null){
+            return ResponseEntity.ok(poule);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    } 
 
 
     /* Pas logique qu'un utilisateur puisse delete son clapier
