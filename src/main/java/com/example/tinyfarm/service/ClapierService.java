@@ -211,6 +211,11 @@ public class ClapierService {
                 
         return clapierRepository.save(clapier);
     }
+
+    @Transactional
+    public void supprimerClapier(Long idClapier) {
+        clapierRepository.deleteById(idClapier);
+    }
 }
 
 
