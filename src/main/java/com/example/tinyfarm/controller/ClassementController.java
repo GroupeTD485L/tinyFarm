@@ -13,7 +13,7 @@ import  com.example.tinyfarm.entity.Classement;
 import  com.example.tinyfarm.service.ClassementService;
 
 @RestController
-@RequestMapping("/classements") // URL
+@RequestMapping("/classement") // URL
 public class ClassementController {
 
     private final ClassementService classementService;

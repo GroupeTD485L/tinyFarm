@@ -49,7 +49,7 @@ public class FermeController {
     @PreAuthorize("isAuthenticated()")
     @PutMapping
     public ResponseEntity<Ferme> updateFerme(Authentication authentication) {
-        // Récupérer le nom d'utilisateur de l'authentification (car la méthode getOrCreateFermeForUser prend un String)
+        // Récupérer le nom d'utilisateur de l'authentification (car la méthode updateFerme prend un String)
         String pseudo = authentication.getName();
         // On update la ferme
         Ferme ferme = fermeService.updateFerme(pseudo);
@@ -63,7 +63,7 @@ public class FermeController {
     public ResponseEntity<Void> deleteFerme(Authentication authentication) {
         // On doit gérer une exception (car renvoie un void), si la ferme existe, ou pas
         try {
-            // Récupére le nom d'utilisateur de l'authentification (car la méthode getOrCreateFermeForUser prend un String)
+            // Récupére le nom d'utilisateur de l'authentification (car la méthode deleteFerme prend un String)
             String pseudo = authentication.getName();
             // On supprime la ferme
             fermeService.deleteFerme(pseudo);
