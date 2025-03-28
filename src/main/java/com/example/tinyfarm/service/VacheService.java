@@ -149,7 +149,12 @@ public class VacheService {
                 }
                 Produit p = existp.get();
                 
-                Remise remise = remiseRepository.findByIdProduitAndProprietaire(p,vache.getProprietaire());
+                Optional<Remise> existingRemise = remiseRepository.findByIdProduitAndProprietaire(p,vache.getProprietaire());
+                if (!existingRemise.isPresent()) {
+                    throw new IllegalArgumentException("Produit non trouvé dans la remise");
+                }
+                Remise remise = existingRemise.get();
+
                 if ( remise.getQuantite() > 0 ){
                     if (vache.getPoids()+3 <= 750) {
                         vache.setPoids(vache.getPoids() + 3);
@@ -188,7 +193,11 @@ public class VacheService {
         }
         Produit p = existp.get();
                 
-        Remise remise = remiseRepository.findByIdProduitAndProprietaire(p,vache.getProprietaire());
+        Optional<Remise> existingRemise = remiseRepository.findByIdProduitAndProprietaire(p,vache.getProprietaire());
+        if (!existingRemise.isPresent()) {
+            throw new IllegalArgumentException("Produit non trouvé dans la remise");
+        }
+        Remise remise = existingRemise.get();
         if (remise.getQuantite()>0 ){
             vache.setDernierBreuvage(LocalDateTime.now());
             remise.setQuantite(remise.getQuantite()-1);
@@ -217,7 +226,11 @@ public class VacheService {
             }
             Produit p = existp.get();
             
-            Remise remise = remiseRepository.findByIdProduitAndProprietaire(p,vache.getProprietaire());
+            Optional<Remise> existingRemise = remiseRepository.findByIdProduitAndProprietaire(p,vache.getProprietaire());
+            if (!existingRemise.isPresent()) {
+                throw new IllegalArgumentException("Produit non trouvé dans la remise");
+            }
+            Remise remise = existingRemise.get();
             if (remise.getQuantite()>0 ){
                 remise.setQuantite(remise.getQuantite()-1);
                 vache.setMaladeDepuis(null);
@@ -247,7 +260,11 @@ public class VacheService {
         }
         Produit p = existp.get();
 
-        Remise remise = remiseRepository.findByIdProduitAndProprietaire(p,vache.getProprietaire());
+        Optional<Remise> existingRemise = remiseRepository.findByIdProduitAndProprietaire(p,vache.getProprietaire());
+        if (!existingRemise.isPresent()) {
+            throw new IllegalArgumentException("Produit non trouvé dans la remise");
+        }
+        Remise remise = existingRemise.get();
         if (remise.getQuantite()>0 ){
             remise.setQuantite(remise.getQuantite()-1);
             vache.setDernierLavage(LocalDateTime.now());

@@ -109,7 +109,11 @@ public class ClapierService {
                 throw new IllegalArgumentException("Le produit n'existe pas");
             }
             Produit p = existp.get();    
-            Remise remise = remiseRepository.findByIdProduitAndProprietaire(p,clapier.getProprietaire());
+            Optional<Remise> existingRemise = remiseRepository.findByIdProduitAndProprietaire(p,clapier.getProprietaire());
+            if (!existingRemise.isPresent()) {
+                throw new IllegalArgumentException("Produit non trouvé dans la remise");
+            }
+            Remise remise = existingRemise.get();
             if (remise.getQuantite()>0 ){
                 clapier.setDernierRepas(LocalDateTime.now());
                 remise.setQuantite(remise.getQuantite()-1);
@@ -136,7 +140,11 @@ public class ClapierService {
         }
         Produit p = existp.get();
         
-        Remise remise = remiseRepository.findByIdProduitAndProprietaire(p,clapier.getProprietaire());
+        Optional<Remise> existingRemise = remiseRepository.findByIdProduitAndProprietaire(p,clapier.getProprietaire());
+        if (!existingRemise.isPresent()) {
+            throw new IllegalArgumentException("Produit non trouvé dans la remise");
+        }
+        Remise remise = existingRemise.get();
         if (remise.getQuantite()>0 ){
             clapier.setDernierBreuvage(LocalDateTime.now());
             remise.setQuantite(remise.getQuantite()-1);
@@ -161,7 +169,11 @@ public class ClapierService {
             throw new IllegalArgumentException("Le produit n'existe pas");
         }
         Produit p = existp.get();
-        Remise remise = remiseRepository.findByIdProduitAndProprietaire(p,clapier.getProprietaire());
+        Optional<Remise> existingRemise = remiseRepository.findByIdProduitAndProprietaire(p,clapier.getProprietaire());
+        if (!existingRemise.isPresent()) {
+            throw new IllegalArgumentException("Produit non trouvé dans la remise");
+        }
+        Remise remise = existingRemise.get();
         if (remise.getQuantite()>0 ){
             clapier.setMaladeDepuis(null);
             remise.setQuantite(remise.getQuantite()-1);
@@ -187,13 +199,22 @@ public class ClapierService {
         }
         Produit p = existp.get();
             
-        Remise remise = remiseRepository.findByIdProduitAndProprietaire(p,clapier.getProprietaire());
+        Optional<Remise> existingRemise = remiseRepository.findByIdProduitAndProprietaire(p,clapier.getProprietaire());
+        if (!existingRemise.isPresent()) {
+            throw new IllegalArgumentException("Produit non trouvé dans la remise");
+        }
+        Remise remise = existingRemise.get();
         if (remise.getQuantite()>0 ){
             clapier.setDernierLavage(LocalDateTime.now());
             remise.setQuantite(remise.getQuantite()-1);
         }
                 
         return clapierRepository.save(clapier);
+    }
+
+    @Transactional
+    public void supprimerClapier(Long idClapier) {
+        clapierRepository.deleteById(idClapier);
     }
 }
 

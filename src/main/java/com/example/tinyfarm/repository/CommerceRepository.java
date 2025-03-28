@@ -18,6 +18,12 @@ public interface CommerceRepository extends JpaRepository<Commerce, Long> {
     long countByProduitAndVendeurAndAcheteurIsNotNull(Produit produit, Ferme vendeur);
     Optional<Commerce> findById(Long id);
 
-    @Query("SELECT AVG(c.prixUnitaire) FROM Commerce c WHERE c.produit.idProduit = :id AND c.acheteur IS NULL")
-    Double findAveragePriceById(long id);
+    @Query("SELECT AVG(c.prixUnitaire) FROM Commerce c WHERE c.produit = :produit AND c.acheteur IS NULL")
+    float findAveragePriceByIdProduit(Produit produit);
+    
+    @Query("SELECT SUM(c.quantite) FROM Commerce c WHERE c.produit = :produit")
+    long findTotalQuantityByProduit(Produit produit);
+
+    @Query("SELECT c FROM Commerce c WHERE c.acheteur IS NULL")
+    Page<Commerce> findAllByAcheteurIsNull(Pageable pageable);
 }
