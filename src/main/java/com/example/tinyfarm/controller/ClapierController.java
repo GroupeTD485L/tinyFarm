@@ -122,7 +122,7 @@ public class ClapierController {
 
     // Supprime le clapier de la ferme
     @PreAuthorize("isAuthenticated()")
-    @PutMapping("/laver")
+    @PutMapping("/supprimer")
     public ResponseEntity<Void> detruireClapier(@PathVariable Long fermeId){
         // On doit gérer une exception (car renvoie un void), si le clapier existe, ou pas
         try {
