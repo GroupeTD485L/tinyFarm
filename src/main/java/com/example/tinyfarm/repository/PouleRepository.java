@@ -13,5 +13,7 @@ import org.springframework.data.domain.Pageable;
 public interface PouleRepository extends JpaRepository<Poule, Long> {
     Page<Poule> findAll(Pageable pageable);  // Ajout de la pagination
     Page<Poule> findAllByProprietaire(Ferme ferme, Pageable pageable);
+    Page<Poule> findAllByProprietaireAndSexe(Ferme ferme, char sexe, Pageable pageable);
+    Page<Poule> findAllBySexe(char sexe, Pageable pageable);
     Optional<Poule> findById(Long id);
 }
