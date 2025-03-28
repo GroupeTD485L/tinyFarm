@@ -42,7 +42,7 @@ public class CommerceController {
         }
 
     }
-
+    /* TODO
     @GetMapping("/{id}")
     public Commerce infoCommerce(){}
 
@@ -57,5 +57,5 @@ public class CommerceController {
     @GetMapping("/coop")
     public void getInfoCoop(){}
     
-
+    */
 }
