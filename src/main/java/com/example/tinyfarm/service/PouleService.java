@@ -24,30 +24,37 @@ public class PouleService {
         this.pouleRepository = pouleRepository;
     }
 
+    @Transactional
     public Page<Poule> getAllPoules(Pageable pageable) {
         return pouleRepository.findAll(pageable);
     }
 
+    @Transactional
     public Page<Poule> getPoulesByProprietaireAndSexe(Ferme ferme, char sexe, Pageable pageable) {
         return pouleRepository.findAllByProprietaireAndSexe(ferme, sexe, pageable);
     }
 
+    @Transactional
     public Page<Poule> getPoulesBySexe(char sexe, Pageable pageable) {
         return pouleRepository.findAllBySexe(sexe, pageable);
     }
 
+    @Transactional
     public Optional<Poule> getPouleById(Long id) {
         return pouleRepository.findById(id);
     }
 
+    @Transactional
     public Poule addPoule(Poule poule) {
         return pouleRepository.save(poule);
     }
 
+    @Transactional
     public void deletePoule(Long id) {
         pouleRepository.deleteById(id);
     }
 
+    @Transactional
     public void updatePoule(Long id) {
         Optional<Poule> existingPoule = pouleRepository.findById(id);
         Poule poule = existingPoule.get();
