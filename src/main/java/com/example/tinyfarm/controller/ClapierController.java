@@ -10,7 +10,7 @@ import  com.example.tinyfarm.service.ClapierService;
 
 
 @RestController 
-@RequestMapping("/comptes/fermes/{fermeId}/clapier") // URL
+@RequestMapping("/compte/{idFerme}/clapier") // URL
 public class ClapierController {
     
     private final ClapierService clapierService; 
@@ -25,8 +25,8 @@ public class ClapierController {
     // Créer le clapier TODO /!\ VOIR LE CORPS DE CLAPIERSERVICE.CREERCLAPIER
     @PreAuthorize("isAuthenticated()")
     @PostMapping
-    public ResponseEntity<Clapier> creerClapier(@PathVariable Long idFerme){ // Créer le clapier 
-        Clapier clapier = clapierService.creerClapier(idFerme); // Créer le clapier
+    public ResponseEntity<Clapier> creerClapier(@PathVariable Long idFerme){ 
+        Clapier clapier = clapierService.creerClapier(idFerme); // Crée le clapier
         if(clapier != null) {
             return ResponseEntity.ok(clapier); // On renvoie le clapier créé
         } else {
@@ -42,7 +42,7 @@ public class ClapierController {
     public ResponseEntity<Clapier> getClapier(@PathVariable Long fermeId) {
         Clapier clapier = clapierService.getInfoClapier(fermeId); // Récupére les infos du clapier cible
         if(clapier != null) {
-            return ResponseEntity.ok(clapier); // On renvoie les infos du clapier
+            return ResponseEntity.ok(clapier); // On renvoie les infos modifiées du clapier
         } else {
             // Si le clapier est inexistant
              return ResponseEntity.notFound().build();
@@ -56,7 +56,7 @@ public class ClapierController {
     public ResponseEntity<Clapier> updateClapier(@PathVariable Long fermeId){
         Clapier clapier = clapierService.updateClapier(fermeId); // Met à jour les infos du clapier
         if(clapier != null) {
-            return ResponseEntity.ok(clapier); // On renvoie les infos du clapier
+            return ResponseEntity.ok(clapier); // On renvoie les infos modifiées du clapier
         } else {
             // Si le clapier n'a pas pu être mis à jour
             return ResponseEntity.badRequest().build();
@@ -70,7 +70,7 @@ public class ClapierController {
     public ResponseEntity<Clapier> nourrirClapier(@PathVariable Long fermeId){
         Clapier clapier = clapierService.nourrirClapier(fermeId); // Met à jour les infos du clapier
         if(clapier != null) {
-            return ResponseEntity.ok(clapier); // On renvoie les infos du clapier
+            return ResponseEntity.ok(clapier); // On renvoie les infos modifiées du clapier
         } else {
             // Si le clapier n'a pas pu être mis à jour
             return ResponseEntity.badRequest().build();
@@ -84,7 +84,7 @@ public class ClapierController {
     public ResponseEntity<Clapier> abreuverClapier(@PathVariable Long fermeId){
         Clapier clapier = clapierService.abbreuverClapier(fermeId); // Met à jour les infos du clapier
         if(clapier != null) {
-            return ResponseEntity.ok(clapier); // On renvoie les infos du clapier
+            return ResponseEntity.ok(clapier); // On renvoie les infos modifiées du clapier
         } else {
             // Si le clapier n'a pas pu être mis à jour
             return ResponseEntity.badRequest().build();
@@ -98,7 +98,7 @@ public class ClapierController {
     public ResponseEntity<Clapier> soignerClapier(@PathVariable Long fermeId){
         Clapier clapier = clapierService.SoignerClapier(fermeId); // Met à jour les infos du clapier
         if(clapier != null) {
-            return ResponseEntity.ok(clapier); // On renvoie les infos du clapier
+            return ResponseEntity.ok(clapier); // On renvoie les infos modifiées du clapier
         } else {
             // Si le clapier n'a pas pu être mis à jour
             return ResponseEntity.badRequest().build();
@@ -120,25 +120,17 @@ public class ClapierController {
     }
 
 
-/* COMMENT ???
     // Supprime le clapier de la ferme
-    @DeleteMapping
-    public ResponseEntity<Clapier>id deleteClapier(){
+    @PreAuthorize("isAuthenticated()")
+    @PutMapping("/laver")
+    public ResponseEntity<Void> detruireClapier(@PathVariable Long fermeId){
+        // On doit gérer une exception (car renvoie un void), si le clapier existe, ou pas
+        try {
+            clapierService.supprimerClapier(fermeId);
+            return ResponseEntity.ok().build(); // Le clapier a été supprimé correctement
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build(); // Si le clapier n'a pas pu être supprimé
+        }
+    }
+} 
 
-    } 
-*/
-
-}
-
-/*
-POST      /comptes/fermes/{fermeId}/clapier  Créer le clapier
-GET        /comptes/fermes/{fermeId}/clapier Obtenir les infos du clapier
-
-PUT         /comptes/fermes/{fermeId}/clapier Update les infos du clapier
-PUT         /comptes/fermes/{fermeId}/clapier/nourrir Nourrit les membres du clapier
-PUT        /comptes/fermes/{fermeId}/clapier/abreuver Abreuver les membres du clapier
-PUT        /comptes/fermes/{fermeId}/clapier/soigner Soigner les membres du clapier
-PUT        /comptes/fermes/{fermeId}/clapier/laver Laver les membres du clapier
-
-DELETE /comptes/{id}/fermes/clapier Detruire le clapîer de la ferme
-*/
