@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import  com.example.tinyfarm.entity.Ferme;
 import  com.example.tinyfarm.service.FermeService;
 import  com.example.tinyfarm.entity.Poule;
 import  com.example.tinyfarm.service.PouleService;
@@ -93,14 +92,32 @@ public class PouleController {
     public Page<Poule> getListePoules(@PathVariable long idFerme, Pageable pageable){
         return pouleService.getPoulesByProprietaireAndSexe(fermeService.getFerme(idFerme), 'F', pageable);
     }
-    //TODO
+
     @PutMapping("/poules/nourrir")
     @PreAuthorize("isAuthenticated()")
-    public void nourrirPoules(@PathVariable long idFerme,@RequestBody String nourriture , Pageable pageable){} 
-    //TODO
+    public ResponseEntity<Page<Poule>> nourrirPoules(@PathVariable long idFerme,@RequestBody String nourriture , Pageable pageable){
+        Page<Poule> allPoules = pouleService.getPoulesByProprietaireAndSexe(fermeService.getFerme(idFerme), 'F', pageable);
+        for (Poule p : allPoules){
+            if (p == null){ 
+                return ResponseEntity.notFound().build();
+            }
+            pouleService.nourrirPoule(p.getIdPoule(), nourriture);
+        }
+        return ResponseEntity.ok(allPoules);
+    } 
+
     @PutMapping("/poules/abreuver")
     @PreAuthorize("isAuthenticated()")
-    public void abreuverPoules(@PathVariable long idFerme,@RequestBody String nourriture , Pageable pageable){} 
+    public ResponseEntity<Page<Poule>> abreuverPoules(@PathVariable long idFerme,@RequestBody String nourriture , Pageable pageable){
+        Page<Poule> allPoules = pouleService.getPoulesByProprietaireAndSexe(fermeService.getFerme(idFerme), 'F', pageable);
+        for (Poule p : allPoules){
+            if (p == null){ 
+                return ResponseEntity.notFound().build();
+            }
+            pouleService.abreuverPoule(p.getIdPoule(), nourriture);
+        }
+        return ResponseEntity.ok(allPoules);    
+    } 
 
     // Gestion des volailles de type poussin
 
@@ -109,14 +126,32 @@ public class PouleController {
     public Page<Poule> getListePoussins(@PathVariable long idFerme, Pageable pageable){
         return pouleService.getPoulesByProprietaireAndSexe(fermeService.getFerme(idFerme), 'U', pageable); 
     }
-    //TODO
+
     @PutMapping("/poussins/nourrir")
     @PreAuthorize("isAuthenticated()")
-    public void nourrirPoussins(){} 
-    //TODO
+    public ResponseEntity<Page<Poule>> nourrirPoussins(@PathVariable long idFerme,@RequestBody String nourriture , Pageable pageable){
+        Page<Poule> allPoussins = pouleService.getPoulesByProprietaireAndSexe(fermeService.getFerme(idFerme), 'U', pageable);
+        for (Poule p : allPoussins){
+            if (p == null){
+                return ResponseEntity.notFound().build();
+            }
+            pouleService.nourrirPoule(p.getIdPoule(), nourriture);
+        }
+        return ResponseEntity.ok(allPoussins);
+    } 
+
     @PutMapping("/poussins/abreuver")
     @PreAuthorize("isAuthenticated()")
-    public void abreuverPoussins(){} 
+    public ResponseEntity<Page<Poule>> abreuverPoussins(@PathVariable long idFerme,@RequestBody String nourriture , Pageable pageable){
+        Page<Poule> allPoussins = pouleService.getPoulesByProprietaireAndSexe(fermeService.getFerme(idFerme), 'U', pageable);
+        for (Poule p : allPoussins){
+            if (p == null){
+                return ResponseEntity.notFound().build();
+            }
+            pouleService.abreuverPoule(p.getIdPoule(), nourriture);
+        }
+        return ResponseEntity.ok(allPoussins);
+    } 
 
     // Méthode d'update 
     @PutMapping
@@ -193,6 +228,6 @@ public class PouleController {
 
     /* Pas logique qu'un utilisateur puisse delete son clapier
     @DeleteMapping
-    public void deleteClapier(){} 
+    public void deletePoulailler(){} 
     */
 }
