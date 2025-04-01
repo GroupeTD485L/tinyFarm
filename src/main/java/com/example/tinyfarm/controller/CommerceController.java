@@ -13,7 +13,6 @@ import  com.example.tinyfarm.service.FermeService;
 import  com.example.tinyfarm.entity.Commerce;
 import  com.example.tinyfarm.service.CommerceService;
 import  com.example.tinyfarm.repository.CommerceRepository;
-import  com.example.tinyfarm.entity.Compte;
 import  com.example.tinyfarm.service.CompteService;
 
 
@@ -26,12 +25,10 @@ public class CommerceController {
     private final CommerceService commerceService;
     private final CommerceRepository commerceRepository;
     private final FermeService fermeService;
-    private final CompteService compteService;
 
     public CommerceController(CompteService compteService, FermeService fermeService, CommerceService commerceService, CommerceRepository commerceRepository){
         this.commerceService = commerceService;
         this.fermeService = fermeService;
-        this.compteService = compteService;
         this.commerceRepository = commerceRepository;
     }
 
