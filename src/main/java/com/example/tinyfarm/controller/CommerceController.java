@@ -4,6 +4,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 
 import  com.example.tinyfarm.entity.Ferme;
 import  com.example.tinyfarm.service.FermeService;
@@ -35,27 +38,45 @@ public class CommerceController {
     @PostMapping
     public ResponseEntity<Commerce> creerCommerce(@PathVariable long idFerme, @RequestBody Commerce commerce){
         Commerce c = commerceService.addComerce(commerce);
-        if (c != null){
+        if (c != null)
             return ResponseEntity.ok(c);
-        } else {
+        else
             return ResponseEntity.notFound().build();
-        }
 
     }
-    /* TODO
-    @GetMapping("/{id}")
-    public Commerce infoCommerce(){}
 
-    @PutMapping("/{id}")
-    public void updateCommerce(){} 
+    @GetMapping
+    public ResponseEntity<Page<Commerce>> infoCommerce(@PathVariable long idFerme, Pageable pageable){
+        Ferme ferme = fermeService.getFerme(idFerme);
+        Page<Commerce> page = commerceRepository.findAllByVendeur(ferme, pageable);
+
+        if(page == null)
+            return ResponseEntity.notFound().build();
+        
+        return ResponseEntity.ok(page);
+    }
+    
+
+    @PutMapping
+    public void updateCommerce(@PathVariable long idFerme){
+        commerceService.updateCommerce(idFerme);
+    } 
 
     @GetMapping("/eleveurs")
-    public void getInfoVenteNonFini(){
-        return
+    public ResponseEntity<Page<Commerce>> getInfoVenteNonFini(Pageable pageable){
+        Page<Commerce> page = commerceRepository.findAllByAcheteurIsNull(pageable);
+
+        if(page == null)
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(page);
     }
 
-    @GetMapping("/coop")
+    /*
+    TODO
+
+     @GetMapping("/coop")
     public void getInfoCoop(){}
-    
-    */
+     */
+
 }
