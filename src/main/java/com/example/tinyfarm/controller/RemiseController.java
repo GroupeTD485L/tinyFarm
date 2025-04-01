@@ -12,12 +12,8 @@ import org.springframework.http.ResponseEntity;
 
 import  com.example.tinyfarm.entity.Ferme;
 import com.example.tinyfarm.entity.Remise;
-import  com.example.tinyfarm.entity.Commerce;
 import  com.example.tinyfarm.entity.Produit;
 import  com.example.tinyfarm.service.FermeService;
-import  com.example.tinyfarm.service.CommerceService;
-import  com.example.tinyfarm.entity.Compte;
-import  com.example.tinyfarm.service.CompteService;
 import  com.example.tinyfarm.service.RemiseService;
 import  com.example.tinyfarm.service.ProduitService;
 import  com.example.tinyfarm.repository.RemiseRepository;
@@ -32,14 +28,12 @@ public class RemiseController {
     
     private final RemiseService remiseService;
     private final FermeService fermeService;
-    private final CompteService compteService;
     private final ProduitService produitService;
     private final RemiseRepository remiseRepository;
 
-    public RemiseController(CompteService compteService, FermeService fermeService, RemiseService remiseService, ProduitService produitService, RemiseRepository remiseRepository) {
+    public RemiseController(FermeService fermeService, RemiseService remiseService, ProduitService produitService, RemiseRepository remiseRepository) {
         this.remiseService = remiseService;
         this.fermeService = fermeService;
-        this.compteService = compteService;
         this.produitService = produitService;
         this.remiseRepository = remiseRepository;
 
