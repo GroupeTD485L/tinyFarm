@@ -81,8 +81,8 @@ public class RemiseController {
     }
     
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Remise> updateProduit(@PathVariable Long fermeId, @RequestBody String nomProduit, @RequestParam int quantite) {
+    @PutMapping
+    public ResponseEntity<Remise> updateProduit(@PathVariable Long fermeId, @RequestBody String nomProduit, @RequestBody int quantite) {
         Ferme ferme = fermeService.getFerme(fermeId);
         Produit produit = produitService.getProduit(nomProduit);
         Remise updatedRemise = remiseService.updateRemiseProduit(ferme, produit, quantite);
