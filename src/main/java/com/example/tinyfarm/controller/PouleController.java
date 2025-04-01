@@ -4,19 +4,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import  com.example.tinyfarm.entity.Ferme;
-import  com.example.tinyfarm.service.FermeService;
-import  com.example.tinyfarm.entity.Poule;
-import  com.example.tinyfarm.service.PouleService;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import  com.example.tinyfarm.service.FermeService;
+import  com.example.tinyfarm.entity.Poule;
+import  com.example.tinyfarm.service.PouleService;
+import  com.example.tinyfarm.repository.PouleRepository;
+
+
 import java.util.Optional;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
 
 
 @RestController
@@ -25,16 +22,18 @@ public class PouleController {
     
     private final PouleService pouleService;
     private final FermeService fermeService;
+    private final PouleRepository pouleRepository;
 
-    public PouleController(PouleService pouleService, FermeService fermeService){
+    public PouleController(PouleService pouleService, FermeService fermeService, PouleRepository pouleRepository){
         this.fermeService = fermeService;
         this.pouleService = pouleService;
+        this.pouleRepository = pouleRepository;
     }
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Poule> creerPoule(@PathVariable long idFerme, @RequestBody Poule poule){
-        //poule.setProprietaire(fermeService.getOrCreateFermeForUser(null));  TODO : Besoin d'une méthode pour trouver une ferme à partir de l'id 
+        poule.setProprietaire(fermeService.getFerme(idFerme));
         Poule pouleAdded = pouleService.addPoule(poule);
         if(pouleAdded != null){
             return ResponseEntity.ok(pouleAdded);
@@ -50,62 +49,121 @@ public class PouleController {
         return pouleService.getAllPoules(pageable);
     }
 
-    // Gestion des volailles de type coqs
-    // TODO : avec les nouvelles méthodes de PouleService 
+    // Gestion des volailles de type coq 
     @GetMapping("/coqs")
     @PreAuthorize("isAuthenticated()")
-    public Page<Poule> getListeCoqs(Pageable pageable){
-        return pouleService.getPoulesByProprietaireAndSexe(null, 'M', pageable); // TODO : méthode qui donne la ferme en fonction de l'id
+    public Page<Poule> getListeCoqs(@PathVariable long idFerme, Pageable pageable){
+        return pouleService.getPoulesByProprietaireAndSexe(fermeService.getFerme(idFerme) , 'M', pageable);
     }
-    //TODO
+
     @PutMapping("/coqs/nourrir")
     @PreAuthorize("isAuthenticated()")
-    public void nourrirCoqs(){} 
-    //TODO
+    public ResponseEntity<Page<Poule>> nourrirCoqs(@PathVariable long idFerme,@RequestBody String nourriture , Pageable pageable){
+        Page<Poule> allCoqs = pouleService.getPoulesByProprietaireAndSexe(fermeService.getFerme(idFerme) , 'M', pageable);
+        for (Poule c : allCoqs){
+            if (c == null){ 
+                return ResponseEntity.notFound().build();
+            }
+            pouleService.nourrirPoule(c.getIdPoule(), nourriture);
+        }
+        return ResponseEntity.ok(allCoqs);
+    } 
+    
     @PutMapping("/coqs/abreuver")
     @PreAuthorize("isAuthenticated()")
-    public void abreuverCoqs(){} 
+    public ResponseEntity<Page<Poule>> abreuverCoqs(@PathVariable long idFerme,@RequestBody String nourriture , Pageable pageable){
+        Page<Poule> allCoqs = pouleService.getPoulesByProprietaireAndSexe(fermeService.getFerme(idFerme) , 'M', pageable);
+        for (Poule c : allCoqs){
+            if (c == null){ 
+                return ResponseEntity.notFound().build();
+            }
+            pouleService.abreuverPoule(c.getIdPoule(), nourriture);
+        }
+        return ResponseEntity.ok(allCoqs);
+    } 
 
     // Gestion des volailles de type poule
 
     @GetMapping("/poules")
     @PreAuthorize("isAuthenticated()")
-    public Page<Poule> getListePoules(Pageable pageable){
-        return pouleService.getPoulesByProprietaireAndSexe(null, 'F', pageable);  // TODO : méthode qui donne la ferme en fonction de l'id
+    public Page<Poule> getListePoules(@PathVariable long idFerme, Pageable pageable){
+        return pouleService.getPoulesByProprietaireAndSexe(fermeService.getFerme(idFerme), 'F', pageable);
     }
-    //TODO
+
     @PutMapping("/poules/nourrir")
     @PreAuthorize("isAuthenticated()")
-    public void nourrirPoules(){} 
-    //TODO
+    public ResponseEntity<Page<Poule>> nourrirPoules(@PathVariable long idFerme,@RequestBody String nourriture , Pageable pageable){
+        Page<Poule> allPoules = pouleService.getPoulesByProprietaireAndSexe(fermeService.getFerme(idFerme), 'F', pageable);
+        for (Poule p : allPoules){
+            if (p == null){ 
+                return ResponseEntity.notFound().build();
+            }
+            pouleService.nourrirPoule(p.getIdPoule(), nourriture);
+        }
+        return ResponseEntity.ok(allPoules);
+    } 
+
     @PutMapping("/poules/abreuver")
     @PreAuthorize("isAuthenticated()")
-    public void abreuverPoules(){} 
+    public ResponseEntity<Page<Poule>> abreuverPoules(@PathVariable long idFerme,@RequestBody String nourriture , Pageable pageable){
+        Page<Poule> allPoules = pouleService.getPoulesByProprietaireAndSexe(fermeService.getFerme(idFerme), 'F', pageable);
+        for (Poule p : allPoules){
+            if (p == null){ 
+                return ResponseEntity.notFound().build();
+            }
+            pouleService.abreuverPoule(p.getIdPoule(), nourriture);
+        }
+        return ResponseEntity.ok(allPoules);    
+    } 
 
     // Gestion des volailles de type poussin
 
     @GetMapping("/poussins")
     @PreAuthorize("isAuthenticated()")
-    public Page<Poule> getListePoussins(Pageable pageable){
-        return pouleService.getPoulesByProprietaireAndSexe(null, 'U', pageable);  // TODO : méthode qui donne la ferme en fonction de l'id
+    public Page<Poule> getListePoussins(@PathVariable long idFerme, Pageable pageable){
+        return pouleService.getPoulesByProprietaireAndSexe(fermeService.getFerme(idFerme), 'U', pageable); 
     }
-    //TODO
+
     @PutMapping("/poussins/nourrir")
     @PreAuthorize("isAuthenticated()")
-    public void nourrirPoussins(){} 
-    //TODO
+    public ResponseEntity<Page<Poule>> nourrirPoussins(@PathVariable long idFerme,@RequestBody String nourriture , Pageable pageable){
+        Page<Poule> allPoussins = pouleService.getPoulesByProprietaireAndSexe(fermeService.getFerme(idFerme), 'U', pageable);
+        for (Poule p : allPoussins){
+            if (p == null){
+                return ResponseEntity.notFound().build();
+            }
+            pouleService.nourrirPoule(p.getIdPoule(), nourriture);
+        }
+        return ResponseEntity.ok(allPoussins);
+    } 
+
     @PutMapping("/poussins/abreuver")
     @PreAuthorize("isAuthenticated()")
-    public void abreuverPoussins(){} 
+    public ResponseEntity<Page<Poule>> abreuverPoussins(@PathVariable long idFerme,@RequestBody String nourriture , Pageable pageable){
+        Page<Poule> allPoussins = pouleService.getPoulesByProprietaireAndSexe(fermeService.getFerme(idFerme), 'U', pageable);
+        for (Poule p : allPoussins){
+            if (p == null){
+                return ResponseEntity.notFound().build();
+            }
+            pouleService.abreuverPoule(p.getIdPoule(), nourriture);
+        }
+        return ResponseEntity.ok(allPoussins);
+    } 
 
     // Méthode d'update 
-    /* TODO
     @PutMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Page<Poule>> updatePoulailler(@PathVariable long idFerme, Pageable pageable){
-
+        Page<Poule> allPoule = pouleRepository.findAllByProprietaire(fermeService.getFerme(idFerme), pageable);
+        for (Poule p : allPoule){
+            if (p == null){ 
+                return ResponseEntity.notFound().build();
+            }
+            pouleService.updatePoule(p.getIdPoule());
+        }
+        return ResponseEntity.ok(allPoule);
     } 
-     */
+    
     // Gestion d'un type de volaille donné
 
     @GetMapping("/{idPoule}")
@@ -167,6 +225,6 @@ public class PouleController {
 
     /* Pas logique qu'un utilisateur puisse delete son clapier
     @DeleteMapping
-    public void deleteClapier(){} 
+    public void deletePoulailler(){} 
     */
 }
