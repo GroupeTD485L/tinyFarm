@@ -54,17 +54,29 @@ public class FermeService {
         Compte compte = new Compte(pseudo, ferme);
         
         //initialisation des 3 poules
-        poules.add(new Poule('M', 2.5, 5));
-        poules.add(new Poule('F', 2.5, 5));
-        poules.add(new Poule('F', 2.5, 5));
+        Poule poule = new Poule('M', 2.5, 5);
+        poule.setProprietaire(ferme);
+        poules.add(poule);
+
+        poule = new Poule('F', 2.5, 5);
+        poule.setProprietaire(ferme);
+        poules.add(poule);
+        
+        poule = new Poule('F', 2.5, 5);
+        poule.setProprietaire(ferme);
+        poules.add(poule);
 
         ferme.setCompte(compte);
+        compte.setIdFerme(ferme);
         compteRepository.save(compte);
         ferme.setVache(vache);
+        vache.setProprietaire(ferme);
         vacheRepository.save(vache);
         ferme.setClapier(clapier);
+        clapier.setProprietaire(ferme);
         clapierRepository.save(clapier);
         ferme.setPoules(poules);
+        
         pouleRepository.saveAll(poules);
 
         return fermeRepository.save(ferme);
