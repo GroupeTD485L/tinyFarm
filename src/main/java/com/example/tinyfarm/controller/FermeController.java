@@ -9,7 +9,7 @@ import  com.example.tinyfarm.entity.Ferme;
 import  com.example.tinyfarm.service.FermeService;
 
 @RestController
-@RequestMapping("/compte/{idFerme}/") // URL
+@RequestMapping("/ferme/") // URL
 public class FermeController {
 
     private final FermeService fermeService;

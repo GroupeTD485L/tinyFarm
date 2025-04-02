@@ -19,21 +19,27 @@ public class Ferme{
     private Long idFerme;
 
     @OneToOne(mappedBy = "idFerme") // the value of mappedBy is the name of the association-mapping attribute on the owning side
+    @JsonManagedReference
     private Compte compte; 
 
+    // TODO: Fix : Remise en One-to-one ?
     @OneToOne(mappedBy = "proprietaire")
     private Remise remise;
 
     @OneToOne(mappedBy = "ferme")
+    @JsonManagedReference
     private Classement classement;
 
     @OneToMany(mappedBy = "proprietaire")
+    @JsonManagedReference
     private List<Poule> poules;
 
     @OneToOne(mappedBy = "proprietaire")
+    @JsonManagedReference
     private Vache vache;
 
     @OneToOne(mappedBy = "proprietaire")
+    @JsonManagedReference
     private Clapier clapier;
 
     private String nom;

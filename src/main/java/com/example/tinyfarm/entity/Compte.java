@@ -1,6 +1,8 @@
 package com.example.tinyfarm.entity;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -14,6 +16,7 @@ public class Compte{
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="idFerme", nullable = false) //le nom de l'attribut dans la table compte
+    @JsonBackReference
     private Ferme idFerme;
 
     @Column(unique = true, nullable = false)
