@@ -1,7 +1,5 @@
 package com.example.tinyfarm.controller;
 
-import java.net.Authenticator;
-
 import org.springframework.security.core.Authentication;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +10,7 @@ import  com.example.tinyfarm.service.CompteService;
 
 @RestController
 @PreAuthorize("isAuthenticated()")
-@RequestMapping("/comptes/{idFerme}") // URL
+@RequestMapping("/comptes/") // URL
 public class CompteController {
     
     private final CompteService compteService;
