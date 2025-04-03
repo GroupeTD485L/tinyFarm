@@ -30,8 +30,18 @@ def test_create_or_get_farm(headers):
 
     farm_data = response.json()
     print(farm_data)
-    # expected_keys = {"username", "name", "location"}
+    expected_keys = {"idFerme", "compte", "remise", "classement", "poules", "vache", "clapier", "nom", "ecus", "enHibernation", "achatRestant", "dernierAchat"}
 
+    # Ensure the farm response contains the required fields
+    assert expected_keys.issubset(farm_data.keys()), f"Missing keys in response: {farm_data.keys()}"
+
+    print("✅ Test passed: Farm was successfully retrieved or created.")
+
+
+def test_create_or_get_farms():
+    """Test fetching or creating a farm for the authenticated user."""
+    response = requests.get(f"{APP_URL}/ferme/")
+    assert response.status_code == 401, f"Failed to fetch/create farm: {response.text}"
     # Ensure the farm response contains the required fields
     # assert expected_keys.issubset(farm_data.keys()), f"Missing keys in response: {farm_data.keys()}"
 
