@@ -6,6 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import  com.example.tinyfarm.service.FermeService;
 import  com.example.tinyfarm.entity.Poule;
@@ -163,8 +164,8 @@ public class PouleController {
     } 
 
     // Méthode d'update 
-    @PutMapping
     @PreAuthorize("isAuthenticated()")
+    @Scheduled(cron="0 00 * * ?")
     public ResponseEntity<Page<Poule>> updatePoulailler(Authentication authentication, Pageable pageable){
         String pseudo = authentication.getName();
         Page<Poule> allPoule = pouleRepository.findAllByProprietaire(fermeService.getOrCreateFermeForUser(pseudo), pageable);

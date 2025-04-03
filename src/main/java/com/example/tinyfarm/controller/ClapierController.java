@@ -4,6 +4,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import  com.example.tinyfarm.entity.Clapier;
 import  com.example.tinyfarm.service.ClapierService;
@@ -39,7 +40,7 @@ public class ClapierController {
 
     // Met à jour les infos du clapier
     @PreAuthorize("isAuthenticated()")
-    @PutMapping 
+    @Scheduled(cron="0 00 * * ?")
     public ResponseEntity<Clapier> updateClapier(Authentication authentication){
         String pseudo = authentication.getName();
         Clapier clapier = clapierService.updateClapier(pseudo); // Met à jour les infos du clapier

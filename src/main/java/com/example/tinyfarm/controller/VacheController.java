@@ -4,6 +4,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 
 
 import  com.example.tinyfarm.entity.Vache;
@@ -47,7 +48,8 @@ public class VacheController {
         }
     }
 
-    @PutMapping
+    //update de la vache en fin de journee
+    @Scheduled(cron="0 00 * * ?")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Vache> updateVache(Authentication authentication){
         Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
@@ -59,6 +61,20 @@ public class VacheController {
         }
     } 
 
+    //update de la production de lait de la vache
+    @Scheduled(cron="0 06,18 * * ?")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Vache> updateLaitVache(Authentication authentication){
+        Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
+        Vache vache = vacheService.updateLaitVache(ferme);
+        if (vache != null){
+            return ResponseEntity.ok(vache);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    } 
+
+    
 /*  Plutôt en tant que Service à utiliser lorsque la vache meurt
     @DeleteMapping("/kill")
     @PreAuthorize("isAuthenticated()")
