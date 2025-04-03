@@ -40,6 +40,11 @@ public class PouleService {
     }
 
     @Transactional
+    public Page<Poule> getAllMyPoules(Ferme ferme, Pageable pageable) {
+        return pouleRepository.findAllByProprietaire(ferme, pageable);
+    }
+
+    @Transactional
     public Page<Poule> getPoulesByProprietaireAndSexe(Ferme ferme, char sexe, Pageable pageable) {
         return pouleRepository.findAllByProprietaireAndSexe(ferme, sexe, pageable);
     }

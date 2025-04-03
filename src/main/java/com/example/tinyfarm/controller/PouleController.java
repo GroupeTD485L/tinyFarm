@@ -17,7 +17,7 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping("/compte/{idFerme}/poulailler")
+@RequestMapping("/poulailler")
 public class PouleController {
     
     private final PouleService pouleService;
@@ -32,8 +32,9 @@ public class PouleController {
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Poule> creerPoule(@PathVariable long idFerme, @RequestBody Poule poule){
-        poule.setProprietaire(fermeService.getFerme(idFerme));
+    public ResponseEntity<Poule> creerPoule(Authentication authentication, @RequestBody Poule poule){
+        String pseudo = authentication.getName();
+        poule.setProprietaire(fermeService.getOrCreateFermeForUser(pseudo));
         Poule pouleAdded = pouleService.addPoule(poule);
         if(pouleAdded != null){
             return ResponseEntity.ok(pouleAdded);
@@ -45,21 +46,24 @@ public class PouleController {
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
-    public Page<Poule> getListeVolailles(Pageable pageable){
-        return pouleService.getAllPoules(pageable);
+    public Page<Poule> getListeVolailles(Authentication authentication, Pageable pageable){
+        String pseudo = authentication.getName();
+        return pouleService.getAllMyPoules(fermeService.getOrCreateFermeForUser(pseudo), pageable);
     }
 
     // Gestion des volailles de type coq 
     @GetMapping("/coqs")
     @PreAuthorize("isAuthenticated()")
-    public Page<Poule> getListeCoqs(@PathVariable long idFerme, Pageable pageable){
-        return pouleService.getPoulesByProprietaireAndSexe(fermeService.getFerme(idFerme) , 'M', pageable);
+    public Page<Poule> getListeCoqs(Authentication authentication, Pageable pageable){
+        String pseudo = authentication.getName();
+        return pouleService.getPoulesByProprietaireAndSexe(fermeService.getOrCreateFermeForUser(pseudo) , 'M', pageable);
     }
 
     @PutMapping("/coqs/nourrir")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Page<Poule>> nourrirCoqs(@PathVariable long idFerme,@RequestBody String nourriture , Pageable pageable){
-        Page<Poule> allCoqs = pouleService.getPoulesByProprietaireAndSexe(fermeService.getFerme(idFerme) , 'M', pageable);
+    public ResponseEntity<Page<Poule>> nourrirCoqs(Authentication authentication,@RequestBody String nourriture , Pageable pageable){
+        String pseudo = authentication.getName();
+        Page<Poule> allCoqs = pouleService.getPoulesByProprietaireAndSexe(fermeService.getOrCreateFermeForUser(pseudo) , 'M', pageable);
         for (Poule c : allCoqs){
             if (c == null){ 
                 return ResponseEntity.notFound().build();
@@ -71,8 +75,9 @@ public class PouleController {
     
     @PutMapping("/coqs/abreuver")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Page<Poule>> abreuverCoqs(@PathVariable long idFerme,@RequestBody String nourriture , Pageable pageable){
-        Page<Poule> allCoqs = pouleService.getPoulesByProprietaireAndSexe(fermeService.getFerme(idFerme) , 'M', pageable);
+    public ResponseEntity<Page<Poule>> abreuverCoqs(Authentication authentication, @RequestBody String nourriture , Pageable pageable){
+        String pseudo = authentication.getName();
+        Page<Poule> allCoqs = pouleService.getPoulesByProprietaireAndSexe(fermeService.getOrCreateFermeForUser(pseudo), 'M', pageable);
         for (Poule c : allCoqs){
             if (c == null){ 
                 return ResponseEntity.notFound().build();
@@ -86,14 +91,16 @@ public class PouleController {
 
     @GetMapping("/poules")
     @PreAuthorize("isAuthenticated()")
-    public Page<Poule> getListePoules(@PathVariable long idFerme, Pageable pageable){
-        return pouleService.getPoulesByProprietaireAndSexe(fermeService.getFerme(idFerme), 'F', pageable);
+    public Page<Poule> getListePoules(Authentication authentication, Pageable pageable){
+        String pseudo = authentication.getName();
+        return pouleService.getPoulesByProprietaireAndSexe(fermeService.getOrCreateFermeForUser(pseudo), 'F', pageable);
     }
 
     @PutMapping("/poules/nourrir")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Page<Poule>> nourrirPoules(@PathVariable long idFerme,@RequestBody String nourriture , Pageable pageable){
-        Page<Poule> allPoules = pouleService.getPoulesByProprietaireAndSexe(fermeService.getFerme(idFerme), 'F', pageable);
+    public ResponseEntity<Page<Poule>> nourrirPoules(Authentication authentication,@RequestBody String nourriture , Pageable pageable){
+        String pseudo = authentication.getName();
+        Page<Poule> allPoules = pouleService.getPoulesByProprietaireAndSexe(fermeService.getOrCreateFermeForUser(pseudo), 'F', pageable);
         for (Poule p : allPoules){
             if (p == null){ 
                 return ResponseEntity.notFound().build();
@@ -105,8 +112,9 @@ public class PouleController {
 
     @PutMapping("/poules/abreuver")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Page<Poule>> abreuverPoules(@PathVariable long idFerme,@RequestBody String nourriture , Pageable pageable){
-        Page<Poule> allPoules = pouleService.getPoulesByProprietaireAndSexe(fermeService.getFerme(idFerme), 'F', pageable);
+    public ResponseEntity<Page<Poule>> abreuverPoules(Authentication authentication, @RequestBody String nourriture , Pageable pageable){
+        String pseudo = authentication.getName();
+        Page<Poule> allPoules = pouleService.getPoulesByProprietaireAndSexe(fermeService.getOrCreateFermeForUser(pseudo), 'F', pageable);
         for (Poule p : allPoules){
             if (p == null){ 
                 return ResponseEntity.notFound().build();
@@ -120,14 +128,16 @@ public class PouleController {
 
     @GetMapping("/poussins")
     @PreAuthorize("isAuthenticated()")
-    public Page<Poule> getListePoussins(@PathVariable long idFerme, Pageable pageable){
-        return pouleService.getPoulesByProprietaireAndSexe(fermeService.getFerme(idFerme), 'U', pageable); 
+    public Page<Poule> getListePoussins(Authentication authentication, Pageable pageable){
+        String pseudo = authentication.getName();
+        return pouleService.getPoulesByProprietaireAndSexe(fermeService.getOrCreateFermeForUser(pseudo), 'U', pageable); 
     }
 
     @PutMapping("/poussins/nourrir")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Page<Poule>> nourrirPoussins(@PathVariable long idFerme,@RequestBody String nourriture , Pageable pageable){
-        Page<Poule> allPoussins = pouleService.getPoulesByProprietaireAndSexe(fermeService.getFerme(idFerme), 'U', pageable);
+    public ResponseEntity<Page<Poule>> nourrirPoussins(Authentication authentication, @RequestBody String nourriture , Pageable pageable){
+        String pseudo = authentication.getName();
+        Page<Poule> allPoussins = pouleService.getPoulesByProprietaireAndSexe(fermeService.getOrCreateFermeForUser(pseudo), 'U', pageable);
         for (Poule p : allPoussins){
             if (p == null){
                 return ResponseEntity.notFound().build();
@@ -135,12 +145,14 @@ public class PouleController {
             pouleService.nourrirPoule(p.getIdPoule(), nourriture);
         }
         return ResponseEntity.ok(allPoussins);
-    } 
+    }
+    
 
     @PutMapping("/poussins/abreuver")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Page<Poule>> abreuverPoussins(@PathVariable long idFerme,@RequestBody String nourriture , Pageable pageable){
-        Page<Poule> allPoussins = pouleService.getPoulesByProprietaireAndSexe(fermeService.getFerme(idFerme), 'U', pageable);
+    public ResponseEntity<Page<Poule>> abreuverPoussins(Authentication authentication, @RequestBody String nourriture , Pageable pageable){
+        String pseudo = authentication.getName();
+        Page<Poule> allPoussins = pouleService.getPoulesByProprietaireAndSexe(fermeService.getOrCreateFermeForUser(pseudo), 'U', pageable);
         for (Poule p : allPoussins){
             if (p == null){
                 return ResponseEntity.notFound().build();
@@ -153,8 +165,9 @@ public class PouleController {
     // Méthode d'update 
     @PutMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Page<Poule>> updatePoulailler(@PathVariable long idFerme, Pageable pageable){
-        Page<Poule> allPoule = pouleRepository.findAllByProprietaire(fermeService.getFerme(idFerme), pageable);
+    public ResponseEntity<Page<Poule>> updatePoulailler(Authentication authentication, Pageable pageable){
+        String pseudo = authentication.getName();
+        Page<Poule> allPoule = pouleRepository.findAllByProprietaire(fermeService.getOrCreateFermeForUser(pseudo), pageable);
         for (Poule p : allPoule){
             if (p == null){ 
                 return ResponseEntity.notFound().build();
