@@ -1,6 +1,8 @@
 package com.example.tinyfarm.entity;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 
 import lombok.Data; // Importation de la classe Data de Lombok qui génère automatiquement les méthodes equals, hashCode, toString, getters et setters
@@ -27,6 +29,7 @@ public class Clapier {
     @OneToOne
     @MapsId
     @JoinColumn(name = "proprietaire", nullable = false)
+    @JsonBackReference
     private Ferme proprietaire; // le propriétaire du clapier
  
     // Constructeurs

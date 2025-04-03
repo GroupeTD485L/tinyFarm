@@ -1,6 +1,8 @@
 package com.example.tinyfarm.entity;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -14,6 +16,7 @@ public class Classement{
     @OneToOne
     @MapsId
     @JoinColumn(name="idFerme", nullable = false)
+    @JsonBackReference
     private Ferme ferme;
 
     private float score;

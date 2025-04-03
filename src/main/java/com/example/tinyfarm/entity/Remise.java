@@ -1,6 +1,8 @@
 package com.example.tinyfarm.entity;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -14,6 +16,7 @@ public class Remise{
 
     @OneToOne
     @JoinColumn(name="proprietaire", nullable = false) //le nom de l'attribut dans la table Remise
+    @JsonBackReference
     private Ferme proprietaire;
 
     @ManyToOne
