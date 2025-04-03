@@ -49,7 +49,7 @@ public class VacheController {
     }
 
     //update de la vache en fin de journee
-    @Scheduled(cron="0 00 * * ?")
+    @Scheduled(cron="0 0 0 * * ?")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Vache> updateVache(Authentication authentication){
         Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
@@ -62,7 +62,7 @@ public class VacheController {
     }
 
     //update de la production de lait de la vache
-    @Scheduled(cron="0 06,18 * * ?")
+    @Scheduled(cron="0 0 6,18 * * ?")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Vache> updateLaitVache(Authentication authentication){
         Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());

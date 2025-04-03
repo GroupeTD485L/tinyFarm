@@ -48,7 +48,7 @@ public class FermeController {
 
     // Mettre à jour une ferme
     @PreAuthorize("isAuthenticated()")
-    @Scheduled(cron="0 00 * * ?")
+    @Scheduled(cron="0 0 0 * * ?")
     public ResponseEntity<Ferme> updateFerme(Authentication authentication) {
         // Récupérer le nom d'utilisateur de l'authentification (car la méthode updateFerme prend un String)
         String pseudo = authentication.getName();

@@ -40,7 +40,7 @@ public class ClapierController {
 
     // Met à jour les infos du clapier
     @PreAuthorize("isAuthenticated()")
-    @Scheduled(cron="0 00 * * ?")
+    @Scheduled(cron="0 0 0 * * ?")
     public ResponseEntity<Clapier> updateClapier(Authentication authentication){
         String pseudo = authentication.getName();
         Clapier clapier = clapierService.updateClapier(pseudo); // Met à jour les infos du clapier
