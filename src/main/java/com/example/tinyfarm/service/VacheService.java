@@ -247,6 +247,16 @@ public class VacheService {
                 
         return vacheRepository.save(vache);
     }
+
+    @Transactional
+    public Vache faireMalade(Ferme ferme) {
+        Vache vache = ferme.getVache();
+        if (vache == null) {
+            return null;
+        }
+        vache.setMaladeDepuis(LocalDateTime.now().minusDays(4));
+        return vacheRepository.save(vache);
+    }
     
 }
 

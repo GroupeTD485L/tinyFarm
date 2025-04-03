@@ -130,4 +130,17 @@ public class VacheController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PutMapping("/faireMalade")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Vache> faireMaladeVache(Authentication authentication){
+        Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
+        Vache vache = vacheService.faireMalade(ferme);
+        if (vache != null){
+            return ResponseEntity.ok(vache);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
 }
