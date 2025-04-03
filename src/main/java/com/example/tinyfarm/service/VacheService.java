@@ -3,6 +3,9 @@ package com.example.tinyfarm.service;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.tinyfarm.entity.Vache;
@@ -66,6 +69,20 @@ public class VacheService {
         }
         
         return vacheRepository.save(vache);
+    }
+
+    @Transactional
+    public void updateAllVache() {
+        int iPage = 0;
+        Page<Vache> vaches;
+        do {
+            vaches = vacheRepository.findAll(PageRequest.of(iPage, 20));
+            for (Vache vache : vaches) {
+                Ferme ferme = vache.getProprietaire();
+                updateVache(ferme);
+            }
+            iPage++;
+        } while (vaches.hasNext());
     }
 
     /**

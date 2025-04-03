@@ -11,6 +11,7 @@ import  com.example.tinyfarm.entity.Vache;
 import com.example.tinyfarm.entity.Ferme;
 import com.example.tinyfarm.service.FermeService;
 import  com.example.tinyfarm.service.VacheService;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/vache")
@@ -48,8 +49,23 @@ public class VacheController {
         }
     }
 
+    @Scheduled(cron="0 0 0 * * ?")
+    public void scheduleUpdateAllVache(){
+        vacheService.updateAllVache();
+    }
+
+    @PutMapping("admin/updateAllVache")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> updateAllVache() {
+        try {
+            vacheService.updateAllVache();
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
+
     //update de la vache en fin de journee
-    // @Scheduled(cron="0 0 0 * * ?")
     @PutMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Vache> updateVache(Authentication authentication){
