@@ -31,7 +31,12 @@ public class ProduitService {
     public void populateData() {
         List<String> nomsProduits = new ArrayList<>(List.of(
             "Seau d'eau",
-            "Botte de foin"
+            "Botte de foin",
+            "Seringue",
+            "Savon",
+            "Oeuf",
+            "Lait"
+            // TODO : Rajouter les objets si besoin
         ));
 
         for (String nomProduit : nomsProduits) {
