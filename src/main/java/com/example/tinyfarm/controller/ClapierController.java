@@ -4,43 +4,31 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import  com.example.tinyfarm.entity.Clapier;
 import  com.example.tinyfarm.service.ClapierService;
 
 
 @RestController 
-@RequestMapping("/compte/{idFerme}/clapier") // URL
+@RequestMapping("/ferme/clapier") // URL
 public class ClapierController {
     
     private final ClapierService clapierService; 
-
 
     // Constructeur du Controller
     public ClapierController(ClapierService clapierService){
         this.clapierService = clapierService;
     }
 
-
-    // Créer le clapier TODO /!\ VOIR LE CORPS DE CLAPIERSERVICE.CREERCLAPIER
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping
-    public ResponseEntity<Clapier> creerClapier(@PathVariable Long idFerme){ 
-        Clapier clapier = clapierService.creerClapier(idFerme); // Crée le clapier
-        if(clapier != null) {
-            return ResponseEntity.ok(clapier); // On renvoie le clapier créé
-        } else {
-            // Si le clapier n'a pas pu être créé
-            return ResponseEntity.badRequest().build();
-        }
-    }  
-
+    // Création du clapier non utile car déjà fait dans la création de la ferme
 
     // Obtenir les infos du clapier 
     @PreAuthorize("isAuthenticated()")
     @GetMapping
-    public ResponseEntity<Clapier> getClapier(@PathVariable Long fermeId) {
-        Clapier clapier = clapierService.getInfoClapier(fermeId); // Récupére les infos du clapier cible
+    public ResponseEntity<Clapier> getClapier(Authentication authentication) {
+        String pseudo = authentication.getName(); // Récupérer le nom d'utilisateur de l'authentification
+        Clapier clapier = clapierService.getInfoClapier(pseudo); // Récupére les infos du clapier cible
         if(clapier != null) {
             return ResponseEntity.ok(clapier); // On renvoie les infos modifiées du clapier
         } else {
@@ -52,9 +40,10 @@ public class ClapierController {
 
     // Met à jour les infos du clapier
     @PreAuthorize("isAuthenticated()")
-    @PutMapping 
-    public ResponseEntity<Clapier> updateClapier(@PathVariable Long fermeId){
-        Clapier clapier = clapierService.updateClapier(fermeId); // Met à jour les infos du clapier
+    @Scheduled(cron="0 00 * * ?")
+    public ResponseEntity<Clapier> updateClapier(Authentication authentication){
+        String pseudo = authentication.getName();
+        Clapier clapier = clapierService.updateClapier(pseudo); // Met à jour les infos du clapier
         if(clapier != null) {
             return ResponseEntity.ok(clapier); // On renvoie les infos modifiées du clapier
         } else {
@@ -67,8 +56,9 @@ public class ClapierController {
     // Nourrir les membres du clapier
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/nourrir")
-    public ResponseEntity<Clapier> nourrirClapier(@PathVariable Long fermeId){
-        Clapier clapier = clapierService.nourrirClapier(fermeId); // Met à jour les infos du clapier
+    public ResponseEntity<Clapier> nourrirClapier(Authentication authentication){
+        String pseudo = authentication.getName();
+        Clapier clapier = clapierService.nourrirClapier(pseudo); // Met à jour les infos du clapier
         if(clapier != null) {
             return ResponseEntity.ok(clapier); // On renvoie les infos modifiées du clapier
         } else {
@@ -81,8 +71,9 @@ public class ClapierController {
     // Abreuver les membres du clapier
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/abreuver")
-    public ResponseEntity<Clapier> abreuverClapier(@PathVariable Long fermeId){
-        Clapier clapier = clapierService.abbreuverClapier(fermeId); // Met à jour les infos du clapier
+    public ResponseEntity<Clapier> abreuverClapier(Authentication authentication){
+        String pseudo = authentication.getName();
+        Clapier clapier = clapierService.abbreuverClapier(pseudo); // Met à jour les infos du clapier
         if(clapier != null) {
             return ResponseEntity.ok(clapier); // On renvoie les infos modifiées du clapier
         } else {
@@ -95,8 +86,9 @@ public class ClapierController {
     // Soigner les membres du clapier
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/soigner")
-    public ResponseEntity<Clapier> soignerClapier(@PathVariable Long fermeId){
-        Clapier clapier = clapierService.SoignerClapier(fermeId); // Met à jour les infos du clapier
+    public ResponseEntity<Clapier> soignerClapier(Authentication authentication){
+        String pseudo = authentication.getName();
+        Clapier clapier = clapierService.SoignerClapier(pseudo); // Met à jour les infos du clapier
         if(clapier != null) {
             return ResponseEntity.ok(clapier); // On renvoie les infos modifiées du clapier
         } else {
@@ -109,8 +101,9 @@ public class ClapierController {
     // Laver les membres du clapier
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/laver")
-    public ResponseEntity<Clapier> laverClapier(@PathVariable Long fermeId){
-        Clapier clapier = clapierService.laverClapier(fermeId); // Met à jour les infos du clapier
+    public ResponseEntity<Clapier> laverClapier(Authentication authentication){
+        String pseudo = authentication.getName();
+        Clapier clapier = clapierService.laverClapier(pseudo); // Met à jour les infos du clapier
         if(clapier != null) {
             return ResponseEntity.ok(clapier); // On renvoie les infos du clapier
         } else {
@@ -120,17 +113,20 @@ public class ClapierController {
     }
 
 
+    /* 
     // Supprime le clapier de la ferme
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/supprimer")
-    public ResponseEntity<Void> detruireClapier(@PathVariable Long fermeId){
+    public ResponseEntity<Void> detruireClapier(Authentification authentification){
+        String pseudo = authentication.getName();
         // On doit gérer une exception (car renvoie un void), si le clapier existe, ou pas
         try {
-            clapierService.supprimerClapier(fermeId);
+            clapierService.supprimerClapier(pseudo);
             return ResponseEntity.ok().build(); // Le clapier a été supprimé correctement
         } catch (Exception e) {
             return ResponseEntity.badRequest().build(); // Si le clapier n'a pas pu être supprimé
         }
     }
+     */
 } 
 

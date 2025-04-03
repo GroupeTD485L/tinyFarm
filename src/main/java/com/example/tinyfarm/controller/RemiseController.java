@@ -22,7 +22,7 @@ import  com.example.tinyfarm.repository.RemiseRepository;
 
 @RestController
 @PreAuthorize("isAuthenticated()")
-@RequestMapping("/compte/{idFerme}/remise")
+@RequestMapping("/remise")
 public class RemiseController {
     
     private final RemiseService remiseService;
@@ -39,8 +39,8 @@ public class RemiseController {
     }
 
     @PostMapping
-    public ResponseEntity<Remise> rajouterProduit(@PathVariable Long fermeId, @RequestBody String nomProduit) {
-        Ferme ferme = fermeService.getFerme(fermeId);
+    public ResponseEntity<Remise> rajouterProduit(Authentication authentication, @RequestBody String nomProduit) {
+        Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
         Produit produit = produitService.getProduit(nomProduit);
         Remise remise = remiseService.addProduit2Remise(ferme, produit);
 
@@ -53,8 +53,8 @@ public class RemiseController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping
-    public ResponseEntity<List<Remise>> infoRemise(@PathVariable Long fermeId) {
-        Ferme ferme = fermeService.getFerme(fermeId);
+    public ResponseEntity<List<Remise>> infoRemise(Authentication authentication) {
+        Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
         List<Remise> remises = remiseService.getInfoRemise(ferme);
 
         for (Remise remise : remises) {
@@ -66,8 +66,8 @@ public class RemiseController {
     
     //IDK how to w/ getInfoProduit in service
     @GetMapping("/{idProduit}")
-    public ResponseEntity<Remise> infoProduit(@PathVariable Long fermeId, @RequestBody String nomProduit){
-        Ferme ferme = fermeService.getFerme(fermeId);
+    public ResponseEntity<Remise> infoProduit(Authentication authentication, @RequestBody String nomProduit){
+        Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
         Produit produit = produitService.getProduit(nomProduit);
         Optional<Remise> optionalRemise = remiseRepository.findByIdProduitAndProprietaire(produit,ferme);
 
@@ -81,8 +81,8 @@ public class RemiseController {
     
 
     @PutMapping
-    public ResponseEntity<Remise> updateProduit(@PathVariable Long fermeId, @RequestBody String nomProduit, @RequestBody int quantite) {
-        Ferme ferme = fermeService.getFerme(fermeId);
+    public ResponseEntity<Remise> updateProduit(Authentication authentication, @RequestBody String nomProduit, @RequestBody int quantite) {
+        Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
         Produit produit = produitService.getProduit(nomProduit);
         Remise updatedRemise = remiseService.updateRemiseProduit(ferme, produit, quantite);
 
@@ -94,8 +94,9 @@ public class RemiseController {
 
     
     @DeleteMapping
-    public ResponseEntity<List<Remise>> deleteRemise(@PathVariable Long fermeId) {
-        List<Remise> deletedRemises = remiseService.deleteRemises(fermeService.getFerme(fermeId));
+    public ResponseEntity<List<Remise>> deleteRemise(Authentication authentication) {
+        String pseudo = authentication.getName();
+        List<Remise> deletedRemises = remiseService.deleteRemises(fermeService.getOrCreateFermeForUser(pseudo));
 
         return ResponseEntity.ok(deletedRemises);
     }

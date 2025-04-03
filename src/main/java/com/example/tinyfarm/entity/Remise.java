@@ -1,5 +1,4 @@
 package com.example.tinyfarm.entity;
-import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -14,7 +13,7 @@ public class Remise{
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // Auto-incrémentation de l'ID
     private Long idRemise;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="proprietaire", nullable = false) //le nom de l'attribut dans la table Remise
     @JsonBackReference
     private Ferme proprietaire;

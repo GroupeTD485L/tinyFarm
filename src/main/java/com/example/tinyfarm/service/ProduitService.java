@@ -7,6 +7,8 @@ import com.example.tinyfarm.entity.Produit;
 import com.example.tinyfarm.repository.ProduitRepository;
 
 import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ProduitService {
@@ -23,5 +25,23 @@ public class ProduitService {
             throw new IllegalArgumentException("Il n'y a pas de produit nommé " + nomProduit + " !");
         }
         return existingProduit.get();
+    }
+
+    @Transactional
+    public void populateData() {
+        List<String> nomsProduits = new ArrayList<>(List.of(
+            "Seau d'eau",
+            "Botte de foin",
+            "Seringue",
+            "Savon",
+            "Oeuf",
+            "Lait"
+            // TODO : Rajouter les objets si besoin
+        ));
+
+        for (String nomProduit : nomsProduits) {
+            Produit produit = new Produit(nomProduit);
+            produitRepository.save(produit);
+        }
     }
 }

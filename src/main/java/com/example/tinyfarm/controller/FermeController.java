@@ -4,6 +4,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import  com.example.tinyfarm.entity.Ferme;
 import  com.example.tinyfarm.service.FermeService;
@@ -47,7 +48,7 @@ public class FermeController {
 
     // Mettre à jour une ferme
     @PreAuthorize("isAuthenticated()")
-    @PutMapping
+    @Scheduled(cron="0 00 * * ?")
     public ResponseEntity<Ferme> updateFerme(Authentication authentication) {
         // Récupérer le nom d'utilisateur de l'authentification (car la méthode updateFerme prend un String)
         String pseudo = authentication.getName();
