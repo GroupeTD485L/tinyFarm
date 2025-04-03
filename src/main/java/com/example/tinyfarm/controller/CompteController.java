@@ -12,7 +12,7 @@ import  com.example.tinyfarm.service.CompteService;
 
 @RestController
 @PreAuthorize("isAuthenticated()")
-@RequestMapping("/comptes/{idFerme}") // URL
+@RequestMapping("/comptes/") // URL
 public class CompteController {
     
     private final CompteService compteService;
@@ -44,7 +44,7 @@ public class CompteController {
         // On update le compte
         Compte compte = compteService.updateCompte(pseudo);
 
-        return ResponseEntity.ok(compte); // On renvoie le compte existante
+        return ResponseEntity.ok(compte); // On renvoie le compte existant
     } 
 
 
