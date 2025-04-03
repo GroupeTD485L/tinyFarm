@@ -19,9 +19,15 @@ public class Produit{
     public Produit(){
     }
 
-    public Produit(String nom,String description,boolean estVendable){
+    public Produit(String nom, String description,boolean estVendable){
         this.nom = nom;
         this.description = description;
         this.estVendable = estVendable;
+    }
+
+    public Produit(String nom) {
+        this.nom = nom;
+        this.description = "Voici " + nom;
+        this.estVendable = true;
     }
 }
