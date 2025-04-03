@@ -74,6 +74,8 @@ public class PouleService {
         Optional<Poule> existingPoule = pouleRepository.findById(id);
         Poule poule = existingPoule.get();
         long differenceInDays = Duration.between(poule.getDernierRepas(), LocalDateTime.now()).toDays();
+        
+        poule.setAge(poule.getAge()+1);
         if ( differenceInDays == 1) {
             poule.setPoids(poule.getPoids()-0.2);
         } else if ( differenceInDays == 2) {
@@ -83,12 +85,13 @@ public class PouleService {
         } else if (differenceInDays >= 4) {
             pouleRepository.deleteById(id); // La poule meurt, on la supprime
         }
-        if (Duration.between(poule.getMaladeDepuis(), LocalDateTime.now()).toDays() >= 4) {
-            pouleRepository.deleteById(id); // La poule meurt, on la supprime
-        }
-        if (poule.getAge()>=5 && poule.getPoids()>= 2.5) {
+        if (poule.getAge()==5 && poule.getPoids()>= 2.5) {
             Random random = new Random();
             poule.setSexe(random.nextBoolean() ? 'M' : 'F');
+        }
+        
+        if (Duration.between(poule.getMaladeDepuis(), LocalDateTime.now()).toDays() >= 4) {
+            pouleRepository.deleteById(id); // La poule meurt, on la supprime
         }
     
     }
