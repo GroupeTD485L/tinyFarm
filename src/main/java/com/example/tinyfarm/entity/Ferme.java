@@ -23,8 +23,9 @@ public class Ferme{
     private Compte compte; 
 
     // TODO: Fix : Remise en One-to-one ?
-    @OneToOne(mappedBy = "proprietaire")
-    private Remise remise;
+    @OneToMany(mappedBy = "proprietaire")
+    @JsonManagedReference
+    private List<Remise> remise;
 
     @OneToOne(mappedBy = "ferme")
     @JsonManagedReference
