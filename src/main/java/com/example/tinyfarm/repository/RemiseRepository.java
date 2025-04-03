@@ -16,5 +16,4 @@ public interface RemiseRepository extends JpaRepository<Remise, Long> {
     Optional<Remise> findById(Long idRemise);
     List<Remise> findByProprietaire(Ferme ferme);
     Optional<Remise> findByProprietaireAndIdProduit(Ferme ferme,Produit produit); 
-
 }

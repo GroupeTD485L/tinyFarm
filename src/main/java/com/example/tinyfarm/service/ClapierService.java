@@ -10,43 +10,41 @@ import com.example.tinyfarm.entity.Ferme;
 import com.example.tinyfarm.entity.Produit;
 import com.example.tinyfarm.entity.Remise;
 import com.example.tinyfarm.repository.ClapierRepository;
-import com.example.tinyfarm.repository.FermeRepository;
 import com.example.tinyfarm.repository.RemiseRepository;
 import com.example.tinyfarm.repository.ProduitRepository;
 
 @Service
 public class ClapierService {
     private final ClapierRepository clapierRepository;
-    private final FermeRepository fermeRepository;
     private final RemiseRepository remiseRepository;
     private final ProduitRepository produitRepository;
+    private final FermeService fermeService;
 
-    public ClapierService(ClapierRepository clapierRepository, FermeRepository fermeRepository, RemiseRepository remiseRepository,ProduitRepository produitRepository) {
+    public ClapierService(ClapierRepository clapierRepository, RemiseRepository remiseRepository,ProduitRepository produitRepository,FermeService fermeService) {
         this.clapierRepository = clapierRepository;
-        this.fermeRepository = fermeRepository;
         this.remiseRepository = remiseRepository;
         this.produitRepository = produitRepository;
+        this.fermeService = fermeService;
     }
     @Transactional
-    public Clapier creerClapier(Long idFerme) {
+    public Clapier creerClapier(String pseudo) {
         return null;
     }
     @Transactional
-    public Clapier getInfoClapier(Long idFerme) {
-        Optional<Clapier> clapier = clapierRepository.findById(idFerme);
+    public Clapier getInfoClapier(String pseudo) {
+        Ferme ferme = fermeService.getOrCreateFermeForUser(pseudo);
+        long fermeId = ferme.getIdFerme();
+        Optional<Clapier> clapier = clapierRepository.findById(fermeId);
         if (clapier.isPresent()) {
             return clapier.get();
         } else {
             return null;
         }
     }
+
     @Transactional
-    public Clapier updateClapier(Long idFerme ) {
-        Optional<Ferme> optFerme = fermeRepository.findById(idFerme);
-        if (!optFerme.isPresent()) {
-            return null;
-        }
-        Ferme ferme = optFerme.get();
+    public Clapier updateClapier(String pseudo) {
+        Ferme ferme = fermeService.getOrCreateFermeForUser(pseudo);
         Clapier clapier = ferme.getClapier();
         if (clapier == null) {
             return null;
@@ -91,12 +89,9 @@ public class ClapierService {
     }
 
     @Transactional
-    public Clapier nourrirClapier(Long idFerme) {
-        Optional<Ferme> optFerme = fermeRepository.findById(idFerme);
-        if (!optFerme.isPresent()) {
-            return null;
-        }
-        Clapier clapier = optFerme.get().getClapier();
+    public Clapier nourrirClapier(String pseudo) {
+        Ferme ferme = fermeService.getOrCreateFermeForUser(pseudo);
+        Clapier clapier = ferme.getClapier();
         if (clapier == null) {
             return null;
         }
@@ -123,12 +118,9 @@ public class ClapierService {
     }
 
     @Transactional
-    public Clapier abbreuverClapier(Long idFerme) {
-        Optional<Ferme> optFerme = fermeRepository.findById(idFerme);
-        if (!optFerme.isPresent()) {
-            return null;
-        }
-        Clapier clapier = optFerme.get().getClapier();
+    public Clapier abbreuverClapier(String pseudo) {
+        Ferme ferme = fermeService.getOrCreateFermeForUser(pseudo);
+        Clapier clapier = ferme.getClapier();
         
         if (clapier == null) {
             return null;
@@ -154,12 +146,9 @@ public class ClapierService {
     }
 
     @Transactional
-    public Clapier SoignerClapier(Long idFerme) {
-        Optional<Ferme> optFerme = fermeRepository.findById(idFerme);
-        if (!optFerme.isPresent()) {
-            return null;
-        }
-        Clapier clapier = optFerme.get().getClapier();
+    public Clapier SoignerClapier(String pseudo) {
+        Ferme ferme = fermeService.getOrCreateFermeForUser(pseudo);
+        Clapier clapier = ferme.getClapier();
         if (clapier == null) {
             return null;
         }
@@ -183,12 +172,9 @@ public class ClapierService {
     }
 
     @Transactional
-    public Clapier laverClapier(Long idFerme) {
-        Optional<Ferme> optFerme = fermeRepository.findById(idFerme);
-        if (!optFerme.isPresent()) {
-            return null;
-        }
-        Clapier clapier = optFerme.get().getClapier();
+    public Clapier laverClapier(String pseudo) {
+        Ferme ferme = fermeService.getOrCreateFermeForUser(pseudo);
+        Clapier clapier = ferme.getClapier();
         if (clapier == null) {
             return null;
         }
@@ -213,11 +199,12 @@ public class ClapierService {
     }
 
     @Transactional
-    public void supprimerClapier(Long idClapier) {
-        clapierRepository.deleteById(idClapier);
+    public void supprimerClapier(String pseudo) {
+        Ferme ferme = fermeService.getOrCreateFermeForUser(pseudo);
+        long fermeId = ferme.getIdFerme();
+        clapierRepository.deleteById(fermeId);
     }
 }
-
 
 
 /*

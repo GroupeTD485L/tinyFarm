@@ -38,13 +38,8 @@ public class VacheService {
      * Obtenir les informations de la vache
      */
     @Transactional
-    public Vache getInfoCow(Long idFerme) {
-        Optional<Vache> vache = vacheRepository.findById(idFerme);
-        if (vache.isPresent()) {
-            return vache.get();
-        } else {
-            return null;
-        }
+    public Vache getInfoCow(Ferme ferme) {
+        return vacheRepository.findByProprietaire(ferme);
     }
     
     
@@ -52,13 +47,7 @@ public class VacheService {
      * Mettre à jour les informations de la vache en fin de journee
      */
     @Transactional
-    public Vache updateVache(Long idFerme) {
-        Optional<Ferme> optFerme = fermeRepository.findById(idFerme);
-        if (!optFerme.isPresent()) {
-            return null;
-        }
-        
-        Ferme ferme = optFerme.get();
+    public Vache updateVache(Ferme ferme) {
         Vache vache = ferme.getVache();
         
         if (vache == null) {
@@ -83,13 +72,7 @@ public class VacheService {
      * Mettre a jour la quantite de lait de la vache (une fois a 6h et une a 18h)
      */
     @Transactional
-    public Vache updateLaitVache(Long idFerme) {
-        Optional<Ferme> optFerme = fermeRepository.findById(idFerme);
-        if (!optFerme.isPresent()) {
-            return null;
-        }
-        
-        Ferme ferme = optFerme.get();
+    public Vache updateLaitVache(Ferme ferme) {
         Vache vache = ferme.getVache();
         
         //si il n'y a pas de vache
@@ -123,13 +106,11 @@ public class VacheService {
      * Nourrir la vache
      */
     @Transactional
-    public Vache nourrirVache(Long idVache, String nourriture) {
-        Optional<Vache> optVache = vacheRepository.findById(idVache);
-        if (!optVache.isPresent()) {
+    public Vache nourrirVache(Ferme ferme, String nourriture) {
+        Vache vache = ferme.getVache();
+        if (vache == null) {
             return null;
         }
-        
-        Vache vache = optVache.get();
         if (vache.getDernierRepas() != null && 
         vache.getDernierRepas().isBefore(LocalDateTime.now().minusHours(24))) {
         if (nourriture.equals("Herbe")) {
@@ -179,13 +160,11 @@ public class VacheService {
      * Abreuver la vache
      */
     @Transactional
-    public Vache abreuverVache(Long idVache) {
-        Optional<Vache> optVache = vacheRepository.findById(idVache);
-        if (!optVache.isPresent()) {
+    public Vache abreuverVache(Ferme ferme) {
+        Vache vache = ferme.getVache();
+        if (vache == null) {
             return null;
         }
-        
-        Vache vache = optVache.get();
 
         Optional<Produit> existp =  produitRepository.findByNom("Seau d'eau");
         if (!existp.isPresent()) {
@@ -210,13 +189,11 @@ public class VacheService {
      * Soigner la vache
      */
     @Transactional
-    public Vache soignerVache(Long idVache) {
-        Optional<Vache> optVache = vacheRepository.findById(idVache);
-        if (!optVache.isPresent()) {
+    public Vache soignerVache(Ferme ferme) {
+        Vache vache = ferme.getVache();
+        if (vache == null) {
             return null;
         }
-        
-        Vache vache = optVache.get();
         
         // Si la vache est malade, on la soigne
         if (vache.getMaladeDepuis() != null) {
@@ -246,13 +223,11 @@ public class VacheService {
      * Laver la vache
      */
     @Transactional
-    public Vache laverVache(Long idVache) {
-        Optional<Vache> optVache = vacheRepository.findById(idVache);
-        if (!optVache.isPresent()) {
+    public Vache laverVache(Ferme ferme) {
+        Vache vache = ferme.getVache();
+        if (vache == null) {
             return null;
         }
-        
-        Vache vache = optVache.get();
 
         Optional<Produit> existp =  produitRepository.findByNom("Savon");
         if (!existp.isPresent()) {
