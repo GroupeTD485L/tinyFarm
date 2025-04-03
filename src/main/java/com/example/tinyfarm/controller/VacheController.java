@@ -59,7 +59,7 @@ public class VacheController {
         } else {
             return ResponseEntity.notFound().build();
         }
-    } 
+    }
 
     //update de la production de lait de la vache
     @Scheduled(cron="0 06,18 * * ?")

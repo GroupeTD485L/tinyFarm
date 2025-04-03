@@ -1,7 +1,6 @@
 package com.example.tinyfarm.repository;
 
 import  com.example.tinyfarm.entity.Classement;
-import  com.example.tinyfarm.entity.Ferme;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.Page;

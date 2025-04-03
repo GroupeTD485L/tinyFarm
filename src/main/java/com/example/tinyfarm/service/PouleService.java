@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.Duration;
-import java.time.LocalDate;
 
 import com.example.tinyfarm.entity.*;
 import com.example.tinyfarm.repository.FermeRepository;

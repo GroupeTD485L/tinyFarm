@@ -1,5 +1,4 @@
 package com.example.tinyfarm.entity;
-import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
 import lombok.Data;

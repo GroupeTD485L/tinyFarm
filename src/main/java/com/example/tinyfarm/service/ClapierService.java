@@ -12,7 +12,6 @@ import com.example.tinyfarm.entity.Remise;
 import com.example.tinyfarm.repository.ClapierRepository;
 import com.example.tinyfarm.repository.RemiseRepository;
 import com.example.tinyfarm.repository.ProduitRepository;
-import com.example.tinyfarm.service.FermeService;
 
 @Service
 public class ClapierService {

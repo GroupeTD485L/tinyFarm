@@ -8,7 +8,6 @@ import java.time.Duration;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import com.example.tinyfarm.entity.*;
 import com.example.tinyfarm.repository.CommerceRepository;
@@ -196,30 +195,6 @@ public class CommerceService {
         }
         
         fermeRepository.save(ferme);
-        /*
-        Optional<Commerce> existingCommerce = commerceRepository.findById(id);
-        Commerce commerce = existingCommerce.get();
-        Ferme vendeur = commerce.getVendeur();
-        Ferme acheteur = commerce.getAcheteur();
-        float prixMoyen = commerceRepository.findAveragePriceById(id);
-        float montantTransaction = quantite*prixMoyen;
-        List<Commerce> commerces = commerceRepository.findAllByProduitOrderByPrixAsc(ProduitService.findById(id));
-        for (Commerce c : commerces) {
-            if (c.getQuantite()<=quantite) {
-                c.getVendeur().setEcus(c.getQuantite()*prixMoyen);
-                quantite-=c.getQuantite();
-                commerceRepository.deleteById(c.getIdTransac());
-            } else if (c.getQuantite()>quantite) {
-                c.setQuantite(c.getQuantite()-quantite);
-                break;
-            }
-        }
-        acheteur.setEcus(acheteur.getEcus()-montantTransaction);// On retire les écus à l'acheteur
-        //TODO : Retirer les produits aux vendeurs et les donner à l'acheteur
-        if (quantite == commerce.getQuantite()) {
-            commerceRepository.deleteById(id);
-        }
-        */
     }
 
     @Transactional
