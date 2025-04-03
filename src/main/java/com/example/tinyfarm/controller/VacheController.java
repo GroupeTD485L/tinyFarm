@@ -49,7 +49,8 @@ public class VacheController {
     }
 
     //update de la vache en fin de journee
-    @Scheduled(cron="0 0 0 * * ?")
+    // @Scheduled(cron="0 0 0 * * ?")
+    @PutMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Vache> updateVache(Authentication authentication){
         Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
