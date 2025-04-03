@@ -4,6 +4,8 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -94,10 +96,15 @@ public class ClassementService {
 
     @Transactional
     public void updateScoreForAllPlayers() {
-        Iterable<Classement> classements = classementRepository.findAll();
-        for (Classement classement : classements) {
-            updateScore(classement.getIdClassement());
-        }
+        int iPage = 0;
+        Page<Classement> classements;
+        do {
+            classements = classementRepository.findAll(PageRequest.of(iPage, 20));
+            for (Classement classement : classements) {
+                updateScore(classement.getIdClassement());
+            }
+            iPage++;
+        } while (classements.hasNext());
     }
 
     @Transactional
