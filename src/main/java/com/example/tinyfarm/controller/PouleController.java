@@ -165,7 +165,8 @@ public class PouleController {
 
     // Méthode d'update 
     @PreAuthorize("isAuthenticated()")
-    @Scheduled(cron="0 00 * * ?")
+    // @Scheduled(cron="0 0 0 * * ?")
+    @PutMapping
     public ResponseEntity<Page<Poule>> updatePoulailler(Authentication authentication, Pageable pageable){
         String pseudo = authentication.getName();
         Page<Poule> allPoule = pouleRepository.findAllByProprietaire(fermeService.getOrCreateFermeForUser(pseudo), pageable);

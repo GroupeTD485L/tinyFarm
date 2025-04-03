@@ -11,6 +11,7 @@ import  com.example.tinyfarm.entity.Vache;
 import com.example.tinyfarm.entity.Ferme;
 import com.example.tinyfarm.service.FermeService;
 import  com.example.tinyfarm.service.VacheService;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/vache")
@@ -48,8 +49,24 @@ public class VacheController {
         }
     }
 
+    @Scheduled(cron="0 0 0 * * ?")
+    public void scheduleUpdateAllVache(){
+        vacheService.updateAllVache();
+    }
+
+    @PutMapping("admin/updateAllVache")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> updateAllVache() {
+        try {
+            vacheService.updateAllVache();
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
+
     //update de la vache en fin de journee
-    @Scheduled(cron="0 00 * * ?")
+    @PutMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Vache> updateVache(Authentication authentication){
         Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
@@ -62,7 +79,7 @@ public class VacheController {
     }
 
     //update de la production de lait de la vache
-    @Scheduled(cron="0 06,18 * * ?")
+    @Scheduled(cron="0 0 6,18 * * ?")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Vache> updateLaitVache(Authentication authentication){
         Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
@@ -129,4 +146,17 @@ public class VacheController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PutMapping("/faireMalade")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Vache> faireMaladeVache(Authentication authentication){
+        Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
+        Vache vache = vacheService.faireMalade(ferme);
+        if (vache != null){
+            return ResponseEntity.ok(vache);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
 }
