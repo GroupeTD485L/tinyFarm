@@ -29,7 +29,7 @@ def test_create_or_get_farm(headers):
     assert response.status_code == 200, f"Failed to fetch/create farm: {response.text}"
 
     farm_data = response.json()
-    print(farm_data)
+    #print(farm_data)
     expected_keys = {"idFerme", "compte", "remise", "classement", "poules", "vache", "clapier", "nom", "ecus", "enHibernation", "achatRestant", "dernierAchat"}
 
     # Ensure the farm response contains the required fields
@@ -46,3 +46,28 @@ def test_create_or_get_farms():
     # assert expected_keys.issubset(farm_data.keys()), f"Missing keys in response: {farm_data.keys()}"
 
     print("✅ Test passed: Farm was successfully retrieved or created.")
+
+def test_get_farm_admin(headers):
+    """Test fetching a farm as admin"""
+    response = requests.get(f"{APP_URL}/ferme/", headers=headers)
+    assert response.status_code == 200
+    response = requests.get(f"{APP_URL}/ferme/admin/getFerme", headers=headers)
+    assert response.status_code == 200
+    
+    farm_data = response.json()
+    expected_keys = {"idFerme", "compte", "remise", "classement", "poules", "vache", "clapier", "nom", "ecus", "enHibernation", "achatRestant", "dernierAchat"}
+    assert expected_keys.issubset(farm_data.keys()), f"Missing keys in response: {farm_data.keys()}"
+
+
+def test_delete_farms(headers):
+    """Test the deletion of a farm for the authenticated user."""
+    response = requests.get(f"{APP_URL}/ferme/", headers=headers)
+    assert response.status_code == 200
+
+    response = requests.delete(f"{APP_URL}/ferme/", headers=headers)
+    assert response.status_code == 200
+    response = requests.get(f"{APP_URL}/ferme/admin/getFerme", headers=headers)
+    assert response.status_code == 404
+
+    response = requests.delete(f"{APP_URL}/ferme/", headers=headers)
+    assert response.status_code == 404
