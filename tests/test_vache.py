@@ -35,7 +35,6 @@ def create_or_get_farm(headers):
 
 @pytest.fixture
 def init_remise(headers):
-
     nom_produit = "Seringue"
     response = requests.post(f"{APP_URL}/remise",data=nom_produit, headers=headers)
     assert response.status_code == 200, f"Failed to add Seringue to remise: {response.text}"

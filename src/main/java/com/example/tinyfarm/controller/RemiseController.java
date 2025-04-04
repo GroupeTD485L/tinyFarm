@@ -37,7 +37,7 @@ public class RemiseController {
     }
 
     @PostMapping
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Remise> rajouterProduit(Authentication authentication, @RequestBody String nomProduit) {
         Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
         Produit produit = produitService.getProduit(nomProduit);
