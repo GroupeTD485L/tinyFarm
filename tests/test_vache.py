@@ -35,6 +35,7 @@ def create_or_get_farm(headers):
 
 @pytest.fixture
 def init_remise(headers):
+
     nom_produit = "Seringue"
     response = requests.post(f"{APP_URL}/remise",data=nom_produit, headers=headers)
     assert response.status_code == 200, f"Failed to add Seringue to remise: {response.text}"
@@ -79,6 +80,14 @@ def test_get_vache(headers,create_or_get_farm):
     print("✅ Test passed: Cow was successfully retrieved.") 
 
 
+#----------------------------------------------------------------------------------------------
+def test_get_vache_no_header(create_or_get_farm):
+    response = requests.get(f"{APP_URL}/vache")
+    assert response.status_code == 401, f"failed to fetch cow: {response.text}"
+    
+    print("✅ Test passed: test successfully got denied") 
+
+
  #----------------------------------------------------------------------------------------------
 def test_update_vache(headers):
     response1 = requests.get(f"{APP_URL}/vache", headers=headers)
@@ -91,6 +100,13 @@ def test_update_vache(headers):
 
     assert vache_data1["age"] == vache_data2["age"]-1 
     print("✅ Test passed: Cow was successfully updated.") 
+
+
+ #----------------------------------------------------------------------------------------------
+def test_update_vache_no_header():
+    response1 = requests.get(f"{APP_URL}/vache")
+    assert response1.status_code == 401, f"failed to fetch cow: {response1.text}"
+    print("✅ Test passed: test successfully got denied") 
 
 
 #----------------------------------------------------------------------------------------------
@@ -107,6 +123,17 @@ def test_soigner_vache(headers,init_remise):
     assert vache_data["maladeDepuis"] is None
 
     print("✅ Test passed: Cow was successfully healed.") 
+
+
+#----------------------------------------------------------------------------------------------
+def test_soigner_vache_no_header(init_remise):
+    response = requests.put(f"{APP_URL}/vache/faireMalade")
+    assert response.status_code == 401, f"failed to fetch cow: {response.text}"
+
+    response = requests.put(f"{APP_URL}/vache/soigner")
+    assert response.status_code == 401, f"failed to fetch cow: {response.text}"
+
+    print("✅ Test passed: test successfully got denied") 
 
 
 #----------------------------------------------------------------------------------------------
@@ -131,6 +158,17 @@ def test_nourrir_vache(headers,init_remise):
 
 
 #----------------------------------------------------------------------------------------------
+def test_nourrir_vache_no_header(init_remise):
+    response1 = requests.get(f"{APP_URL}/vache" )
+    assert response1.status_code == 401, f"failed to feed cow: {response1.text}"
+
+    response2 = requests.put(f"{APP_URL}/vache/nourrir", data="Botte de foin")
+    assert response2.status_code == 401, f"failed to feed cow: {response2.text}"
+    
+    print("✅ Test passed: test successfully got denied")
+
+
+#----------------------------------------------------------------------------------------------
 def test_abreuver_vache(headers,init_remise):
     response = requests.put(f"{APP_URL}/vache/abreuver", headers=headers)
     assert response.status_code == 200, f"failed to drink cow: {response.text}"
@@ -144,6 +182,14 @@ def test_abreuver_vache(headers,init_remise):
     date_hier = datetime.datetime.now() - datetime.timedelta(days=1)
     assert dernier_breuvage > date_hier
     print("✅ Test passed: Cow successfully drank.")
+
+
+#----------------------------------------------------------------------------------------------
+def test_abreuver_vache_no_header(init_remise):
+    response = requests.put(f"{APP_URL}/vache/abreuver")
+    assert response.status_code == 401, f"failed to drink cow: {response.text}"
+
+    print("✅ Test passed: test successfully got denied")
 
 
 #----------------------------------------------------------------------------------------------
@@ -163,6 +209,14 @@ def test_laver_vache(headers,init_remise):
 
 
 #----------------------------------------------------------------------------------------------
+def test_laver_vache_no_header(init_remise):
+    response = requests.put(f"{APP_URL}/vache/laver")
+    assert response.status_code == 401, f"failed to wash cow: {response.text}"
+    
+    print("✅ Test passed: test successfully got denied")
+
+
+#----------------------------------------------------------------------------------------------
 def test_update_vache_mourrir_vache(headers):
     response1 = requests.put(f"{APP_URL}/vache/faireMalade", headers=headers)
     assert response1.status_code == 200, f"failed to make the cow sick: {response1.text}"
@@ -171,6 +225,17 @@ def test_update_vache_mourrir_vache(headers):
     assert response2.status_code == 404, f"vache shouldn't be alive: {response2.text}"
 
     print("✅ Test passed: Cow successfully died.")
+
+
+#----------------------------------------------------------------------------------------------
+def test_update_vache_mourrir_vache_no_header():
+    response1 = requests.put(f"{APP_URL}/vache/faireMalade")
+    assert response1.status_code == 401, f"failed to make the cow sick: {response1.text}"
+
+    response2 = requests.put(f"{APP_URL}/vache")
+    assert response2.status_code == 401, f"vache shouldn't be alive: {response2.text}"
+
+    print("✅ Test passed: test successfully got denied")
 
 
 #----------------------------------------------------------------------------------------------
