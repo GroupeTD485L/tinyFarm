@@ -35,7 +35,8 @@ public class ProduitService {
             "Seringue",
             "Savon",
             "Oeuf",
-            "Lait"
+            "Lait",
+            "Graine"
             // TODO : Rajouter les objets si besoin
         ));
 
