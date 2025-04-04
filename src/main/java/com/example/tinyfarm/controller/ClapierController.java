@@ -6,19 +6,25 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import  com.example.tinyfarm.entity.Clapier;
-import  com.example.tinyfarm.service.ClapierService;
+import com.example.tinyfarm.entity.Clapier;
+import com.example.tinyfarm.entity.Ferme;
+import com.example.tinyfarm.service.FermeService;
+import com.example.tinyfarm.service.ClapierService;
+import org.springframework.web.bind.annotation.PutMapping;
 
 
 @RestController 
-@RequestMapping("/ferme/clapier") // URL
+@RequestMapping("/clapier") // URL
 public class ClapierController {
+
+    private final FermeService fermeService;
     
     private final ClapierService clapierService; 
 
     // Constructeur du Controller
-    public ClapierController(ClapierService clapierService){
+    public ClapierController(ClapierService clapierService, FermeService fermeService){
         this.clapierService = clapierService;
+        this.fermeService = fermeService;
     }
 
     // Création du clapier non utile car déjà fait dans la création de la ferme
@@ -38,13 +44,28 @@ public class ClapierController {
     }
 
 
-    // Met à jour les infos du clapier
-    @PreAuthorize("isAuthenticated()")
-    // @Scheduled(cron="0 0 0 * * ?")
+    @Scheduled(cron="0 0 0 * * ?")
+    public void scheduleUpdateAllClapier(){
+        clapierService.updateAllClapier();
+    }
+
+    @PutMapping("admin/updateAllClapier")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> updateAllClapier() {
+        try {
+            clapierService.updateAllClapier();
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
+
     @PutMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Clapier> updateClapier(Authentication authentication){
-        String pseudo = authentication.getName();
-        Clapier clapier = clapierService.updateClapier(pseudo); // Met à jour les infos du clapier
+        //String pseudo = authentication.getName();
+        Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
+        Clapier clapier = clapierService.updateClapier(ferme); // Met à jour les infos du clapier
         if(clapier != null) {
             return ResponseEntity.ok(clapier); // On renvoie les infos modifiées du clapier
         } else {
