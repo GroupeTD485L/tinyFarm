@@ -13,6 +13,7 @@ import com.example.tinyfarm.repository.ProduitRepository;
 import com.example.tinyfarm.repository.RemiseRepository;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
@@ -93,6 +94,20 @@ public class PouleService {
             pouleRepository.deleteById(id); // La poule meurt, on la supprime
         }
     
+    }
+
+    @Transactional
+    public void updateAllPoules(){
+        int iPage = 0;
+        Page<Poule> poules;
+        do {
+            poules = pouleRepository.findAll(PageRequest.of(iPage, 20));
+            for (Poule poule : poules) {
+                Long id = poule.getIdPoule();
+                updatePoule(id);
+            }
+            iPage++;
+        } while (poules.hasNext());
     }
 
     @Transactional
