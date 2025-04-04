@@ -38,7 +38,7 @@ def test_get_classement(headers):
     print("✅ Test passed: Classement was successfully retrieved.")
 
 
-def test_get_classement():
+def test_get_classement_no_headers():
     """Test fetching or creating a farm for the authenticated user."""
     response = requests.get(f"{APP_URL}/classement?page=0&size=5")
     assert response.status_code == 401, f"Managed to do something with : {response.text}"
