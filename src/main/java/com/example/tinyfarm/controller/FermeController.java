@@ -32,6 +32,18 @@ public class FermeController {
         return ResponseEntity.ok(ferme); // On renvoie la ferme créée
     }
 
+    @GetMapping("admin/getFerme")
+    @PreAuthorize("hasRole('ADMIN')")
+    // Tu voulais regarder comment passer des paramètres en URL afin de récupérer n'importe quelle compte
+    public ResponseEntity<Ferme> adminGetFerme(Authentication authentication) {
+        String pseudo = authentication.getName();
+        try {
+            Ferme ferme = fermeService.getFerme(pseudo);
+            return ResponseEntity.ok(ferme);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     // Get une ferme
     @PreAuthorize("isAuthenticated()")
