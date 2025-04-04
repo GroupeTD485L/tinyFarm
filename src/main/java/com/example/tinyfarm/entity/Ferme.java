@@ -18,28 +18,28 @@ public class Ferme{
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // Auto-incrémentation de l'ID
     private Long idFerme;
 
-    @OneToOne(mappedBy = "idFerme") // the value of mappedBy is the name of the association-mapping attribute on the owning side
+    @OneToOne(mappedBy = "idFerme", cascade = CascadeType.ALL) // the value of mappedBy is the name of the association-mapping attribute on the owning side
     @JsonManagedReference
     private Compte compte; 
 
     // TODO: Fix : Remise en One-to-one ?
-    @OneToMany(mappedBy = "proprietaire")
+    @OneToMany(mappedBy = "proprietaire", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Remise> remise;
 
-    @OneToOne(mappedBy = "ferme")
+    @OneToOne(mappedBy = "ferme", cascade = CascadeType.ALL)
     @JsonManagedReference
     private Classement classement;
 
-    @OneToMany(mappedBy = "proprietaire")
+    @OneToMany(mappedBy = "proprietaire", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Poule> poules;
 
-    @OneToOne(mappedBy = "proprietaire")
+    @OneToOne(mappedBy = "proprietaire", cascade = CascadeType.ALL)
     @JsonManagedReference
     private Vache vache;
 
-    @OneToOne(mappedBy = "proprietaire")
+    @OneToOne(mappedBy = "proprietaire", cascade = CascadeType.ALL)
     @JsonManagedReference
     private Clapier clapier;
 

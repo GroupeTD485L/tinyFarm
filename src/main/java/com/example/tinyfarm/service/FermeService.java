@@ -94,6 +94,16 @@ public class FermeService {
     }
 
     @Transactional
+    public Ferme getFerme(String nomFerme) {
+        Optional<Ferme> existingFerme = fermeRepository.findByComptePseudo(nomFerme);
+        if (existingFerme.isPresent()) {
+            return existingFerme.get();
+        } else {
+            throw new IllegalArgumentException("La ferme " + nomFerme + " n'existe pas !");
+        }
+    }
+
+    @Transactional
     public Ferme getFerme(Long idFerme) {
         Optional<Ferme> existingFerme = fermeRepository.findById(idFerme);
         if (existingFerme.isPresent()) {
