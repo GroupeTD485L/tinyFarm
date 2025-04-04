@@ -101,9 +101,9 @@ public class VacheController {
 */
     @PutMapping("/nourrir")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Vache> nourrirVache(Authentication authentication){
+    public ResponseEntity<Vache> nourrirVache(Authentication authentication, @RequestBody String nomProduit){
         Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
-        Vache vache = vacheService.updateVache(ferme);
+        Vache vache = vacheService.nourrirVache(ferme,nomProduit);
         if (vache != null){
             return ResponseEntity.ok(vache);
         } else {
@@ -115,7 +115,7 @@ public class VacheController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Vache> abreuverVache(Authentication authentication){
         Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
-        Vache vache = vacheService.updateVache(ferme);
+        Vache vache = vacheService.abreuverVache(ferme);
         if (vache != null){
             return ResponseEntity.ok(vache);
         } else {

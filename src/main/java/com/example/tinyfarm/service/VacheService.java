@@ -140,8 +140,8 @@ public class VacheService {
                 vache.setDernierRepas(LocalDateTime.now());
             }
             }
-            if (nourriture.equals("Paille")) {                
-                Optional<Produit> existp = produitRepository.findByNom("Paille");
+            if (nourriture.equals("Botte de foin")) {                
+                Optional<Produit> existp = produitRepository.findByNom("Botte de foin");
                 if (!existp.isPresent()) {
                     throw new IllegalArgumentException("Le produit n'existe pas");
                 }

@@ -21,7 +21,6 @@ import  com.example.tinyfarm.repository.RemiseRepository;
 
 
 @RestController
-@PreAuthorize("isAuthenticated()")
 @RequestMapping("/remise")
 public class RemiseController {
     
@@ -39,6 +38,7 @@ public class RemiseController {
     }
 
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Remise> rajouterProduit(Authentication authentication, @RequestBody String nomProduit) {
         Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
         Produit produit = produitService.getProduit(nomProduit);
