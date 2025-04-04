@@ -26,10 +26,13 @@ public class CompteController {
     public ResponseEntity<Compte> infoCompte(Authentication authentication){
         // Récupérer le nom d'utilisateur de l'authentification (car la méthode getCompte prend un String)
         String pseudo = authentication.getName();
-        // On get le compte
-        Compte compte = compteService.getCompte(pseudo);
-
-        return ResponseEntity.ok(compte); // On renvoie le compte existante
+        try {
+            // On get le compte
+            Compte compte = compteService.getCompte(pseudo);
+            return ResponseEntity.ok(compte); // On renvoie le compte existante
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();   // Si le compte trouver n'existe pas, on retourne une erreur 404 !
+        }
     }
 
 
@@ -42,13 +45,13 @@ public class CompteController {
         // On update le compte
         Compte compte = compteService.updateCompte(pseudo);
 
-        return ResponseEntity.ok(compte); // On renvoie le compte existante
+        return ResponseEntity.ok(compte); // On renvoie le compte existant
     } 
 
 
     // Détruire le compte
     @PreAuthorize("isAuthenticated()")
-    @DeleteMapping
+    //@DeleteMapping
     public ResponseEntity<Void> deleteCompte(Authentication authentication){
         try {
             // Récupérer le nom d'utilisateur de l'authentification (car la méthode deleteCompte prend un String)
@@ -65,7 +68,7 @@ public class CompteController {
 }
 
 /*
-GET /comptes/{id} Obtenir les infos du compte
-PUT /comptes/{id} Mettre à jour 
-DELETE /comptes/{id} Détruire le compte
+GET /comptes/       Obtenir les infos du compte
+PUT /comptes/       Mettre à jour 
+DELETE /comptes/    Détruire le compte
  */
