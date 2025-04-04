@@ -1,6 +1,9 @@
 package com.example.tinyfarm.entity;
 import java.time.LocalDateTime;
 
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -14,10 +17,12 @@ public class Commerce{
 
     @ManyToOne
     @JoinColumn(name = "idAcheteur", nullable = false)  // Clé étrangère vers la ferme pour acheteur
+    @JsonBackReference
     private Ferme acheteur;
 
     @ManyToOne
     @JoinColumn(name = "idVendeur", nullable = false)  // Clé étrangère vers la ferme pour vendeur
+    @JsonBackReference
     private Ferme vendeur;
 
     @ManyToOne

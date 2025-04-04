@@ -42,19 +42,18 @@ public class CommerceService {
     }
 
     @Transactional
-    public Commerce addCommerce(Long idVendeur, Long idProduit, int quantite, float prixUnitaire) {
-        Optional<Ferme> existingVendeur = fermeRepository.findById(idVendeur);
-        Optional<Produit> existingProduit = produitRepository.findById(idProduit);
-
-        if (!existingVendeur.isPresent()) {
-            throw new IllegalArgumentException("Le vendeur " + idVendeur + " n'existe pas !");
-        }
+    public Commerce addCommerce(Ferme fermeVendeur, String nomProduit, int quantite, float prixUnitaire) {
+        Optional<Produit> existingProduit = produitRepository.findByNom(nomProduit);
         
         if ( !existingProduit.isPresent()) {
-            throw new IllegalArgumentException("Le produit " + idProduit + " n'existe pas !");
+            throw new IllegalArgumentException("Le produit " + nomProduit + " n'existe pas !");
         }
 
-        Ferme vendeur = existingVendeur.get();
+        Ferme vendeur = fermeVendeur;
+        if (vendeur == null) {
+            throw new IllegalArgumentException("Le vendeur n'existe pas !");
+        }
+
         Produit produit = existingProduit.get();
 
         Commerce commerce = new Commerce();
@@ -69,20 +68,18 @@ public class CommerceService {
     }
 
     @Transactional
-    public Commerce addOffre(Long idVendeur, Long idProduit, int quantite, float prixUnitaire)
+    public Commerce addOffre(Ferme fermeVendeur, String nomProduit, int quantite, float prixUnitaire)
     {
-        Optional<Ferme> existingVendeur = fermeRepository.findById(idVendeur);
-        Optional<Produit> existingProduit = produitRepository.findById(idProduit);
-
-        if (!existingVendeur.isPresent()) {
-            throw new IllegalArgumentException("Le vendeur " + idVendeur + " n'existe pas !");
-        }
+        Optional<Produit> existingProduit = produitRepository.findByNom(nomProduit);
         
         if ( !existingProduit.isPresent()) {
-            throw new IllegalArgumentException("Le produit " + idProduit + " n'existe pas !");
+            throw new IllegalArgumentException("Le produit " + nomProduit + " n'existe pas !");
         }
 
-        Ferme vendeur = existingVendeur.get();
+        Ferme vendeur = fermeVendeur;
+        if (vendeur == null) {
+            throw new IllegalArgumentException("Le vendeur n'existe pas !");
+        }
         Produit produit = existingProduit.get();
 
         Optional<Remise> existingRemise = remiseRepository.findByIdProduitAndProprietaire(produit, vendeur);
@@ -97,7 +94,7 @@ public class CommerceService {
 
         remise.setQuantite(remise.getQuantite() - quantite);
         remiseRepository.save(remise);
-        return addCommerce(idVendeur, idProduit, quantite, prixUnitaire);
+        return addCommerce(fermeVendeur, nomProduit, quantite, prixUnitaire);
     }
 
     @Transactional
@@ -112,20 +109,18 @@ public class CommerceService {
     
     // Permet de faire une transaction entre 2 joueurs
     @Transactional
-    public void executeTransaction(Long idFerme, Long idProduit, int quantite) {
+    public void executeTransaction(Ferme fermeVendeur, String nomProduit, int quantite) {
         // Vérification des paramètres
-        Optional<Ferme> existingFerme = fermeRepository.findById(idFerme);
-        Optional<Produit> existingProduit = produitRepository.findById(idProduit);
-
-        if (!existingFerme.isPresent()) {
-            throw new IllegalArgumentException("Le vendeur " + idFerme + " n'existe pas !");
-        }
+        Optional<Produit> existingProduit = produitRepository.findByNom(nomProduit);
         
         if ( !existingProduit.isPresent()) {
-            throw new IllegalArgumentException("Le produit " + idProduit + " n'existe pas !");
+            throw new IllegalArgumentException("Le produit " + nomProduit + " n'existe pas !");
         }
 
-        Ferme ferme = existingFerme.get();
+        Ferme ferme = fermeVendeur;
+        if (ferme == null) {
+            throw new IllegalArgumentException("La ferme n'existe pas !");
+        }
         Produit produit = existingProduit.get();
 
         // Vérification des capacités d'achat
@@ -198,7 +193,7 @@ public class CommerceService {
     }
 
     @Transactional
-    public void updateCommerce(Long id) {
+    public void updateCommerce() {
         int iPage = 0;
         Page<Commerce> commerces;
 

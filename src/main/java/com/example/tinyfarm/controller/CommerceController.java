@@ -18,8 +18,7 @@ import  com.example.tinyfarm.service.CompteService;
 
 
 @RestController
-@PreAuthorize("isAuthenticated()")
-@RequestMapping("/compte/{idFerme}/commerce")
+@RequestMapping("/commerce")
 public class CommerceController {
     
     private final CommerceService commerceService;
@@ -32,8 +31,9 @@ public class CommerceController {
         this.commerceRepository = commerceRepository;
     }
 
-    @PostMapping
-    public ResponseEntity<Commerce> creerCommerce(@PathVariable long idFerme, @RequestBody Commerce commerce){
+    @PostMapping("/admin/addCommerce")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Commerce> creerCommerce(@RequestBody Commerce commerce){
         Commerce c = commerceService.addComerce(commerce);
         if (c != null)
             return ResponseEntity.ok(c);
@@ -42,9 +42,24 @@ public class CommerceController {
 
     }
 
+    @PostMapping("/addOffre")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Commerce> creerOffre(Authentication authentication, @RequestBody String nomProduit, @RequestBody int quantite, @RequestBody float prixUnitaire){
+        Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
+        Commerce c = commerceService.addOffre(ferme, nomProduit, quantite, prixUnitaire);
+        if (c != null)
+            return ResponseEntity.ok(c);
+        else
+            return ResponseEntity.notFound().build();
+
+    }
+
     @GetMapping
-    public ResponseEntity<Page<Commerce>> infoCommerce(@PathVariable long idFerme, Pageable pageable){
-        Ferme ferme = fermeService.getFerme(idFerme);
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Page<Commerce>> infoCommerce(Authentication authentication, Pageable pageable){
+        Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
+        if (ferme == null)
+            return ResponseEntity.notFound().build();
         Page<Commerce> page = commerceRepository.findAllByVendeur(ferme, pageable);
 
         if(page == null)
@@ -55,11 +70,13 @@ public class CommerceController {
     
 
     @PutMapping
-    public void updateCommerce(@PathVariable long idFerme){
-        commerceService.updateCommerce(idFerme);
+    @PreAuthorize("isAuthenticated()")
+    public void updateCommerce(){
+        commerceService.updateCommerce();
     } 
 
     @GetMapping("/eleveurs")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Page<Commerce>> getInfoVenteNonFini(Pageable pageable){
         Page<Commerce> page = commerceRepository.findAllByAcheteurIsNull(pageable);
 
