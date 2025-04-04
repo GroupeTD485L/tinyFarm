@@ -63,6 +63,14 @@ def test_info_remise(headers,create_or_get_farm, init_remise):
 
 
 #----------------------------------------------------------------------------------------------
+def test_info_remise_no_header(create_or_get_farm):
+    response = requests.get(f"{APP_URL}/remise")
+    assert response.status_code == 401, f"failed to fetch remise: {response.text}"
+    
+    print("✅ Test passed: test successfully got denied.")
+
+
+#----------------------------------------------------------------------------------------------
 def test_info_produit(headers,create_or_get_farm):
     response = requests.get(f"{APP_URL}/remise/Savon",headers=headers)
     assert response.status_code == 200, f"failed to fetch remise: {response.text}"
@@ -82,6 +90,17 @@ def test_info_produit(headers,create_or_get_farm):
 
 
 #----------------------------------------------------------------------------------------------
+def test_info_produit_no_header(create_or_get_farm):
+    response = requests.get(f"{APP_URL}/remise/Savon")
+    assert response.status_code == 401, f"failed to fetch remise: {response.text}"
+    
+    response = requests.get(f"{APP_URL}/remise/Seringue")
+    assert response.status_code == 401, f"failed to fetch remise: {response.text}"
+   
+    print("✅ Test passed: test successfully got denied.")
+
+
+#----------------------------------------------------------------------------------------------
 def test_info_produit_pas_existant(headers,create_or_get_farm):
     response = requests.get(f"{APP_URL}/remise/Essaie",headers=headers)
     assert response.status_code == 500, f"failed to fetch remise: {response.text}"
@@ -92,6 +111,18 @@ def test_info_produit_pas_existant(headers,create_or_get_farm):
     #pas de remise avec ce produit dans le proprietaire donc not found
 
     print("✅ Test passed: info remise was successfull.") 
+
+
+#----------------------------------------------------------------------------------------------
+def test_info_produit_pas_existant_no_header(create_or_get_farm):
+    response = requests.get(f"{APP_URL}/remise/Essaie")
+    assert response.status_code == 401, f"failed to fetch remise: {response.text}"
+
+    response = requests.get(f"{APP_URL}/remise/Seau d'eau")
+    assert response.status_code == 401, f"failed to fetch remise: {response.text}"
+
+    print("✅ Test passed: test successfully got denied.") 
+
 
 
 #----------------------------------------------------------------------------------------------
@@ -107,6 +138,14 @@ def test_add_remise(headers,create_or_get_farm):
     print("✅ Test passed: add remise was successfull.") 
 
 
+#----------------------------------------------------------------------------------------------
+def test_add_remise_no_header(create_or_get_farm):
+    response = requests.post(f"{APP_URL}/remise", data="Seau d'eau")
+    assert response.status_code == 401, f"failed to fetch remise: {response.text}"
+
+    print("✅ Test passed: test successfully got denied.") 
+
+
  #----------------------------------------------------------------------------------------------
 def test_update_produit(headers,create_or_get_farm):
     response = requests.put(f"{APP_URL}/remise", json = { "nomProduit": "Seau d'eau", "quantite": 10 } ,headers=headers)
@@ -119,3 +158,11 @@ def test_update_produit(headers,create_or_get_farm):
     assert nom_produit == "Seau d'eau"
 
     print("✅ Test passed: add remise was successfull.") 
+
+
+#----------------------------------------------------------------------------------------------
+def test_update_produit_no_header(create_or_get_farm):
+    response = requests.put(f"{APP_URL}/remise", json = { "nomProduit": "Seau d'eau", "quantite": 10 })
+    assert response.status_code == 401, f"failed to fetch remise: {response.text}"
+   
+    print("✅ Test passed: test successfully got denied.") 
