@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 
 @RestController 
-@RequestMapping("/ferme/clapier") // URL
+@RequestMapping("/clapier") // URL
 public class ClapierController {
 
     private final FermeService fermeService;
