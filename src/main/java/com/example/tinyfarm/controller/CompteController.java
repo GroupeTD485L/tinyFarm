@@ -51,7 +51,7 @@ public class CompteController {
 
     // Détruire le compte
     @PreAuthorize("isAuthenticated()")
-    @DeleteMapping
+    //@DeleteMapping
     public ResponseEntity<Void> deleteCompte(Authentication authentication){
         try {
             // Récupérer le nom d'utilisateur de l'authentification (car la méthode deleteCompte prend un String)
@@ -68,7 +68,7 @@ public class CompteController {
 }
 
 /*
-GET /comptes/{id} Obtenir les infos du compte
-PUT /comptes/{id} Mettre à jour 
-DELETE /comptes/{id} Détruire le compte
+GET /comptes/       Obtenir les infos du compte
+PUT /comptes/       Mettre à jour 
+DELETE /comptes/    Détruire le compte
  */
