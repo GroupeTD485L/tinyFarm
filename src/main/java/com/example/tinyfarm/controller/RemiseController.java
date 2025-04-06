@@ -40,10 +40,14 @@ public class RemiseController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Remise> rajouterProduit(Authentication authentication, @RequestBody String nomProduit) {
         Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
-        Produit produit = produitService.getProduit(nomProduit);
+        Produit produit;
+        try {
+            produit = produitService.getProduit(nomProduit);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
         Remise remise = remiseService.addProduit2Remise(ferme, produit);
-
-        if(produit == null || remise == null)
+        if(remise == null)
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok(remise);

@@ -166,3 +166,11 @@ def test_update_produit_no_header(create_or_get_farm):
     assert response.status_code == 401, f"failed to fetch remise: {response.text}"
    
     print("✅ Test passed: test successfully got denied.") 
+
+def test_ajout_produit_inexistant(headers):
+    # produit dans service
+    ferme = requests.get(f"{APP_URL}/ferme/", headers=headers)
+    response = requests.post(f"{APP_URL}/remise", data="a", headers=headers)
+    assert response.status_code == 404
+    
+    print("✅ Test passed: cannot add wrong product to remise.")
