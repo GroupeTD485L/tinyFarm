@@ -29,7 +29,7 @@ public class RemiseService {
     public Remise createRemise (Ferme ferme, Produit produit){
        Remise r = new Remise();
        r.setIdProduit(produit);
-        r.setQuantite(0);
+        r.setQuantite(1);
         r.setProprietaire(ferme);
         return remiseRepository.save(r);
     }
@@ -38,11 +38,13 @@ public class RemiseService {
     public Remise addProduit2Remise (Ferme ferme, Produit produit){
        Optional<Remise> remise = remiseRepository.findByProprietaireAndIdProduit(ferme,produit);
         if (!remise.isPresent()){
-            return null;
+            return remiseRepository.save (createRemise(ferme, produit));
         }
+        else {
         Remise r = remise.get();
         r.setQuantite(r.getQuantite()+1);
         return remiseRepository.save(r);
+        }
     }
 
     @Transactional 

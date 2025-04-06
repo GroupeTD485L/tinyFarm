@@ -4,27 +4,34 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import com.example.tinyfarm.entity.Clapier;
 import com.example.tinyfarm.entity.Ferme;
 import com.example.tinyfarm.entity.Produit;
 import com.example.tinyfarm.entity.Remise;
 import com.example.tinyfarm.repository.ClapierRepository;
+import com.example.tinyfarm.repository.PouleRepository;
 import com.example.tinyfarm.repository.RemiseRepository;
 import com.example.tinyfarm.repository.ProduitRepository;
 
 @Service
 public class ClapierService {
+
+    private final PouleRepository pouleRepository;
     private final ClapierRepository clapierRepository;
     private final RemiseRepository remiseRepository;
     private final ProduitRepository produitRepository;
     private final FermeService fermeService;
 
-    public ClapierService(ClapierRepository clapierRepository, RemiseRepository remiseRepository,ProduitRepository produitRepository,FermeService fermeService) {
+    public ClapierService(ClapierRepository clapierRepository, RemiseRepository remiseRepository,ProduitRepository produitRepository,FermeService fermeService, PouleRepository pouleRepository) {
         this.clapierRepository = clapierRepository;
         this.remiseRepository = remiseRepository;
         this.produitRepository = produitRepository;
         this.fermeService = fermeService;
+        this.pouleRepository = pouleRepository;
     }
     @Transactional
     public Clapier creerClapier(String pseudo) {
@@ -43,8 +50,8 @@ public class ClapierService {
     }
 
     @Transactional
-    public Clapier updateClapier(String pseudo) {
-        Ferme ferme = fermeService.getOrCreateFermeForUser(pseudo);
+    public Clapier updateClapier(Ferme ferme) {
+        //Ferme ferme = fermeService.getOrCreateFermeForUser(pseudo);
         Clapier clapier = ferme.getClapier();
         if (clapier == null) {
             return null;
@@ -80,12 +87,23 @@ public class ClapierService {
             }else if(clapier.getNb_adulte_m()!=0){
                 clapier.setNb_adulte_m(clapier.getNb_adulte_m()-clapier.getNb_adulte_m()/3);
             }
-        }
-        
-
-        
+        }    
 
         return clapierRepository.save(clapier);
+    }
+
+    @Transactional
+    public void updateAllClapier(){
+        int iPage = 0;
+        Page<Clapier> clapiers;
+        do {
+            clapiers = clapierRepository.findAll(PageRequest.of(iPage, 20));
+            for(Clapier clapier : clapiers){
+                Ferme ferme = clapier.getProprietaire();
+                updateClapier(ferme);
+            }
+            iPage++;
+        } while(clapiers.hasNext());
     }
 
     @Transactional

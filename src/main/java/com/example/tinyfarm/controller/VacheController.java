@@ -11,7 +11,6 @@ import  com.example.tinyfarm.entity.Vache;
 import com.example.tinyfarm.entity.Ferme;
 import com.example.tinyfarm.service.FermeService;
 import  com.example.tinyfarm.service.VacheService;
-import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/vache")
@@ -101,9 +100,9 @@ public class VacheController {
 */
     @PutMapping("/nourrir")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Vache> nourrirVache(Authentication authentication){
+    public ResponseEntity<Vache> nourrirVache(Authentication authentication, @RequestBody String nomProduit){
         Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
-        Vache vache = vacheService.updateVache(ferme);
+        Vache vache = vacheService.nourrirVache(ferme,nomProduit);
         if (vache != null){
             return ResponseEntity.ok(vache);
         } else {
@@ -115,7 +114,7 @@ public class VacheController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Vache> abreuverVache(Authentication authentication){
         Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
-        Vache vache = vacheService.updateVache(ferme);
+        Vache vache = vacheService.abreuverVache(ferme);
         if (vache != null){
             return ResponseEntity.ok(vache);
         } else {
@@ -148,7 +147,7 @@ public class VacheController {
     }
 
     @PutMapping("/faireMalade")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Vache> faireMaladeVache(Authentication authentication){
         Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
         Vache vache = vacheService.faireMalade(ferme);

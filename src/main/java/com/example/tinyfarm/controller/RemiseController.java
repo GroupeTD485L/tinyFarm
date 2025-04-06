@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
 import  com.example.tinyfarm.entity.Ferme;
+import  com.example.tinyfarm.entity.ProduitUpdateDTO;
 import  com.example.tinyfarm.entity.Remise;
 import  com.example.tinyfarm.entity.Produit;
 import  com.example.tinyfarm.service.FermeService;
@@ -18,10 +19,7 @@ import  com.example.tinyfarm.service.ProduitService;
 import  com.example.tinyfarm.repository.RemiseRepository;
 
 
-
-
 @RestController
-@PreAuthorize("isAuthenticated()")
 @RequestMapping("/remise")
 public class RemiseController {
     
@@ -39,6 +37,7 @@ public class RemiseController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Remise> rajouterProduit(Authentication authentication, @RequestBody String nomProduit) {
         Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
         Produit produit = produitService.getProduit(nomProduit);
@@ -66,14 +65,15 @@ public class RemiseController {
     
     //IDK how to w/ getInfoProduit in service
     @GetMapping("/{idProduit}")
-    public ResponseEntity<Remise> infoProduit(Authentication authentication, @RequestBody String nomProduit){
+    public ResponseEntity<Remise> infoProduit(Authentication authentication, @PathVariable String idProduit){
         Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
-        Produit produit = produitService.getProduit(nomProduit);
+        Produit produit = produitService.getProduit(idProduit);
         Optional<Remise> optionalRemise = remiseRepository.findByIdProduitAndProprietaire(produit,ferme);
 
-        if (optionalRemise == null)
+        if (!optionalRemise.isPresent()){
             return ResponseEntity.notFound().build();
-            
+        }
+
         Remise remise = optionalRemise.get();
 
         return ResponseEntity.ok(remise);
@@ -81,10 +81,10 @@ public class RemiseController {
     
 
     @PutMapping
-    public ResponseEntity<Remise> updateProduit(Authentication authentication, @RequestBody String nomProduit, @RequestBody int quantite) {
+    public ResponseEntity<Remise> updateProduit(Authentication authentication, @RequestBody ProduitUpdateDTO dto ) {
         Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
-        Produit produit = produitService.getProduit(nomProduit);
-        Remise updatedRemise = remiseService.updateRemiseProduit(ferme, produit, quantite);
+        Produit produit = produitService.getProduit( dto.nomProduit);
+        Remise updatedRemise = remiseService.updateRemiseProduit(ferme, produit, dto.quantite);
 
         if (updatedRemise == null)
             return ResponseEntity.notFound().build();

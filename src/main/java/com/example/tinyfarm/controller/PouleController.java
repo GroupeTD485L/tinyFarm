@@ -163,9 +163,25 @@ public class PouleController {
         return ResponseEntity.ok(allPoussins);
     } 
 
+
+    @Scheduled(cron="0 0 0 * * ?")
+    public void scheduleUpdateAllPoulailler(){
+        pouleService.updateAllPoules();
+    }
+
+    @PutMapping("admin/updateAllPoulailler")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> updateAllPoulailler() {
+        try {
+            pouleService.updateAllPoules();
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
+
     // Méthode d'update 
     @PreAuthorize("isAuthenticated()")
-    // @Scheduled(cron="0 0 0 * * ?")
     @PutMapping
     public ResponseEntity<Page<Poule>> updatePoulailler(Authentication authentication, Pageable pageable){
         String pseudo = authentication.getName();
