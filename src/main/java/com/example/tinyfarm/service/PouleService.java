@@ -73,8 +73,8 @@ public class PouleService {
     public void updatePoule(Long id) {
         Optional<Poule> existingPoule = pouleRepository.findById(id);
         Poule poule = existingPoule.get();
-        long differenceInDays = Duration.between(poule.getDernierRepas(), LocalDateTime.now()).toDays();
-        
+        long differenceInDays = poule.getDernierRepas() != null 
+        ? Duration.between(poule.getDernierRepas(), LocalDateTime.now()).toDays() : Long.MAX_VALUE;
         poule.setAge(poule.getAge()+1);
         if ( differenceInDays == 1) {
             poule.setPoids(poule.getPoids()-0.2);
@@ -89,10 +89,12 @@ public class PouleService {
             Random random = new Random();
             poule.setSexe(random.nextBoolean() ? 'M' : 'F');
         }
-        
-        if (Duration.between(poule.getMaladeDepuis(), LocalDateTime.now()).toDays() >= 4) {
-            pouleRepository.deleteById(id); // La poule meurt, on la supprime
+        if (poule.getMaladeDepuis() != null) {
+            if (Duration.between(poule.getMaladeDepuis(), LocalDateTime.now()).toDays() >= 4)  {
+                pouleRepository.deleteById(id); // La poule meurt, on la supprime
+            }
         }
+        
     
     }
 
@@ -267,4 +269,19 @@ public class PouleService {
 
         return(poule);
     }
+    // Ajout d'une méthode pour rendre une poule malade
+    @Transactional
+    public Poule rendreMaladePoule(Long id, Ferme ferme) {
+        Optional<Poule> optPoule = pouleRepository.findById(id);
+        if (!optPoule.isPresent()) {
+            return null;
+        }
+    
+        Poule poule = optPoule.get();
+        // Ignorer le paramètre ferme car non nécessaire pour cette fonctionnalité
+        poule.setMaladeDepuis(LocalDateTime.now().minusDays(2));
+        return pouleRepository.save(poule);
+    }
 }
+
+    
