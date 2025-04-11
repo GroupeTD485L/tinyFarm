@@ -252,8 +252,6 @@ public class PouleController {
             return ResponseEntity.notFound().build();
         }
     } 
-
-
     /* Pas logique qu'un utilisateur puisse delete son clapier
     @DeleteMapping
     public void deletePoulailler(){} 

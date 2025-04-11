@@ -114,38 +114,53 @@ public class PouleService {
     public Poule nourrirPoule(Long id, String nourriture) {
         Optional<Poule> optPoule = pouleRepository.findById(id);
         if (!optPoule.isPresent()) {
+            System.out.println("Poule non trouvée avec l'ID : " + id);
             return null;
         }
-        
+
         Poule poule = optPoule.get();
-        if (poule.getDernierRepas() != null && poule.getDernierRepas().isBefore(LocalDateTime.now().minusHours(24)) && poule.getProprietaire().getEcus()>=3) {
-            if (nourriture.equals("Grain")) {
-                Optional<Produit> existp = produitRepository.findByNom("Grain");
+        System.out.println("Dernier repas : " + poule.getDernierRepas());
+        System.out.println("Poids actuel : " + poule.getPoids());
+        System.out.println("Ecus du propriétaire : " + poule.getProprietaire().getEcus());
+
+        if (poule.getDernierRepas() == null) {
+            System.out.println("Dernier repas est null - la poule n'a jamais été nourrie");
+        } else if (!poule.getDernierRepas().isBefore(LocalDateTime.now().minusHours(24))) {
+            System.out.println("La poule a déjà été nourrie dans les dernières 24 heures");
+            return poule;
+        } else if (poule.getProprietaire().getEcus() < 3) {
+            System.out.println("Le propriétaire n'a pas assez d'écus");
+            return poule;
+        }
+        if (poule.getDernierRepas() != null 
+        && poule.getDernierRepas().isBefore(LocalDateTime.now().minusHours(24)) && poule.getProprietaire().getEcus() >= 3) {
+            if (nourriture.equals("Graine")) {
+                Optional<Produit> existp = produitRepository.findByNom("Graine");
                 if (!existp.isPresent()) {
                     throw new IllegalArgumentException("Le produit n'existe pas");
                 }
 
                 Produit p = existp.get();
-                Optional<Remise> existingRemise = remiseRepository.findByIdProduitAndProprietaire(p,poule.getProprietaire());
+                Optional<Remise> existingRemise = remiseRepository.findByIdProduitAndProprietaire(p, poule.getProprietaire());
                 if (!existingRemise.isPresent()) {
                     throw new IllegalArgumentException("Produit non trouvé dans la remise");
                 }
 
                 Remise remise = existingRemise.get();
-                if ( remise.getQuantite() > 0 ){
-                    if (poule.getPoids()+0.5 <= 3.5){
+                System.out.println("Quantité dans la remise : " + remise.getQuantite());
+                if (remise.getQuantite() > 0) {
+                    if (poule.getPoids() + 0.5 <= 3.5) {
                         poule.setPoids(poule.getPoids() + 0.5);
-                    }
-                    else if (poule.getPoids()<3.5 && poule.getPoids()+0.5 > 3.5 ){
+                    } else if (poule.getPoids() < 3.5 && poule.getPoids() + 0.5 > 3.5) {
                         poule.setPoids(3.5);
                     }
                     poule.setDernierRepas(LocalDateTime.now());
-                    remise.setQuantite(remise.getQuantite()-1);
+                    remise.setQuantite(remise.getQuantite() - 1);
                     remiseRepository.save(remise);
                 }
             }
 
-            poule.getProprietaire().setEcus(poule.getProprietaire().getEcus()-3);
+            poule.getProprietaire().setEcus(poule.getProprietaire().getEcus() - 3);
             return pouleRepository.save(poule);
         }
         return poule;
