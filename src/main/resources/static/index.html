@@ -40,7 +40,7 @@
             // Récupère les données de la ferme
             async function fetchFerme() {
                 try {
-                    const fermeRes = await fetch('/ferme', { credentials: "include" });
+                    const fermeRes = await fetch('/ferme/', { credentials: "include" });
                     if (fermeRes.ok) {
                         const fermeData = await fermeRes.json();
                         setFerme(fermeData);
@@ -93,8 +93,7 @@
                         <div>
                             <h2>Votre Ferme</h2>
                             <p>Nom : {ferme.nom}</p>
-                            <p>Niveau : {ferme.niveau}</p>
-                            <p>Ressources : {ferme.ressources}</p>
+                            <p>Votre solde : {ferme.ecus}</p>
                         </div>
                     ) : (
                         <p>{user ? "Chargement de la ferme..." : "Veuillez vous connecter pour voir votre ferme."}</p>
