@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 
+
+
 import  com.example.tinyfarm.service.FermeService;
 import  com.example.tinyfarm.entity.Poule;
 import  com.example.tinyfarm.service.PouleService;
@@ -16,6 +18,11 @@ import  com.example.tinyfarm.repository.PouleRepository;
 
 import java.util.Optional;
 
+//ajout
+import java.io.PrintWriter;
+import java.io.StringWriter;
+// Ajoutez cet import en haut du fichier
+import org.springframework.data.domain.PageRequest;
 
 @RestController
 @RequestMapping("/poulailler")
@@ -162,8 +169,7 @@ public class PouleController {
         }
         return ResponseEntity.ok(allPoussins);
     } 
-
-
+    
     @Scheduled(cron="0 0 0 * * ?")
     public void scheduleUpdateAllPoulailler(){
         pouleService.updateAllPoules();
@@ -171,12 +177,13 @@ public class PouleController {
 
     @PutMapping("admin/updateAllPoulailler")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> updateAllPoulailler() {
+    public ResponseEntity<String> updateAllPoulailler() {
         try {
             pouleService.updateAllPoules();
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok("Mise à jour réussie");
         } catch (Exception e) {
-            return ResponseEntity.status(500).build();
+            e.printStackTrace(); // Affiche la pile d'appels dans les logs
+            return ResponseEntity.status(500).body("Erreur : " + e.getMessage() + "\n" + e.getClass().getName());
         }
     }
 
@@ -252,7 +259,18 @@ public class PouleController {
             return ResponseEntity.notFound().build();
         }
     } 
-
+    // Ajout d'une méthode pour rendre une poule malade
+    @PutMapping("/{idPoule}/rendreMalade")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Poule> rendreMaladeVolaille(@PathVariable long idPoule) {
+    // Sans utiliser Authentication, puisque c'est un admin
+        Poule poule = pouleService.rendreMaladePoule(idPoule, null);  // null pour le paramètre ferme
+        if (poule != null) {
+            return ResponseEntity.ok(poule);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     /* Pas logique qu'un utilisateur puisse delete son clapier
     @DeleteMapping
