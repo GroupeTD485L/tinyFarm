@@ -151,34 +151,32 @@
 
             return (
                 <div className="app">
-                    <header>
-                        {user ? (
-                            <div>
-                                <p>Connecté en tant que : {user.username}</p>
-                                <button onClick={logout}>Se déconnecter</button>
-                            </div>
-                        ) : (
-                            <div class="login-screen">
-                                <div class="classement">
-                                    <div class="classement-content">
-                                        <p>Top des joueurs</p>
-                                        <ol>
-                                            <li>Riri</li>
-                                            <li>Fifi</li>
-                                            <li>Loulou</li>
-                                            <li>Donald</li>
-                                            <li>Picsou</li>
-                                        </ol>
-                                    </div>
-                                </div>
-                                <div class="login-screen-content">
-                                    <img src="/res/logo_40p.png" />
-                                    <h1>Rejoignez l'aventure agricole !</h1>
-                                    <button onClick={login}>Se connecter avec GitHub</button>
+                    {user ? (
+                        <div>
+                            <p>Connecté en tant que : {user.username}</p>
+                            <button onClick={logout}>Se déconnecter</button>
+                        </div>
+                    ) : (
+                        <div class="login-screen">
+                            <div class="classement">
+                                <div class="classement-content">
+                                    <p>Top des joueurs</p>
+                                    <ol>
+                                        <li>Riri</li>
+                                        <li>Fifi</li>
+                                        <li>Loulou</li>
+                                        <li>Donald</li>
+                                        <li>Picsou</li>
+                                    </ol>
                                 </div>
                             </div>
-                        )}
-                    </header>
+                            <div class="login-screen-content">
+                                <img src="/res/logo_40p.png" />
+                                <h1>Rejoignez l'aventure agricole !</h1>
+                                <button onClick={login}>Se connecter avec GitHub</button>
+                            </div>
+                        </div>
+                    )}
 
                     {ferme ? (
                         <div>
