@@ -17,6 +17,7 @@
         function App() {
             const [user, setUser] = React.useState(null);
             const [ferme, setFerme] = React.useState(null);
+            const [vache, setVache ] = React.useState(null);
 
             // Vérifie l'état de connexion
             async function checkLoginStatus() {
@@ -43,7 +44,9 @@
                     const fermeRes = await fetch('/ferme/', { credentials: "include" });
                     if (fermeRes.ok) {
                         const fermeData = await fermeRes.json();
+                        console.log(fermeData)
                         setFerme(fermeData);
+                        setVache(fermeData.vache);
                     } else {
                         setFerme(null);
                     }
@@ -51,6 +54,7 @@
                     console.error("Erreur lors de la récupération de la ferme :", err);
                 }
             }
+
 
             // Gère la connexion
             function login() {
@@ -68,6 +72,73 @@
                     }
                 } catch (err) {
                     console.error("Erreur lors de la déconnexion :", err);
+                }
+            }
+
+            async function nourrirVache(){
+                try {
+                    const response = await fetch('/vache/nourrir', {
+                    method: 'PUT',
+                    body: JSON.stringify("Botte de foin")
+                    });
+                    if (response.ok) {
+                        const vache = await response.json();
+                        setVache(vache);
+                        console.log(vache)
+
+                    } else {
+                        setVache(null);
+                    }
+                } catch (err) {
+                    console.error("Erreur lors du nourissage de la vache : ", err);
+                }
+            }
+
+            async function soignerVache(){
+                try {
+                    const response = await fetch('/vache/soigner', { method: 'PUT' });
+                    if (response.ok) {
+                        const vache = await response.json();
+                        setVache(vache);
+                        console.log(vache)
+
+                    } else {
+                        setVache(null);
+                    }
+                } catch (err) {
+                    console.error("Erreur lors du soin de la vache : ", err);
+                }
+            }
+
+            async function abreuverVache(){
+                try {
+                    const response = await fetch('/vache/abreuver', { method: 'PUT' });
+                    if (response.ok) {
+                        const vache = await response.json();
+                        setVache(vache);
+                        console.log(vache)
+
+                    } else {
+                        setVache(null);
+                    }
+                } catch (err) {
+                    console.error("Erreur lors de l'abreuvage de la vache : ", err);
+                }
+            }
+
+            async function laverVache(){
+                try {
+                    const response = await fetch('/vache/laver', { method: 'PUT' });
+                    if (response.ok) {
+                        const vache = await response.json();
+                        setVache(vache);
+                        console.log(vache)
+
+                    } else {
+                        setVache(null);
+                    }
+                } catch (err) {
+                    console.error("Erreur lors du lavage de la vache : ", err);
                 }
             }
 
@@ -94,10 +165,28 @@
                             <h2>Votre Ferme</h2>
                             <p>Nom : {ferme.nom}</p>
                             <p>Votre solde : {ferme.ecus}</p>
-                        </div>
+                            
+                            {vache ? (
+                            <div>
+                                <h2>Votre Vache</h2>
+                                <p>age : {vache.age}</p>
+                                <p>poids : {vache.poids}</p>
+                                {vache.maladeDepuis ? (<p> la vache est malade depuis : {vache.maladeDepuis} </p> ) : ( <p> la vache n'est pas malade </p>) }
+                                <p>dernierBreuvage : {vache.dernierBreuvage}</p>
+                                <p>dernierLavage : {vache.dernierLavage}</p>
+                                <p>dernierRepas : {vache.dernierRepas}</p>
+                                <p>qt_lait : {vache.qt_lait}</p>
+                                <button onClick={nourrirVache}> Nourrir la vache </button>
+                                <button onClick={abreuverVache}> abreuver la vache </button>
+                                <button onClick={soignerVache}> Soigner la vache </button>
+                                <button onClick={laverVache}> Laver la vache </button>
+                            </div> ) : (<p>vache morte</p>) }
+
+                        </div>   
                     ) : (
                         <p>{user ? "Chargement de la ferme..." : "Veuillez vous connecter pour voir votre ferme."}</p>
                     )}
+                     
                 </div>
             );
         }
