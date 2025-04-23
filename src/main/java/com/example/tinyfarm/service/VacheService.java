@@ -128,6 +128,7 @@ public class VacheService {
         if (vache == null) {
             return null;
         }
+        try {
         if (vache.getDernierRepas() != null && 
         vache.getDernierRepas().isBefore(LocalDateTime.now().minusHours(24))) {
         if (nourriture.equals("Herbe")) {
@@ -170,6 +171,10 @@ public class VacheService {
             }
             return vacheRepository.save(vache);
         }
+    }
+    catch (Exception e ){
+        return vache;
+    }
         return vache;
     }
     
@@ -178,11 +183,12 @@ public class VacheService {
      */
     @Transactional
     public Vache abreuverVache(Ferme ferme) {
+        
         Vache vache = ferme.getVache();
         if (vache == null) {
             return null;
         }
-
+        try {
         Optional<Produit> existp =  produitRepository.findByNom("Seau d'eau");
         if (!existp.isPresent()) {
             throw new IllegalArgumentException("Le produit n'existe pas");
@@ -198,7 +204,10 @@ public class VacheService {
             vache.setDernierBreuvage(LocalDateTime.now());
             remise.setQuantite(remise.getQuantite()-1);
         }
-
+        }
+        catch (Exception e ){
+            return vache;
+        }
         return vacheRepository.save(vache);
     }
     
@@ -211,7 +220,7 @@ public class VacheService {
         if (vache == null) {
             return null;
         }
-        
+        try {
         // Si la vache est malade, on la soigne
         if (vache.getMaladeDepuis() != null) {
             Optional<Produit> existp =  produitRepository.findByNom("Seringue");
@@ -230,6 +239,10 @@ public class VacheService {
                 vache.setMaladeDepuis(null);
             }
             
+            return vache;
+        }
+        }
+        catch (Exception e ){
             return vacheRepository.save(vache);
         }
 
@@ -245,7 +258,7 @@ public class VacheService {
         if (vache == null) {
             return null;
         }
-
+        try {
         Optional<Produit> existp =  produitRepository.findByNom("Savon");
         if (!existp.isPresent()) {
             throw new IllegalArgumentException("Le produit n'existe pas");
@@ -261,7 +274,10 @@ public class VacheService {
             remise.setQuantite(remise.getQuantite()-1);
             vache.setDernierLavage(LocalDateTime.now());
         }
-                
+        }
+        catch (Exception e ){
+            return vache ;
+        } 
         return vacheRepository.save(vache);
     }
 
