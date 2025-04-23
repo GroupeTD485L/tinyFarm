@@ -2,12 +2,14 @@
 <html lang="fr">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TinyFarm</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TinyFarm - Connexion</title>
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+    <link rel="stylesheet" href="/base.css" />
+    <link rel="stylesheet" href="/reset.css" />
 </head>
 
 <body>
@@ -28,6 +30,7 @@
 
                         // Récupère les données de la ferme
                         fetchFerme();
+                        document.title = 'Tinyfarm - Bienvenue !'
                     } else {
                         setUser(null);
                         setFerme(null);
@@ -78,14 +81,31 @@
             return (
                 <div className="app">
                     <header>
-                        <h1>Bienvenue sur TinyFarm</h1>
                         {user ? (
                             <div>
                                 <p>Connecté en tant que : {user.username}</p>
                                 <button onClick={logout}>Se déconnecter</button>
                             </div>
                         ) : (
-                            <button onClick={login}>Se connecter avec GitHub</button>
+                            <div class="login-screen">
+                                <div class="classement">
+                                    <div class="classement-content">
+                                        <p>Top des joueurs</p>
+                                        <ol>
+                                            <li>Riri</li>
+                                            <li>Fifi</li>
+                                            <li>Loulou</li>
+                                            <li>Donald</li>
+                                            <li>Picsou</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="login-screen-content">
+                                    <img src="/res/logo_40p.png" />
+                                    <h1>Rejoignez l'aventure agricole !</h1>
+                                    <button onClick={login}>Se connecter avec GitHub</button>
+                                </div>
+                            </div>
                         )}
                     </header>
 
@@ -96,7 +116,7 @@
                             <p>Votre solde : {ferme.ecus}</p>
                         </div>
                     ) : (
-                        <p>{user ? "Chargement de la ferme..." : "Veuillez vous connecter pour voir votre ferme."}</p>
+                        <p>{user ? "Chargement de la ferme..." : ""}</p>
                     )}
                 </div>
             );
