@@ -86,7 +86,9 @@
                     });
                     if (response.ok) {
                         const vache = await response.json();
-                        setVache(vache);
+                        if (vache) {
+                            setVache(vache);
+                        }
                         console.log(vache)
 
                     } else {
@@ -102,7 +104,9 @@
                     const response = await fetch('/vache/soigner', { method: 'PUT' });
                     if (response.ok) {
                         const vache = await response.json();
-                        setVache(vache);
+                        if (vache) {
+                            setVache(vache);
+                        }
                         console.log(vache)
 
                     } else {
@@ -118,7 +122,9 @@
                     const response = await fetch('/vache/abreuver', { method: 'PUT' });
                     if (response.ok) {
                         const vache = await response.json();
-                        setVache(vache);
+                        if (vache) {
+                            setVache(vache);
+                        }
                         console.log(vache)
 
                     } else {
@@ -134,7 +140,9 @@
                     const response = await fetch('/vache/laver', { method: 'PUT' });
                     if (response.ok) {
                         const vache = await response.json();
-                        setVache(vache);
+                        if (vache) {
+                            setVache(vache);
+                        }
                         console.log(vache)
 
                     } else {
