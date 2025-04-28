@@ -112,13 +112,18 @@ public class VacheController {
 
     @PutMapping("/abreuver")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Vache> abreuverVache(Authentication authentication){
+    public ResponseEntity<Object> abreuverVache(Authentication authentication){
         Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
-        Vache vache = vacheService.abreuverVache(ferme);
-        if (vache != null){
-            return ResponseEntity.ok(vache);
-        } else {
-            return ResponseEntity.notFound().build();
+        
+        try {
+            Vache vache = vacheService.abreuverVache(ferme);
+            if (vache != null){
+                return ResponseEntity.ok(vache);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(403).body(e.getMessage());
         }
     }
 
