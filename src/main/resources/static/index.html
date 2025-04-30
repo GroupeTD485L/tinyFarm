@@ -20,10 +20,14 @@
             const [user, setUser] = React.useState(null);
             const [ferme, setFerme] = React.useState(null);
             const [vache, setVache ] = React.useState(null);
+            const [classement, setClassement] = React.useState([]);
+            const [error, setError] = React.useState(null);
 
             // Vérifie l'état de connexion
             async function checkLoginStatus() {
                 try {
+                    setError(null);
+                    fetchClassement();
                     const userRes = await fetch('/user', { credentials: "include" });
                     if (userRes.ok) {
                         const userData = await userRes.json();
@@ -38,6 +42,17 @@
                     }
                 } catch (err) {
                     console.error("Erreur lors de la vérification de l'utilisateur :", err);
+                }
+            }
+
+            async function fetchClassement() {
+                const classementRes = await fetch('/classement?page=0&size=5', { credentials: "include" });
+                try {
+                    const classementData = await classementRes.json();
+                    setClassement(classementData.content);
+                } catch (err) {
+                    setError("Erreur lors de la récupération du classement");
+                    console.log("Erreur lors de la récupération du classement :", err);
                 }
             }
 
@@ -88,9 +103,12 @@
                         const vache = await response.json();
                         setVache(vache);
                         console.log(vache)
-
+                        setError(null);
+                    } else if (response.status === 403) {
+                        const errorData = await response.text();
+                        setError(errorData || "Erreur 403");
                     } else {
-                        setVache(null);
+                        setError("Une erreur innatendue s'est produite")
                     }
                 } catch (err) {
                     console.error("Erreur lors du nourissage de la vache : ", err);
@@ -104,28 +122,36 @@
                         const vache = await response.json();
                         setVache(vache);
                         console.log(vache)
-
+                        setError(null);
+                    } else if (response.status === 403) {
+                        const errorData = await response.text();
+                        setError(errorData || "Erreur 403");
                     } else {
-                        setVache(null);
+                        setError("Une erreur innatendue s'est produite");
                     }
                 } catch (err) {
                     console.error("Erreur lors du soin de la vache : ", err);
                 }
             }
 
-            async function abreuverVache(){
+            async function abreuverVache() {
                 try {
                     const response = await fetch('/vache/abreuver', { method: 'PUT' });
                     if (response.ok) {
                         const vache = await response.json();
                         setVache(vache);
-                        console.log(vache)
-
+                        console.log(vache);
+                        setError(null);
+                    } else if (response.status === 403) {
+                        const errorData = await response.text();
+                        console.log(errorData);
+                        setError(errorData || "Erreur 403");
                     } else {
-                        setVache(null);
+                        setError("Une erreur inattendue s'est produite.");
                     }
                 } catch (err) {
                     console.error("Erreur lors de l'abreuvage de la vache : ", err);
+                    setError("Une erreur s'est produite lors de l'abreuvage de la vache.");
                 }
             }
 
@@ -137,8 +163,11 @@
                         setVache(vache);
                         console.log(vache)
 
+                    } else if (response.status === 403) {
+                        const errorData = await response.text();
+                        setError(errorData || "Erreur 403");
                     } else {
-                        setVache(null);
+                        setError("Une erreur innatendue s'est produite");
                     }
                 } catch (err) {
                     console.error("Erreur lors du lavage de la vache : ", err);
@@ -151,58 +180,74 @@
 
             return (
                 <div className="app">
-                    <header>
-                        {user ? (
-                            <div>
-                                <p>Connecté en tant que : {user.username}</p>
-                                <button onClick={logout}>Se déconnecter</button>
-                            </div>
-                        ) : (
-                            <div class="login-screen">
-                                <div class="classement">
-                                    <div class="classement-content">
-                                        <p>Top des joueurs</p>
-                                        <ol>
-                                            <li>Riri</li>
-                                            <li>Fifi</li>
-                                            <li>Loulou</li>
-                                            <li>Donald</li>
-                                            <li>Picsou</li>
-                                        </ol>
-                                    </div>
+                    {error && (
+                        <div class="error-message">
+                            <p style={{ color: 'red' }}>Erreur : {error}</p>
+                        </div>
+                    )}
+
+                    {user ? (
+                        <div>
+                            <p>Connecté en tant que : {user.username}</p>
+                            <button onClick={logout}>Se déconnecter</button>
+                        </div>
+                    ) : (
+                        <div class="login-screen">
+                            <div class="classement">
+                                <div class="classement-content">
+                                    <p>Top des joueurs</p>
+                                    <ol>
+                                        {classement.length > 0 ? (
+                                            classement.map((item, index) => (
+                                                <li key={item.idClassement}>
+                                                    <span>{item.nomFerme}</span>
+                                                    <span class="score">Score : {item.score}</span>
+                                                </li>
+                                            ))
+                                        ) : (
+                                            <p>Aucun joueur n'existe pour le moment !</p>
+                                        )}
+                                    </ol>
                                 </div>
-                                <div class="login-screen-content">
-                                    <img src="/res/logo_40p.png" />
-                                    <h1>Rejoignez l'aventure agricole !</h1>
-                                    <button onClick={login}>Se connecter avec GitHub</button>
-                                </div>
                             </div>
-                        )}
-                    </header>
+                            <div class="login-screen-content">
+                                <img src="/res/logo_40p.png" />
+                                <h1>Rejoignez l'aventure agricole !</h1>
+                                <button onClick={login}>Se connecter avec GitHub</button>
+                            </div>
+                        </div>
+                    )}
 
                     {ferme ? (
-                        <div>
+                        <div className="ferme-section">
                             <h2>Votre Ferme</h2>
                             <p>Nom : {ferme.nom}</p>
                             <p>Votre solde : {ferme.ecus}</p>
                             
                             {vache ? (
-                            <div>
+                            <div className="vache-section">
                                 <h2>Votre Vache</h2>
-                                <p>age : {vache.age}</p>
-                                <p>poids : {vache.poids}</p>
-                                {vache.maladeDepuis ? (<p> la vache est malade depuis : {vache.maladeDepuis} </p> ) : ( <p> la vache n'est pas malade </p>) }
-                                <p>dernierBreuvage : {vache.dernierBreuvage}</p>
-                                <p>dernierLavage : {vache.dernierLavage}</p>
-                                <p>dernierRepas : {vache.dernierRepas}</p>
-                                <p>qt_lait : {vache.qt_lait}</p>
-                                <button onClick={nourrirVache}> Nourrir la vache </button>
-                                <button onClick={abreuverVache}> abreuver la vache </button>
-                                <button onClick={soignerVache}> Soigner la vache </button>
-                                <button onClick={laverVache}> Laver la vache </button>
-                            </div> ) : (<p>vache morte</p>) }
-
-                        </div>   
+                                <p>Âge : {vache.age}</p>
+                                <p>Poids : {vache.poids}</p>
+                                {vache.maladeDepuis ? (
+                                    <p>La vache est malade depuis : {vache.maladeDepuis}</p>
+                                ) : (
+                                    <p>La vache n'est pas malade</p>
+                                )}
+                                <p>Dernier breuvage : {vache.dernierBreuvage}</p>
+                                <p>Dernier lavage : {vache.dernierLavage}</p>
+                                <p>Dernier repas : {vache.dernierRepas}</p>
+                                <p>Quantité de lait : {vache.qt_lait}</p>
+                                <button onClick={nourrirVache}>Nourrir la vache</button>
+                                <button onClick={abreuverVache}>Abreuver la vache</button>
+                                <button onClick={soignerVache}>Soigner la vache</button>
+                                <button onClick={laverVache}>Laver la vache</button>
+                                <a href="/clapier.html"><button>Aller vers le clapier</button></a>
+                            </div>
+                            ) : (
+                            <p>Vache morte</p>
+                            )}
+                        </div>
                     ) : (
                         <p>{user ? "Chargement de la ferme..." : ""}</p>
                     )}

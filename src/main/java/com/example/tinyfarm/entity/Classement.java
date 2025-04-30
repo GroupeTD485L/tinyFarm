@@ -18,6 +18,9 @@ public class Classement{
     @JsonBackReference
     private Ferme ferme;
 
+    @Transient
+    private String nomFerme;
+
     private float score;
 
     public Classement(){}

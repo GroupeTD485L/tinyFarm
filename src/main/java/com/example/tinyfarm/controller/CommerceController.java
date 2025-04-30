@@ -85,12 +85,4 @@ public class CommerceController {
 
         return ResponseEntity.ok(page);
     }
-
-    /*
-    TODO
-
-     @GetMapping("/coop")
-    public void getInfoCoop(){}
-     */
-
 }

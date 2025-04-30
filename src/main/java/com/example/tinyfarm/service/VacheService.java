@@ -5,7 +5,6 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.tinyfarm.entity.Vache;
@@ -149,7 +148,7 @@ public class VacheService {
                 
                 Optional<Remise> existingRemise = remiseRepository.findByIdProduitAndProprietaire(p,vache.getProprietaire());
                 if (!existingRemise.isPresent()) {
-                    throw new IllegalArgumentException("Produit non trouvé dans la remise");
+                    throw new IllegalArgumentException("Aucune botte de foin de disponible dans votre remise !");
                 }
                 Remise remise = existingRemise.get();
 
@@ -191,7 +190,7 @@ public class VacheService {
                 
         Optional<Remise> existingRemise = remiseRepository.findByIdProduitAndProprietaire(p,vache.getProprietaire());
         if (!existingRemise.isPresent()) {
-            throw new IllegalArgumentException("Produit non trouvé dans la remise");
+            throw new IllegalArgumentException("Aucun seau d'eau n'est disponible dans votre remise !");
         }
         Remise remise = existingRemise.get();
         if (remise.getQuantite()>0 ){
@@ -222,7 +221,7 @@ public class VacheService {
             
             Optional<Remise> existingRemise = remiseRepository.findByIdProduitAndProprietaire(p,vache.getProprietaire());
             if (!existingRemise.isPresent()) {
-                throw new IllegalArgumentException("Produit non trouvé dans la remise");
+                throw new IllegalArgumentException("Aucune seringue disponible dans votre remise !");
             }
             Remise remise = existingRemise.get();
             if (remise.getQuantite()>0 ){
@@ -254,7 +253,7 @@ public class VacheService {
 
         Optional<Remise> existingRemise = remiseRepository.findByIdProduitAndProprietaire(p,vache.getProprietaire());
         if (!existingRemise.isPresent()) {
-            throw new IllegalArgumentException("Produit non trouvé dans la remise");
+            throw new IllegalArgumentException("Aucun savon disponible dans votre remise !");
         }
         Remise remise = existingRemise.get();
         if (remise.getQuantite()>0 ){

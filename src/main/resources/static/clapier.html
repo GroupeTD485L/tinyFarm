@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <title>Clapier</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="clapier.css" />
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        function Clapier() {
+            const [fin, setFin] = React.useState("");
+            const [age, setAge] = React.useState("");
+            const [ecus, setEcus] = React.useState(0);
+            const [niveau, setNiveau] = React.useState(1);
+            const [bebes, setBebes] = React.useState(0);
+            const [petits, setPetits] = React.useState(0);
+            const [males, setMales] = React.useState(0);
+            const [femelles, setFemelles] = React.useState(0);
+            const [submenuVisible, setSubmenuVisible] = React.useState(false);
+            const [dernierRepas, setDernierRepas] = React.useState(null);
+            const [dernierBreuvage, setDernierBreuvage] = React.useState(null);
+            const [dernierLavage, setDernierLavage] = React.useState(null);
+            const [maladeDepuis, setMaladeDepuis] = React.useState(null);
+
+            React.useEffect(() => {
+                document.title = "Clapier";
+                fetchClapierData();
+            }, []);
+
+            // Récupère les données de la ferme, écus
+            async function fetchFerme() {
+                try {
+                    const fermeRes = await fetch('/ferme/', { credentials: "include" });
+                    if (fermeRes.ok) {
+                        const fermeData = await fermeRes.json();
+                        setEcus(fermeData.ecus); 
+                    } else {
+                        console.error("Erreur lors de la récupération de la ferme");
+                    }
+                } catch (err) {
+                    console.error("Erreur réseau lors de la récupération de la ferme :", err);
+                }
+            }
+
+            const fetchClapierData = async () => {
+                try {
+                    const response = await fetch("/clapier", { method: "GET", credentials: "include" });
+                    if (response.ok) {
+                        const data = await response.json();
+                        setBebes(data.nb_bebe);
+                        setPetits(data.nb_petit);
+                        setMales(data.nb_adulte_m);
+                        setFemelles(data.nb_adulte_f);
+                        setDernierRepas(data.dernier_repas);
+                        setDernierBreuvage(data.dernier_abreuvage);
+                        setDernierLavage(data.dernier_lavage);
+                        setMaladeDepuis(data.malade_depuis);
+                    } else {
+                        console.error("Erreur lors de la récupération des données du clapier");
+                    }
+                } catch (error) {
+                    console.error("Erreur réseau :", error);
+                }
+            };
+            
+            //fonction pour nourrir le clapier
+            async function nourrirClapier() {
+                try {
+                    const response = await fetch('/clapier/nourrir', {
+                        method: 'PUT',
+                        body: JSON.stringify("Graine"), 
+                    });
+                    if (response.ok) {
+                        const clapier = await response.json();
+                        if (clapier) {
+                            setBebes(clapier.nb_bebe);
+                            setPetits(clapier.nb_petit);
+                            setMales(clapier.nb_adulte_m);
+                            setFemelles(clapier.nb_adulte_f);
+                        }
+                        console.log(clapier);
+                    } else {
+                        console.error("Erreur lors du nourrissage du clapier");
+                    }
+                } catch (err) {
+                    console.error("Erreur réseau lors du nourrissage du clapier :", err);
+                }
+            }
+
+            //fonction pour abreuver le clapier
+            async function abreuverClapier() {
+                try {
+                    const response = await fetch('/clapier/abreuver', { method: 'PUT', credentials: 'include' });
+                    if (response.ok) {
+                        const clapier = await response.json();
+                        if (clapier) {
+                            setBebes(clapier.nb_bebe);
+                            setPetits(clapier.nb_petit);
+                            setMales(clapier.nb_adulte_m);
+                            setFemelles(clapier.nb_adulte_f);
+                        }
+                        console.log(clapier);
+                    } else {
+                        console.error("Erreur lors de l'abreuvage du clapier");
+                    }
+                } catch (err) {
+                    console.error("Erreur réseau lors de l'abreuvage du clapier :", err);
+                }
+            }
+            
+            //fonction pour soigner le clapier
+            async function soignerClapier() {
+                try {
+                    const response = await fetch('/clapier/soigner', { method: 'PUT', credentials: 'include' });
+                    if (response.ok) {
+                        const clapier = await response.json();
+                        if (clapier) {
+                            setBebes(clapier.nb_bebe);
+                            setPetits(clapier.nb_petit);
+                            setMales(clapier.nb_adulte_m);
+                            setFemelles(clapier.nb_adulte_f);
+                        }
+                        console.log(clapier);
+                    } else {
+                        console.error("Erreur lors du soin du clapier");
+                    }
+                } catch (err) {
+                    console.error("Erreur réseau lors du soin du clapier :", err);
+                }
+
+                //fonction pour laver le clapier
+                async function laverClapier() {
+                    try {
+                        const response = await fetch('/clapier/laver', { method: 'PUT', credentials: 'include' });
+                        if (response.ok) {
+                            const clapier = await response.json();
+                            if (clapier) {
+                                setBebes(clapier.nb_bebe);
+                                setPetits(clapier.nb_petit);
+                                setMales(clapier.nb_adulte_m);
+                                setFemelles(clapier.nb_adulte_f);
+                            }
+                            console.log(clapier);
+                        } else {
+                            console.error("Erreur lors du lavage du clapier");
+                        }
+                    } catch (err) {
+                        console.error("Erreur réseau lors du lavage du clapier :", err);
+                    }
+                }
+
+
+            }
+            const toggleSubmenu = () => {
+                setSubmenuVisible(!submenuVisible);
+            };
+
+            return (
+                <div>
+                    <header className="bandeau">
+                        <div>fin journée : <span>{fin}</span></div>
+                        <div>age ferme : <span>{age}</span></div>
+                        <div id="titre">Clapier</div>
+                        <div>Ecus : <span>{ecus}</span></div>
+                        <div>Niveau : <span>{niveau}</span></div>
+                        <div className="profil" id="profil" onClick={toggleSubmenu}>
+                            PROFIL
+                            <ul className="submenu" id="submenu" style={{ display: submenuVisible ? "block" : "none" }}>
+                                <li><a href="index.html">retour index</a></li>
+                                <li><a href="#">2eme truc</a></li>
+                                <li><a href="#">3eme truc</a></li>
+                                <li><a href="#">4eme truc</a></li>
+                            </ul>
+                        </div>
+                    </header>
+
+                    <main className="page">
+                        <section className="jeunes">
+                            <h2>Lapereaux</h2>
+                            <p>Nombre de bébés : <span>{bebes}</span></p>
+                            <p>Nombre de petits : <span>{petits}</span></p>
+                            <img
+                                src="https://png.pngtree.com/png-vector/20250103/ourmid/pngtree-cute-bunny-rabbit-clip-art-illustration-transparent-background-png-image_15026667.png"
+                                alt="Lapin Jeune"
+                                className="image-illustration"
+                            />
+                        </section>
+
+                        <section className="adultes">
+                            <h2>Adultes</h2>
+                            <p>Nombre de lapins mâles : <span>{males}</span></p>
+                            <p>Nombre de lapins femelles : <span>{femelles}</span></p>
+                            <img
+                                src="https://static.vecteezy.com/system/resources/thumbnails/036/398/218/small/ai-generated-rabbit-isolated-on-transparent-background-png.png"
+                                alt="Lapin Adulte"
+                                className="image-illustration"
+                            />
+                        </section>
+                    
+                    <section className="infos">
+                        <h2>Informations clapier : </h2>
+                        <p>Nombre de lapins malades : <span>{maladeDepuis}</span></p>
+                        <p>Dernier repas : <span>{dernierRepas}</span></p>
+                        <p>Dernier abreuver : <span>{dernierBreuvage}</span></p>
+                        <p>Dernier lavage : <span>{dernierLavage}</span></p>
+                        </section>
+
+                    </main>
+
+                    <footer className="actions">
+                        <button onClick={() => nourrirClapier("nourrir")}>Nourrir : 5 écus</button>
+                        <button onClick={() => abreuverClapier("abreuver")}>Abreuver : 2 écus</button>
+                        <button onClick={() => soignerClapier("soigner")}>Soigner : 6 écus</button>
+                        <button onClick={() => laverClapier("laver")}>Nettoyer : 3 écus</button>
+                    </footer>
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById("root")).render(<Clapier />);
+    </script>
+</body>
+
+</html>

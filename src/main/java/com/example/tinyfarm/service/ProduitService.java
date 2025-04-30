@@ -37,7 +37,6 @@ public class ProduitService {
             "Oeuf",
             "Lait",
             "Graine"
-            // TODO : Rajouter les objets si besoin
         ));
 
         for (String nomProduit : nomsProduits) {
