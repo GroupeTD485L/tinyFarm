@@ -61,23 +61,23 @@ public class ClassementService {
         long totalVenteOeufJoueur = commerceRepository.countByProduitAndVendeurAndAcheteurIsNotNull(oeuf, ferme);
         float scoreOeuf = nbPointOeuf * (totalVenteOeufJoueur/(float)totalVenteOeuf);
 
-        Optional<Produit> existLapin =  produitRepository.findByNom("Lapin");
+        /* Optional<Produit> existLapin =  produitRepository.findByNom("Lapin");
         if (!existLapin.isPresent()) {
             throw new IllegalArgumentException("Le produit n'existe pas");
         }
         Produit lapin = existLapin.get();
         long totalVenteLapin = commerceRepository.countByProduitAndAcheteurIsNotNull(lapin);
         long totalVenteLapinJoueur = commerceRepository.countByProduitAndVendeurAndAcheteurIsNotNull(lapin, ferme);
-        float scoreLapin = nbPointLapin * (totalVenteLapinJoueur/(float)totalVenteLapin);
+        float scoreLapin = nbPointLapin * (totalVenteLapinJoueur/(float)totalVenteLapin); */
 
-        Optional<Produit> existPoule =  produitRepository.findByNom("Poule");
+        /* Optional<Produit> existPoule =  produitRepository.findByNom("Poule");
         if (!existPoule.isPresent()) {
             throw new IllegalArgumentException("Le produit n'existe pas");
         }
         Produit poule = existPoule.get();
         long totalVentePoule = commerceRepository.countByProduitAndAcheteurIsNotNull(poule);
         long totalVentePouleJoueur = commerceRepository.countByProduitAndVendeurAndAcheteurIsNotNull(poule, ferme);
-        float scorePoule = nbPointPoule * (totalVentePouleJoueur/(float)totalVentePoule);
+        float scorePoule = nbPointPoule * (totalVentePouleJoueur/(float)totalVentePoule); */
 
         Optional<Produit> existLait =  produitRepository.findByNom("Lait");
         if (!existLait.isPresent()) {
@@ -89,7 +89,12 @@ public class ClassementService {
         float scoreLait = nbPointLait * (totalVenteLaitJoueur/(float)totalVenteLait);
 
         // TODO: prendre en compte les écus aussi
-        classement.setScore(scoreOeuf + scoreLapin + scorePoule + scoreLait);
+        // classement.setScore(scoreOeuf + scoreLapin + scorePoule + scoreLait);
+        if (Double.isNaN(scoreOeuf + scoreLait)) {
+            classement.setScore(0);
+        } else {
+            classement.setScore(scoreOeuf + scoreLait);
+        }
 
         return classementRepository.save(classement);
     }
@@ -109,7 +114,16 @@ public class ClassementService {
 
     @Transactional
     public Page<Classement> getAllClassement(Pageable pageable) {
-        return classementRepository.findAll(pageable);
+        updateScoreForAllPlayers();
+        Page<Classement> classements = classementRepository.findAll(pageable);
+
+        classements.forEach(classement -> {
+            if (classement.getFerme() != null) {
+                classement.setNomFerme(classement.getFerme().getNom());
+            }
+        });
+    
+        return classements;
     }
 
     @Transactional

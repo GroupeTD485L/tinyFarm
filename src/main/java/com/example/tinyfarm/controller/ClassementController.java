@@ -21,7 +21,6 @@ public class ClassementController {
     }
 
     // Obtenir les infos du classement
-    @PreAuthorize("isAuthenticated()")
     @GetMapping
     public ResponseEntity<Page<Classement>> getClassement(@PageableDefault Pageable pageable){
         Page<Classement> classement = classementService.getAllClassement(pageable); // Récupére les infos du classement

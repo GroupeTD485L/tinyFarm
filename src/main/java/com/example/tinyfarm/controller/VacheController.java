@@ -100,13 +100,17 @@ public class VacheController {
 */
     @PutMapping("/nourrir")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Vache> nourrirVache(Authentication authentication, @RequestBody String nomProduit){
+    public ResponseEntity<Object> nourrirVache(Authentication authentication, @RequestBody String nomProduit){
         Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
-        Vache vache = vacheService.nourrirVache(ferme,nomProduit);
-        if (vache != null){
-            return ResponseEntity.ok(vache);
-        } else {
-            return ResponseEntity.notFound().build();
+        try {            
+            Vache vache = vacheService.nourrirVache(ferme,nomProduit);
+            if (vache != null){
+                return ResponseEntity.ok(vache);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(403).body(e.getMessage());
         }
     }
 
@@ -129,25 +133,33 @@ public class VacheController {
 
     @PutMapping("/soigner")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Vache> soignerVache(Authentication authentication){
+    public ResponseEntity<Object> soignerVache(Authentication authentication){
         Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
-        Vache vache = vacheService.soignerVache(ferme);
-        if (vache != null){
-            return ResponseEntity.ok(vache);
-        } else {
-            return ResponseEntity.notFound().build();
+        try {
+            Vache vache = vacheService.soignerVache(ferme);
+            if (vache != null){
+                return ResponseEntity.ok(vache);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(403).body(e.getMessage());
         }
     }
 
     @PutMapping("/laver")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Vache> laverVache(Authentication authentication){
+    public ResponseEntity<Object> laverVache(Authentication authentication){
         Ferme ferme = fermeService.getOrCreateFermeForUser(authentication.getName());
-        Vache vache = vacheService.laverVache(ferme);
+        try {
+            Vache vache = vacheService.laverVache(ferme);
         if (vache != null){
             return ResponseEntity.ok(vache);
         } else {
             return ResponseEntity.notFound().build();
+        }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(403).body(e.getMessage());
         }
     }
 
