@@ -18,12 +18,12 @@
 - SAADANA Adam
 - SOARES--QUEBRIAC Kélig (Chef d'équipe)
 - VIRENQUE Luka
-  
+
 # REST Api
 
 | Nom de la tache | Qui s'en charge |
 |-|-|
-|REST Api endpoint| Goulven, Daniele, Adam, Maxime|
+|REST Api endpoint| Goulven, Maxime|
 |Startup|Gwénolé|
 |Entity|Isaac, Rémi, Solène|
 |Repository|Tony, Nathan, Noé|
