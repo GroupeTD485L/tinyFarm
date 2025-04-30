@@ -1,9 +1,7 @@
 package com.example.tinyfarm.entity;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.ArrayList;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
@@ -22,7 +20,6 @@ public class Ferme{
     @JsonManagedReference
     private Compte compte; 
 
-    // TODO: Fix : Remise en One-to-one ?
     @OneToMany(mappedBy = "proprietaire", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Remise> remise;

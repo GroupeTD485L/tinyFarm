@@ -118,7 +118,6 @@ public class FermeService {
         Optional<Ferme> existingFerme = fermeRepository.findByComptePseudo(pseudo);
         if (existingFerme.isPresent()) {
             Ferme ferme = existingFerme.get();
-            // TODO: mettre à jour les différents attributs
             ferme.setAchatRestant(12);
             return fermeRepository.save(ferme);
         }

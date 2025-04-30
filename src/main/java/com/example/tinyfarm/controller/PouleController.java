@@ -18,12 +18,6 @@ import  com.example.tinyfarm.repository.PouleRepository;
 
 import java.util.Optional;
 
-//ajout
-import java.io.PrintWriter;
-import java.io.StringWriter;
-// Ajoutez cet import en haut du fichier
-import org.springframework.data.domain.PageRequest;
-
 @RestController
 @RequestMapping("/poulailler")
 public class PouleController {
